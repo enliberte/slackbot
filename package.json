@@ -1,23 +1,17 @@
 {
-  "name": "slackbot",
+  "name": "botkit-slackbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
+    "start": "node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/enliberte/slackbot.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/enliberte/slackbot/issues"
-  },
-  "homepage": "https://github.com/enliberte/slackbot#readme",
   "dependencies": {
+    "botbuilder-adapter-slack": "^1.0.4",
+    "botbuilder-storage-mongodb": "^0.9.5",
     "botkit": "^4.5.0",
-    "dotenv": "^8.1.0"
+    "botkit-plugin-cms": "^1.0.2",
+    "dotenv": "^7.0.0"
   }
 }
