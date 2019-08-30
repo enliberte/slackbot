@@ -68,7 +68,7 @@ class Bot {
         for (let followed in this.subscribes) {
             for (let repo in this.subscribes[followed]) {
                 if (data.text.match(new RegExp(`^Push(.*)${repo}(.*)${followed}`))) {
-                    this.subscribes[followed].forEach(
+                    this.subscribes[followed][repo].forEach(
                         follower =>  this.instance.postMessageToUser(follower, data.text, {attachments: data.attachments})
                     );
                 }
