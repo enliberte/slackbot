@@ -21,7 +21,7 @@ class Bot {
         });
 
         this.app.post('/push', (req, res) => {
-            this.instance.postMessageToUser('zugife21', req.body.text);
+            this.instance.postMessageToUser('zugife21', 'Gotcha!');
         });
     }
 
