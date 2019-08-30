@@ -1,6 +1,7 @@
 const express = require('express');
 const SlackBot = require('slackbots');
 const port = process.env.PORT || 8080;
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 class Bot {
@@ -9,6 +10,7 @@ class Bot {
         this.instance = new SlackBot({token, name});
         this.subscribes = {};
         this.app = express();
+        this.app.use(bodyParser.json());
 
         this.helpMsg = `send me a message "${this.instance.name} subscribe to user"
         (for instance @testbot subscribe to Alexey Sumatokhin.EXT) to follow him or
