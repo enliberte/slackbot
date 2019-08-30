@@ -32,6 +32,7 @@ class Bot {
             res.status(200);
             console.log('-------------------------');
             console.log('subscribe');
+            console.log(req);
             console.log(req.body);
             console.log('-------------------------');
         });
@@ -40,6 +41,7 @@ class Bot {
             res.status(200);
             console.log('-------------------------');
             console.log('unsubscribe');
+            console.log(req);
             console.log(req.body);
             console.log('-------------------------');
         });
