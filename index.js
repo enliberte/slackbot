@@ -4,6 +4,8 @@ const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
+const extractSubscriptionData = text => text.match(/(^.*) (.*$)/);
+
 class Bot {
     constructor(token, name) {
         this.instance = new SlackBot({token, name});
@@ -13,6 +15,16 @@ class Bot {
         //app settings
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
+    }
+
+    processSubscriptionEvent(req, res, cb, errorMsg) {
+        const [, followed, repo] = extractSubscriptionData(req.body.text);
+        if (followed && repo) {
+            cb(followed, req.body.user_name, repo);
+            res.status(200).send();
+        } else {
+            res.status(404).send(errorMsg)
+        }
     }
 
     router() {
@@ -28,21 +40,11 @@ class Bot {
         });
 
         this.app.post('/subscribe', (req, res) => {
-            if (req.body.text && req.body.user_name) {
-                this.subscribe(req.body.text, req.body.user_name);
-                res.status(200).send();
-            } else {
-                res.status(404).send('Specify user you subscribe to')
-            }
+            this.processSubscriptionEvent(req, res, this.subscribe, 'Specify user and repo you subscribe to');
         });
 
         this.app.post('/unsubscribe', (req, res) => {
-            if (req.body.text && req.body.user_name) {
-                this.unsubscribe(req.body.text, req.body.user_name);
-                res.status(200).send();
-            } else {
-                res.status(404).send('Specify user you unsubscribe from')
-            }
+            this.processSubscriptionEvent(req, res, this.unsubscribe, 'Specify user and repo you unsubscribe from');
         });
     }
 
@@ -68,20 +70,27 @@ class Bot {
         }
     }
 
-    subscribe(followed, follower) {
+    subscribe(followed, follower, repo) {
         if (this.subscribes[followed]) {
-            this.subscribes[followed] = [...this.subscribes[followed], follower];
+            if (this.subscribes[followed][repo]) {
+                this.subscribes[followed][repo] = [...this.subscribes[followed][repo], follower];
+            } else {
+                this.subscribes[followed][repo] = [follower];
+            }
         } else {
-            this.subscribes[followed] = [follower]
+            this.subscribes[followed] = {};
+            this.subscribes[followed][repo] = [follower];
         }
-        this.instance.postMessageToUser(follower, `You have subscribed to ${followed}`);
+        this.instance.postMessageToUser(follower, `You have subscribed to ${followed} on ${repo}`);
     }
 
-    unsubscribe(followed, follower) {
+    unsubscribe(followed, follower, repo) {
         if (this.subscribes[followed]) {
-            this.subscribes[followed] = this.subscribes[followed].filter(currentFollower => currentFollower !== follower);
+            if (this.subscribes[followed][repo]) {
+                this.subscribes[followed][repo] = this.subscribes[followed][repo].filter(currentFollower => currentFollower !== follower);
+            }
         }
-        this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed}`);
+        this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repo}`);
     }
 }
 
