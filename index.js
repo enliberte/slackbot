@@ -27,6 +27,20 @@ class Bot {
                 this.instance.postMessageToUser('zugife21', req.body.text, {attachments: req.body.attachments});
             }
         });
+
+        this.app.post('/subscribe', (req, res) => {
+            console.log('-------------------------');
+            console.log('subscribe');
+            console.log(req.body);
+            console.log('-------------------------');
+        });
+
+        this.app.post('/unsubscribe', (req, res) => {
+            console.log('-------------------------');
+            console.log('unsubscribe');
+            console.log(req.body);
+            console.log('-------------------------');
+        });
     }
 
     start() {
