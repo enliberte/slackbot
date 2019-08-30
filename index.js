@@ -16,14 +16,18 @@ class Bot {
         this.app.use(bodyParser.urlencoded({extended: true}));
     }
 
-    processSubscriptionEvent(req, res, cb, errorMsg) {
+    processSubscriptionEvent(req, res, subscribe) {
         const result = req.body.text.match(/(^.*) (.*$)/);
         if (result) {
             const [, followed, repo] = result;
-            cb(followed, req.body.user_name, repo);
+            if (subscribe) {
+                this.subscribe(followed, req.body.user_name, repo);
+            } else {
+                this.unsubscribe(followed, req.body.user_name, repo);
+            }
             res.status(200).send();
         } else {
-            res.status(404).send(errorMsg);
+            res.status(404).send();
         }
     }
 
@@ -40,11 +44,11 @@ class Bot {
         });
 
         this.app.post('/subscribe', (req, res) => {
-            this.processSubscriptionEvent(req, res, this.subscribe, 'Specify user and repo you subscribe to');
+            this.processSubscriptionEvent(req, res, true);
         });
 
         this.app.post('/unsubscribe', (req, res) => {
-            this.processSubscriptionEvent(req, res, this.unsubscribe, 'Specify user and repo you unsubscribe from');
+            this.processSubscriptionEvent(req, res, false);
         });
     }
 
