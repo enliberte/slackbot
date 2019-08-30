@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/enliberte/slackbot#readme",
   "dependencies": {
+    "express": "^4.17.1",
     "slackbots": "^1.2.0"
   }
 }

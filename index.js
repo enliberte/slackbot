@@ -1,4 +1,7 @@
+const express = require('express');
 const SlackBot = require('slackbots');
+const port = process.env.PORT || 8080;
+const app = express();
 
 class Bot {
     constructor(token, id, name) {
@@ -88,3 +91,8 @@ class Bot {
 }
 
 new Bot('xoxb-734390477313-729518821202-1gilmTwwSde1ZiJcUGdoN8Gi', '@UMFF8Q55Y', 'testbot').start();
+
+app.post('/push', (req, res) => {
+    res.status(200).send(req.body);
+});
+app.listen(port);
