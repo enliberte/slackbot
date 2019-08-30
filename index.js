@@ -4,7 +4,6 @@ const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const extractSubscriptionData = text => text.match(/(^.*) (.*$)/);
 
 class Bot {
     constructor(token, name) {
@@ -18,12 +17,13 @@ class Bot {
     }
 
     processSubscriptionEvent(req, res, cb, errorMsg) {
-        const [, followed, repo] = extractSubscriptionData(req.body.text);
-        if (followed && repo) {
+        const result = req.body.text.match(/(^.*) (.*$)/);
+        if (result) {
+            const [, followed, repo] = result;
             cb(followed, req.body.user_name, repo);
             res.status(200).send();
         } else {
-            res.status(404).send(errorMsg)
+            res.status(404).send(errorMsg);
         }
     }
 
