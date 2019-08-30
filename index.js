@@ -10,7 +10,10 @@ class Bot {
         this.instance = new SlackBot({token, name});
         this.subscribes = {};
         this.app = express();
+
+        //app settings
         this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({extended: true}));
 
         this.helpMsg = `send me a message "${this.instance.name} subscribe to user"
         (for instance @testbot subscribe to Alexey Sumatokhin.EXT) to follow him or
