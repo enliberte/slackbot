@@ -92,6 +92,10 @@ class Bot {
 
 new Bot('xoxb-734390477313-729518821202-1gilmTwwSde1ZiJcUGdoN8Gi', '@UMFF8Q55Y', 'testbot').start();
 
+app.get('/', (req, res) => {
+    res.status(200).send('React app will be there');
+});
+
 app.post('/push', (req, res) => {
     res.status(200).send(req.body);
 });
