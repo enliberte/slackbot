@@ -1,7 +1,6 @@
 const express = require('express');
 const SlackBot = require('slackbots');
 const port = process.env.PORT || 8080;
-const app = express();
 require('dotenv').config();
 
 class Bot {
@@ -9,15 +8,28 @@ class Bot {
         this.id = id;
         this.instance = new SlackBot({token, name});
         this.subscribes = {};
+        this.app = express();
+
         this.helpMsg = `send me a message "${this.instance.name} subscribe to user"
         (for instance @testbot subscribe to Alexey Sumatokhin.EXT) to follow him or
         "${this.instance.name} unsubscribe from user" to unfollow`;
     }
 
+    listenRoutes() {
+        this.app.get('/', (req, res) => {
+            res.status(200).send('React app will be there');
+        });
+
+        this.app.post('/push', (req, res) => {
+            this.instance.postMessageToUser('zugife21', req.body.text);
+        });
+    }
+
     start() {
-        this.listenStart();
-        this.listenMessages();
-        console.log('Start')
+        this.app.listen(port);
+        this.listenRoutes();
+        // this.listenStart();
+        // this.listenMessages();
     }
 
     listenStart() {
@@ -92,12 +104,3 @@ class Bot {
 }
 
 new Bot(process.env.BOT_TOKEN, '@UMFF8Q55Y', 'testbot').start();
-
-app.get('/', (req, res) => {
-    res.status(200).send('React app will be there');
-});
-
-app.post('/push', (req, res) => {
-    res.status(200).send(req.body);
-});
-app.listen(port);
