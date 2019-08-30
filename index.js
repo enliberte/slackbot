@@ -29,7 +29,7 @@ class Bot {
         });
 
         this.app.post('/subscribe', (req, res) => {
-            res.status(200);
+            res.status(200).send();
             console.log('-------------------------');
             console.log('subscribe');
             console.log(req);
@@ -38,7 +38,7 @@ class Bot {
         });
 
         this.app.post('/unsubscribe', (req, res) => {
-            res.status(200);
+            res.status(200).send();
             console.log('-------------------------');
             console.log('unsubscribe');
             console.log(req);
