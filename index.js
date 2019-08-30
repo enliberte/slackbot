@@ -21,6 +21,7 @@ class Bot {
         });
 
         this.app.post('/push', (req, res) => {
+            console.log(req.body);
             if (req.body.text && req.body.attachments) {
                 this.notifyAboutPushEvent(req.body);
             }
