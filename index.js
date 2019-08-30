@@ -65,8 +65,11 @@ class Bot {
     }
 
     notifyAboutPushEvent(data) {
+        console.log(this.subscribes);
         for (let followed in this.subscribes) {
+            console.log(followed);
             for (let repo in followed) {
+                console.log(repo);
                 if (data.text.match(new RegExp(`^Push(.*)${repo}(.*)${followed}`))) {
                     this.subscribes[followed].forEach(
                         follower =>  this.instance.postMessageToUser(follower, data.text, {attachments: data.attachments})
