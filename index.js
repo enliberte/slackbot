@@ -5,8 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 class Bot {
-    constructor(token, id, name) {
-        this.id = id;
+    constructor(token, name) {
         this.instance = new SlackBot({token, name});
         this.subscribes = {};
         this.app = express();
@@ -14,47 +13,42 @@ class Bot {
         //app settings
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
-
-        this.helpMsg = `send me a message "${this.instance.name} subscribe to user"
-        (for instance @testbot subscribe to Alexey Sumatokhin.EXT) to follow him or
-        "${this.instance.name} unsubscribe from user" to unfollow`;
     }
 
-    listenRoutes() {
+    router() {
         this.app.get('/', (req, res) => {
             res.status(200).send('React app will be there');
         });
 
         this.app.post('/push', (req, res) => {
             if (req.body.text && req.body.attachments) {
-                this.instance.postMessageToUser('zugife21', req.body.text, {attachments: req.body.attachments});
+                this.notifyAboutPushEvent(req.body);
             }
         });
 
         this.app.post('/subscribe', (req, res) => {
-            res.status(200).send();
-            console.log('-------------------------');
-            console.log('subscribe');
-            console.log(req);
-            console.log(req.body);
-            console.log('-------------------------');
+            if (req.body.text && req.body.user_name) {
+                this.subscribe(req.body.text, req.body.user_name);
+                res.status(200).send();
+            } else {
+                res.status(404).send('Specify user you subscribe to')
+            }
         });
 
         this.app.post('/unsubscribe', (req, res) => {
-            res.status(200).send();
-            console.log('-------------------------');
-            console.log('unsubscribe');
-            console.log(req);
-            console.log(req.body);
-            console.log('-------------------------');
+            if (req.body.text && req.body.user_name) {
+                this.unsubscribe(req.body.text, req.body.user_name);
+                res.status(200).send();
+            } else {
+                res.status(404).send('Specify user you unsubscribe from')
+            }
         });
     }
 
     start() {
         this.app.listen(port);
-        this.listenRoutes();
-        // this.listenStart();
-        // this.listenMessages();
+        this.router();
+        this.listenStart();
     }
 
     listenStart() {
@@ -63,69 +57,31 @@ class Bot {
         });
     }
 
-    listenMessages() {
-        this.instance.on('message', (data) => {
-            console.log(data);
-            if (data.text) {
-                this.interactIfNeeded(data);
-                this.notifyIfNeeded(data);
-            }
-        });
-    }
-
-    interactIfNeeded(data) {
-        const routes = [
-            {pattern: new RegExp(`<${this.id}> subscribe to (.*)`), cb: (followed) => this.subscribe(followed, data.user)},
-            {pattern: new RegExp(`<${this.id}> unsubscribe from (.*)`), cb: (followed) => this.unsubscribe(followed, data.user)},
-            {pattern: new RegExp(`<${this.id}> help`), cb: () => this.showHelp(data.user)},
-        ];
-
-        routes.forEach(route => {
-            const result = data.text.match(route.pattern);
-            if (result) {
-                route.cb(result[1]);
-            }
-        })
-    }
-
-    notifyIfNeeded(data) {
+    notifyAboutPushEvent(data) {
         for (let followed in this.subscribes) {
             if (data.text.match(new RegExp(`^Push(.*)${followed}`))) {
                 this.subscribes[followed].forEach(
-                    followerId => this.notify(data.text, {attachments: data.attachments}, followerId)
+                    follower =>  this.instance.postMessageToUser(follower, data.text, {attachments: data.attachments})
                 );
             }
         }
     }
 
-    notify(text, params, followerId) {
-        this.instance.getUserById(followerId)
-            .then(user => this.instance.postMessageToUser(user.name, `Attention! ${text}`, params));
-    }
-
-    subscribe(followed, followerId) {
+    subscribe(followed, follower) {
         if (this.subscribes[followed]) {
-            this.subscribes[followed] = [...this.subscribes[followed], followerId];
+            this.subscribes[followed] = [...this.subscribes[followed], follower];
         } else {
-            this.subscribes[followed] = [followerId]
+            this.subscribes[followed] = [follower]
         }
-        this.instance.getUserById(followerId).then(user =>
-            this.instance.postMessageToUser(user.name, `You have subscribed to ${followed}`)
-        );
+        this.instance.postMessageToUser(follower, `You have subscribed to ${followed}`);
     }
 
-    unsubscribe(followed, followerId) {
+    unsubscribe(followed, follower) {
         if (this.subscribes[followed]) {
-            this.subscribes[followed] = this.subscribes[followed].filter(currentFollowerId => currentFollowerId !== followerId);
+            this.subscribes[followed] = this.subscribes[followed].filter(currentFollower => currentFollower !== follower);
         }
-        this.instance.getUserById(followerId).then(user =>
-            this.instance.postMessageToUser(user.name, `You have unsubscribed from ${followed}`)
-        );
-    }
-
-    showHelp(userId) {
-        this.instance.getUserById(userId).then(user => this.instance.postMessageToUser(user.name, this.helpMsg));
+        this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed}`);
     }
 }
 
-new Bot(process.env.BOT_TOKEN, '@UMFF8Q55Y', 'testbot').start();
+new Bot(process.env.BOT_TOKEN,  'testbot').start();
