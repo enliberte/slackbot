@@ -20,7 +20,7 @@ const isFollowed = (followed, follower, repoName) => {
 const subscribe = (followed, follower, repoName) => {
     client.connect(err => {
         const subscribes = getSubscribes();
-        if (!isFollowed(follower, followed, repoName)) {
+        if (!isFollowed(followed, follower, repoName)) {
             subscribes.insertOne(getSubscribeSelector(followed, follower, repoName));
         }
         client.close()
