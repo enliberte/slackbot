@@ -22,19 +22,16 @@ const unsubscribe = (followed, follower, repoName) => {
     });
 };
 
-const getFollowers = (followed, repoName) => {
-    console.log(followed, repoName);
-    let followers = [];
+const notifyFollowers = (followed, repoName, cb, ...cbArgs) => {
     client.connect(err => {
         const subscribes = client.db("subscribes").collection("followed");
         subscribes.find(getFollowersSelector(followed, repoName)).toArray(err, docs => {
             if (docs) {
-                followers = docs.map(doc => doc.follower);
+                docs.forEach(doc => cb(doc.follower, ...cbArgs));
             }
             client.close()
         });
     });
-    return followers;
 };
 
-module.exports = {subscribe, unsubscribe, getFollowers};
+module.exports = {subscribe, unsubscribe, notifyFollowers};
