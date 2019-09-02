@@ -67,10 +67,7 @@ class Bot {
 
     notifyAboutPR(data) {
         const {fallback, author_name} = data.attachments[0];
-        const result = fallback.match(/opened pull request <(.*)\/pull-requests/);
-        console.log('-------------------------------------------------------');
-        console.log(result);
-        console.log('-------------------------------------------------------');
+        const result = fallback.match(/opened pull request.* <(.*)\/pull-requests/);
         if (result) {
             const followers = m.getFollowers(author_name, result[1]);
             console.log('-------------------------------------------------------');
