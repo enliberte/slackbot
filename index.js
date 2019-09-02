@@ -66,7 +66,7 @@ class Bot {
     }
 
     notifyAboutPR(attachments) {
-        const {fallback, author_name: followed} = attachments;
+        const {fallback, author_name: followed} = attachments[0];
         console.log('-------------------------------------------------------------');
         console.log('fallback/followed', fallback, followed);
         console.log('-------------------------------------------------------------');
