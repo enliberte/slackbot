@@ -6,26 +6,11 @@ const getSubscribeSelector = require('./selectors').getSubscribeSelector;
 const client = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true });
 const getSubscribes = () => client.db("subscribes").collection("followed");
 
-
-const isFollowed = (followed, follower, repoName) => {
-    let isFollowed = false;
-    const subscribes = getSubscribes();
-    const rawSubscribes = subscribes.find(getSubscribeSelector(followed, follower, repoName));
-    console.log('rawSubscribes', rawSubscribes);
-
-    subscribes.find(getSubscribeSelector(followed, follower, repoName)).toArray((err, docs) => {
-
-        isFollowed = docs.length !== 0;
-    });
-    return isFollowed;
-};
-
 const subscribe = (followed, follower, repoName) => {
     client.connect(err => {
         const subscribes = getSubscribes();
-        if (!isFollowed(followed, follower, repoName)) {
-            subscribes.insertOne(getSubscribeSelector(followed, follower, repoName));
-        }
+        const subscribe = getSubscribeSelector(followed, follower, repoName);
+        subscribes.update(subscribe, subscribe, {upsert: true});
         client.close()
     })
 };
@@ -33,9 +18,7 @@ const subscribe = (followed, follower, repoName) => {
 const unsubscribe = (followed, follower, repoName) => {
     client.connect(err => {
         const subscribes = getSubscribes();
-        if (isFollowed(follower, followed, repoName)) {
-            subscribes.deleteOne(getSubscribeSelector(followed, follower, repoName));
-        }
+        subscribes.deleteOne(getSubscribeSelector(followed, follower, repoName));
         client.close()
     })
 };
