@@ -90,7 +90,7 @@ class Bot {
             const subscribe = {followed, follower, repoName};
             subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => this.client.close());
         });
-        this.instance.postMessageToUser(follower, `You have subscribed to ${followed} on ${repo}`);
+        this.instance.postMessageToUser(follower, `You have subscribed to ${followed} on ${repoName}`);
     }
 
     unsubscribe(followed, follower, repoName) {
@@ -98,7 +98,7 @@ class Bot {
             const subscribes = this.client.db("subscribes").collection("followed");
             subscribes.deleteOne({followed, follower, repoName}, {}, err => this.client.close());
         });
-        this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repo}`);
+        this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repoName}`);
     }
 }
 
