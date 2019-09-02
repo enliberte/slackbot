@@ -38,8 +38,7 @@ class Bot {
         });
 
         this.app.post('/push', (req, res) => {
-            // console.log(req.body);
-            console.log(req.body.text, req.body.author_name);
+            console.log(JSON.stringify(req.body);
             if (req.body.text && req.body.author_name) {
                 this.notifyAboutPR(req.body);
             }
