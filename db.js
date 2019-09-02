@@ -36,5 +36,4 @@ const getFollowers = (followed, repoName) => {
     return followers;
 };
 
-module.exports = {subscribe, unsubscribe};
-
+module.exports = {subscribe, unsubscribe, getFollowers};
