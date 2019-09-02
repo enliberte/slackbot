@@ -66,9 +66,6 @@ class Bot {
     }
 
     notifyAboutPR(attachments) {
-        console.log('-------------------------------------------------------------');
-        console.log('attachments', attachments);
-        console.log('-------------------------------------------------------------');
         const {fallback, author_name: followed} = attachments;
         if (fallback && followed) {
             const result = fallback.match(/<(.*)\/pull-requests/);
@@ -77,6 +74,9 @@ class Bot {
                 this.client.connect(err => {
                     const subscribes = this.client.db("subscribes").collection("followed");
                     subscribes.find({followed, repoName}).toArray(err, docs => {
+                        console.log('-------------------------------------------------------------');
+                        console.log('docs', docs);
+                        console.log('-------------------------------------------------------------');
                         if (docs) {
                             docs.forEach(doc => this.instance.postMessageToUser(doc.follower, 'PR!', {attachments}));
                         }
