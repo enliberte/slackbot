@@ -2,8 +2,8 @@ const express = require('express');
 const SlackBot = require('slackbots');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
+const MongoClient = require('mongodb').MongoClient;
 require('dotenv').config();
-const m = require('./db');
 
 
 class Bot {
@@ -11,6 +11,7 @@ class Bot {
         this.instance = new SlackBot({token, name});
         this.subscribes = {};
         this.app = express();
+        this.client = new MongoClient(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
         //app settings
         this.app.use(bodyParser.json());
@@ -38,9 +39,8 @@ class Bot {
         });
 
         this.app.post('/push', (req, res) => {
-            console.log(JSON.stringify(req.body));
             if (req.body.attachments) {
-                this.notifyAboutPR(req.body);
+                this.notifyAboutPR(req.body.attachments);
             }
         });
 
@@ -65,28 +65,37 @@ class Bot {
         });
     }
 
-    notifyAboutPR(data) {
-        const {fallback, author_name} = data.attachments[0];
-        console.log('fallback', fallback);
+    notifyAboutPR(attachments) {
+        const {fallback, author_name: followed} = attachments;
         const result = fallback.match(/<(.*)\/pull-requests/);
-        console.log('result', result);
         if (result) {
-            m.notifyFollowers(
-                author_name,
-                result[1],
-                this.instance.postMessageToUser.bind(this),
-                'PR!', {attachments: data.attachments}
-            );
+            const repoName = result[1];
+            this.client.connect(err => {
+                const subscribes = this.client.db("subscribes").collection("followed");
+                subscribes.find({followed, repoName}).toArray(err, docs => {
+                    if (docs) {
+                        docs.forEach(doc => this.instance.postMessageToUser(doc.follower, 'PR!', {attachments}));
+                    }
+                    this.client.close()
+                });
+            });
         }
     }
 
-    subscribe(followed, follower, repo) {
-        m.subscribe(followed, follower, repo);
+    subscribe(followed, follower, repoName) {
+        this.client.connect(err => {
+            const subscribes = this.client.db("subscribes").collection("followed");
+            const subscribe = {followed, follower, repoName};
+            subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => client.close());
+        });
         this.instance.postMessageToUser(follower, `You have subscribed to ${followed} on ${repo}`);
     }
 
-    unsubscribe(followed, follower, repo) {
-        m.unsubscribe(followed, follower, repo);
+    unsubscribe(followed, follower, repoName) {
+        this.client.connect(err => {
+            const subscribes = this.client.db("subscribes").collection("followed");
+            subscribes.deleteOne({followed, follower, repoName}, {}, err => client.close());
+        });
         this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repo}`);
     }
 }

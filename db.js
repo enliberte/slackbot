@@ -22,7 +22,7 @@ const unsubscribe = (followed, follower, repoName) => {
     });
 };
 
-const notifyFollowers = (followed, repoName, cb, ...cbArgs) => {
+const notifyFollowers = (followed, repoName, cb) => {
     client.connect(err => {
         const subscribes = client.db("subscribes").collection("followed");
         subscribes.find(getFollowersSelector(followed, repoName)).toArray(err, docs => {
