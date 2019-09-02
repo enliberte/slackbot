@@ -3,7 +3,7 @@ const assert = require('assert');
 require('dotenv').config();
 const getSubscribeSelector = require('./selectors').getSubscribeSelector;
 
-const client = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true });
+const client = new MongoClient(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 const subscribe = (followed, follower, repoName) => {
     client.connect(err => {
