@@ -40,7 +40,7 @@ class Bot {
         this.app.post('/push', (req, res) => {
             console.log(req.body);
             if (req.body.text && req.body.attachments) {
-                this.notifyAboutPushEvent(req.body);
+                this.notifyAboutPR(req.body);
             }
         });
 
@@ -65,16 +65,17 @@ class Bot {
         });
     }
 
-    notifyAboutPushEvent(data) {
-        for (let followed in this.subscribes) {
-            for (let repo in this.subscribes[followed]) {
-                if (data.text.match(new RegExp(`^Push(.*)${repo}(.*)${followed}`))) {
-                    this.subscribes[followed][repo].forEach(
-                        follower =>  this.instance.postMessageToUser(follower, data.text, {attachments: data.attachments})
-                    );
-                }
+    notifyAboutPR(data) {
+        const result = data.text.match(/^(.*) opened.*<(.*)\/pull-requests/);
+        if (result) {
+            const [, followed, repo] = result;
+            if (followed && repo) {
+                const followers = m.getFollowers(followed, repo);
+                console.log('-------------------------------------------------------');
+                console.log(followers);
+                console.log('-------------------------------------------------------');
+                followers.forEach(follower => this.instance.postMessageToUser(follower, data.text, {attachments: data.attachments}))
             }
-
         }
     }
 
