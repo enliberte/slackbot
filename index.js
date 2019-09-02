@@ -67,22 +67,13 @@ class Bot {
 
     notifyAboutPR(attachments) {
         const {fallback, author_name: followed} = attachments[0];
-        console.log('-------------------------------------------------------------');
-        console.log('fallback/followed', fallback, followed);
-        console.log('-------------------------------------------------------------');
         if (fallback && followed) {
             const result = fallback.match(/<(.*)\/pull-requests/);
-            console.log('-------------------------------------------------------------');
-            console.log('result', result);
-            console.log('-------------------------------------------------------------');
             if (result) {
                 const repoName = result[1];
                 this.client.connect(err => {
                     const subscribes = this.client.db("subscribes").collection("followed");
                     subscribes.find({followed, repoName}).toArray((err, docs) => {
-                        console.log('-------------------------------------------------------------');
-                        console.log('docs', docs);
-                        console.log('-------------------------------------------------------------');
                         if (docs) {
                             docs.forEach(doc => this.instance.postMessageToUser(doc.follower, 'PR!', {attachments}));
                         }
@@ -97,7 +88,7 @@ class Bot {
         this.client.connect(err => {
             const subscribes = this.client.db("subscribes").collection("followed");
             const subscribe = {followed, follower, repoName};
-            subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => client.close());
+            subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => this.client.close());
         });
         this.instance.postMessageToUser(follower, `You have subscribed to ${followed} on ${repo}`);
     }
@@ -105,7 +96,7 @@ class Bot {
     unsubscribe(followed, follower, repoName) {
         this.client.connect(err => {
             const subscribes = this.client.db("subscribes").collection("followed");
-            subscribes.deleteOne({followed, follower, repoName}, {}, err => client.close());
+            subscribes.deleteOne({followed, follower, repoName}, {}, err => this.client.close());
         });
         this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repo}`);
     }
