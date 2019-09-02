@@ -3,6 +3,7 @@ const SlackBot = require('slackbots');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const test = require('./db/index');
 
 
 class Bot {
@@ -56,6 +57,7 @@ class Bot {
         this.app.listen(port);
         this.router();
         this.listenStart();
+        test();
     }
 
     listenStart() {
