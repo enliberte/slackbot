@@ -38,8 +38,9 @@ class Bot {
         });
 
         this.app.post('/push', (req, res) => {
-            console.log(req.body);
-            if (req.body.text) {
+            // console.log(req.body);
+            console.log(req.body.text, req.body.author_name);
+            if (req.body.text && req.body.author_name) {
                 this.notifyAboutPR(req.body);
             }
         });
@@ -66,19 +67,16 @@ class Bot {
     }
 
     notifyAboutPR(data) {
-        const result = data.text.match(/^(.*) opened.*<(.*)\/pull-requests/);
+        const result = data.text.match(/opened pull request <(.*)\/pull-requests/);
         console.log('-------------------------------------------------------');
         console.log(result);
         console.log('-------------------------------------------------------');
         if (result) {
-            const [, followed, repo] = result;
-            if (followed && repo) {
-                const followers = m.getFollowers(followed, repo);
-                console.log('-------------------------------------------------------');
-                console.log(followers);
-                console.log('-------------------------------------------------------');
-                followers.forEach(follower => this.instance.postMessageToUser(follower, data.text, {attachments: data.attachments}))
-            }
+            const followers = m.getFollowers(data.author_name, result[1]);
+            console.log('-------------------------------------------------------');
+            console.log(followers);
+            console.log('-------------------------------------------------------');
+            followers.forEach(follower => this.instance.postMessageToUser(follower, data.text, {attachments: data.attachments}))
         }
     }
 
