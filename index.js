@@ -39,7 +39,9 @@ class Bot {
 
         this.app.post('/push', (req, res) => {
             console.log(req.body);
-            this.notifyAboutPR(req.body);
+            if (req.body.text) {
+                this.notifyAboutPR(req.body);
+            }
         });
 
         this.app.post('/subscribe', (req, res) => {
