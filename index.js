@@ -79,7 +79,7 @@ class Bot {
                 const repoName = result[1];
                 this.client.connect(err => {
                     const subscribes = this.client.db("subscribes").collection("followed");
-                    subscribes.find({followed, repoName}).toArray(err, docs => {
+                    subscribes.find({followed, repoName}).toArray((err, docs) => {
                         console.log('-------------------------------------------------------------');
                         console.log('docs', docs);
                         console.log('-------------------------------------------------------------');
