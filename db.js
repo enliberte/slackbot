@@ -14,6 +14,9 @@ const subscribe = (followed, follower, repoName) => {
 };
 
 const unsubscribe = (followed, follower, repoName) => {
+    console.log('---------------------------------');
+    console.log(followed, follower, repoName);
+    console.log('---------------------------------');
     client.connect(err => {
         const subscribes = client.db("subscribes").collection("followed");
         subscribes.deleteOne({followed, follower, repoName}, {}, err => client.close());
