@@ -68,11 +68,12 @@ class Bot {
     notifyAboutPR(data) {
         const {fallback, author_name} = data.attachments[0];
         const result = fallback.match(/opened pull request.* <(.*)\/pull-requests/);
+        console.log('result', result);
         if (result) {
             m.notifyFollowers(
                 author_name,
                 result[1],
-                this.instance.postMessageToUser,
+                this.instance.postMessageToUser.bind(this),
                 'PR!', {attachments: data.attachments}
             );
         }
