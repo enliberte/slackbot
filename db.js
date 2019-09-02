@@ -4,11 +4,12 @@ require('dotenv').config();
 const getSubscribeSelector = require('./selectors').getSubscribeSelector;
 
 const client = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true });
-const subscribes = client.db("subscribes").collection("followed");
+const getSubscribes = () => client.db("subscribes").collection("followed");
 
 
 const isFollowed = (followed, follower, repoName) => {
     let isFollowed = false;
+    const subscribes = getSubscribes();
     subscribes.find(getSubscribeSelector(followed, follower, repoName)).toArray((err, docs) => {
         assert.equal(null, err);
         isFollowed = docs.length !== 0;
@@ -19,6 +20,7 @@ const isFollowed = (followed, follower, repoName) => {
 const subscribe = (followed, follower, repoName) => {
     client.connect(err => {
         assert.equal(null, err);
+        const subscribes = getSubscribes();
         if (!isFollowed(follower, followed, repoName)) {
             subscribes.insertOne(
                 getSubscribeSelector(followed, follower, repoName), {},
@@ -32,6 +34,7 @@ const subscribe = (followed, follower, repoName) => {
 const unsubscribe = (followed, follower, repoName) => {
     client.connect(err => {
         assert.equal(null, err);
+        const subscribes = getSubscribes();
         if (isFollowed(follower, followed, repoName)) {
             subscribes.deleteOne(
                 getSubscribeSelector(followed, follower, repoName), {},
