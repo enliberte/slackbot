@@ -67,6 +67,9 @@ class Bot {
 
     notifyAboutPR(attachments) {
         const {fallback, author_name: followed} = attachments;
+        console.log('-------------------------------------------------------------');
+        console.log('fallback/followed', fallback, followed);
+        console.log('-------------------------------------------------------------');
         if (fallback && followed) {
             const result = fallback.match(/<(.*)\/pull-requests/);
             console.log('-------------------------------------------------------------');
