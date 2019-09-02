@@ -9,7 +9,7 @@ const subscribe = (followed, follower, repoName) => {
     client.connect(err => {
         const subscribes = client.db("subscribes").collection("followed");
         const subscribe = getSubscribeSelector(followed, follower, repoName);
-        subscribes.updateOne(subscribe, subscribe, {upsert: true}, err => client.close());
+        subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => client.close());
     })
 };
 
