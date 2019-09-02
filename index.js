@@ -84,7 +84,7 @@ class Bot {
     }
 
     unsubscribe(followed, follower, repo) {
-        m.subscribe(followed, follower, repo);
+        m.unsubscribe(followed, follower, repo);
         this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repo}`);
     }
 }
