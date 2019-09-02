@@ -10,8 +10,11 @@ const getSubscribes = () => client.db("subscribes").collection("followed");
 const isFollowed = (followed, follower, repoName) => {
     let isFollowed = false;
     const subscribes = getSubscribes();
+    const rawSubscribes = subscribes.find(getSubscribeSelector(followed, follower, repoName));
+    console.log('rawSubscribes', rawSubscribes);
+
     subscribes.find(getSubscribeSelector(followed, follower, repoName)).toArray((err, docs) => {
-        console.log('isFollowed', docs);
+
         isFollowed = docs.length !== 0;
     });
     return isFollowed;
