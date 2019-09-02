@@ -67,6 +67,9 @@ class Bot {
 
     notifyAboutPR(data) {
         const result = data.text.match(/^(.*) opened.*<(.*)\/pull-requests/);
+        console.log('-------------------------------------------------------');
+        console.log(result);
+        console.log('-------------------------------------------------------');
         if (result) {
             const [, followed, repo] = result;
             if (followed && repo) {
