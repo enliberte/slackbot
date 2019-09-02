@@ -1,6 +1,6 @@
-const getFollowersSelector = (followed, repoName) => ({"followed": followed, "repoName": repoName});
+const getFollowersSelector = (followed, repoName) => ({followed, repoName});
 
-const getSubscribeSelector = (followed, follower, repoName) => ({"followed": followed, "follower": follower, "repoName": repoName});
+const getSubscribeSelector = (followed, follower, repoName) => ({followed, follower, repoName});
 
 
 
