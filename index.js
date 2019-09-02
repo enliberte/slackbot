@@ -69,6 +69,9 @@ class Bot {
         const {fallback, author_name: followed} = attachments;
         if (fallback && followed) {
             const result = fallback.match(/<(.*)\/pull-requests/);
+            console.log('-------------------------------------------------------------');
+            console.log('result', result);
+            console.log('-------------------------------------------------------------');
             if (result) {
                 const repoName = result[1];
                 this.client.connect(err => {
