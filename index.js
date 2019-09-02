@@ -3,7 +3,8 @@ const SlackBot = require('slackbots');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const test = require('./db/index').test;
+const test = require('./db').test;
+const m = require('./db');
 
 
 class Bot {
@@ -80,25 +81,12 @@ class Bot {
     }
 
     subscribe(followed, follower, repo) {
-        if (this.subscribes[followed]) {
-            if (this.subscribes[followed][repo]) {
-                this.subscribes[followed][repo] = [...this.subscribes[followed][repo], follower];
-            } else {
-                this.subscribes[followed][repo] = [follower];
-            }
-        } else {
-            this.subscribes[followed] = {};
-            this.subscribes[followed][repo] = [follower];
-        }
+        m.subscribe(followed, follower, repo);
         this.instance.postMessageToUser(follower, `You have subscribed to ${followed} on ${repo}`);
     }
 
     unsubscribe(followed, follower, repo) {
-        if (this.subscribes[followed]) {
-            if (this.subscribes[followed][repo]) {
-                this.subscribes[followed][repo] = this.subscribes[followed][repo].filter(currentFollower => currentFollower !== follower);
-            }
-        }
+        m.subscribe(followed, follower, repo);
         this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repo}`);
     }
 }
