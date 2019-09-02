@@ -23,6 +23,7 @@ const unsubscribe = (followed, follower, repoName) => {
 };
 
 const getFollowers = (followed, repoName) => {
+    console.log(followed, repoName);
     let followers = [];
     client.connect(err => {
         const subscribes = client.db("subscribes").collection("followed");
