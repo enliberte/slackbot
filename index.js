@@ -3,7 +3,7 @@ const SlackBot = require('slackbots');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 require('dotenv').config();
-const test = require('./db/index');
+const test = require('./db/index').test;
 
 
 class Bot {
