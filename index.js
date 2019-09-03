@@ -1,5 +1,6 @@
 const express = require('express');
-const SlackBot = require('slackbots');
+const {RTMClient} = require('@slack/rtm-api');
+const {WebClient} = require('@slack/web-api');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
@@ -7,8 +8,9 @@ require('dotenv').config();
 
 
 class Bot {
-    constructor(token, name) {
-        this.instance = new SlackBot({token, name});
+    constructor(token) {
+        this.rtm = new RTMClient(token);
+        this.web = new WebClient(token);
         this.subscribes = {};
         this.app = express();
         this.client = new MongoClient(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -44,6 +46,10 @@ class Bot {
             }
         });
 
+        this.app.post('/test', (req, res) => {
+            this.testRichMessages(req, res);
+        });
+
         this.app.post('/subscribe', (req, res) => {
             this.processSubscriptionEvent(req, res, true);
         });
@@ -56,13 +62,9 @@ class Bot {
     start() {
         this.app.listen(port);
         this.router();
-        this.listenStart();
-    }
-
-    listenStart() {
-        this.instance.on('start', () => {
-            this.instance.postMessageToChannel('pushes', "I'm alive (Skynet)", {});
-        });
+        (async () => {
+            await this.rtm.start();
+        })();
     }
 
     notifyAboutPR(attachments) {
@@ -75,7 +77,7 @@ class Bot {
                     const subscribes = this.client.db("subscribes").collection("followed");
                     subscribes.find({followed, repoName}).toArray((err, docs) => {
                         if (docs) {
-                            docs.forEach(doc => this.instance.postMessageToUser(doc.follower, 'PR!', {attachments}));
+                            docs.forEach(doc => this.rtm.postMessageToUser(doc.follower, 'PR!', {attachments}));
                         }
                         this.client.close()
                     });
@@ -84,7 +86,30 @@ class Bot {
         }
     }
 
-
+    testRichMessages(req, res) {
+        this.web.chat.postMessage({
+            blocks: [
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: `Welcome to the channel. We're here to help. Let us know if you have an issue.`,
+                    },
+                    accessory: {
+                        type: 'button',
+                        text: {
+                            type: 'plain_text',
+                            text: 'Get Help',
+                        },
+                        value: 'get_help',
+                    },
+                },
+            ],
+            channel: req.body.user_name,
+        })
+            .then(result => res.status(200).send())
+            .catch(err => res.status(404).send(err));
+    }
 
     subscribe(followed, follower, repoName) {
         this.client.connect(err => {
@@ -92,7 +117,7 @@ class Bot {
             const subscribe = {followed, follower, repoName};
             subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => this.client.close());
         });
-        this.instance.postMessageToUser(follower, `You have subscribed to ${followed} on ${repoName}`);
+        this.rtm.postMessageToUser(follower, `You have subscribed to ${followed} on ${repoName}`);
     }
 
     unsubscribe(followed, follower, repoName) {
@@ -100,8 +125,8 @@ class Bot {
             const subscribes = this.client.db("subscribes").collection("followed");
             subscribes.deleteOne({followed, follower, repoName}, {}, err => this.client.close());
         });
-        this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repoName}`);
+        this.rtm.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repoName}`);
     }
 }
 
-new Bot(process.env.BOT_TOKEN,  'testbot').start();
+new Bot(process.env.BOT_TOKEN).start();
