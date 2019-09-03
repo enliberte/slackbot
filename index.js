@@ -11,7 +11,6 @@ class Bot {
     constructor(token) {
         this.rtm = new RTMClient(token);
         this.web = new WebClient(token);
-        this.subscribes = {};
         this.app = express();
         this.client = new MongoClient(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -107,8 +106,14 @@ class Bot {
             ],
             channel: req.body.user_name,
         })
-            .then(result => res.status(200).send())
-            .catch(err => res.status(404).send(err));
+            .then(result => {
+                console.log(result);
+                res.status(200).send()
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(404).send(err)
+            });
     }
 
     subscribe(followed, follower, repoName) {
