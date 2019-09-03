@@ -1,12 +1,11 @@
 require('dotenv').config();
 const {addUsersListForSubscribe, addUsersListForUnsubscribe, addReposListForUnsubscribe, addReposListForSubscribe} = require('./templates/subscribe');
-const {getAllUsers, getAllRepos, getAllSubscribedRepos, getAllSubscribedUsers, addSubscription, removeSubscription} = require('./db');
+const {getAllUsers, getAllUnsubscribedRepos, getAllSubscribedRepos, getAllSubscribedUsers, addSubscription, removeSubscription} = require('./db');
 const {WebClient} = require('@slack/web-api');
 const web = new WebClient(process.env.BOT_TOKEN);
 
 const listUsersForSubscribe = async (channelId, res) => {
-    const docs = await getAllUsers();
-    const usernames = docs.map(doc => doc.username);
+    const usernames = await getAllUsers();
     try {
         await web.chat.postMessage({
             blocks: addUsersListForSubscribe(usernames),
@@ -20,8 +19,7 @@ const listUsersForSubscribe = async (channelId, res) => {
 };
 
 const listUsersForUnsubscribe = async (channelId, res) => {
-    const docs = await getAllSubscribedUsers(channelId);
-    const usernames = Array.from(new Set(docs.map(doc => doc.followed)));
+    const usernames = await getAllSubscribedUsers(channelId);
     try {
         await web.chat.postMessage({
             blocks: addUsersListForUnsubscribe(usernames),
@@ -35,8 +33,7 @@ const listUsersForUnsubscribe = async (channelId, res) => {
 };
 
 const listReposForSubscribe = async (followed, respond) => {
-    const docs = await getAllRepos();
-    const reponames = docs.map(doc => doc.reponame);
+    const reponames = await getAllUnsubscribedRepos();
     try {
         await respond({blocks: addReposListForSubscribe(followed, reponames)});
     } catch (e) {
@@ -45,8 +42,7 @@ const listReposForSubscribe = async (followed, respond) => {
 };
 
 const listReposForUnsubscribe = async (followed, follower, respond) => {
-    const docs = await getAllSubscribedRepos(followed, follower);
-    const reponames = docs.map(doc => doc.reponame);
+    const reponames = await getAllSubscribedRepos(followed, follower);
     try {
         await respond({blocks: addReposListForUnsubscribe(followed, reponames)});
     } catch (e) {
