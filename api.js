@@ -6,7 +6,6 @@ const web = new WebClient(process.env.BOT_TOKEN);
 
 const listUsersForSubscribe = async (channelId, res) => {
     const docs = await getAllUsers();
-    console.log('docs', docs);
     const usernames = docs.map(doc => doc.username);
     try {
         await web.chat.postMessage({
