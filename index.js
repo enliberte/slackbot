@@ -2,7 +2,7 @@ const express = require('express');
 const {createMessageAdapter} = require('@slack/interactive-messages');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
-const {listUsersForSubscribe, listUsersForUnsubscribe} = require('./api');
+const {listUsersForSubscribe, listUsersForUnsubscribe, notifyAboutPR, addNewUser, addNewRepo} = require('./api');
 const {interactMessagesRouter} = require('./interact_msg');
 require('dotenv').config();
 
@@ -23,10 +23,18 @@ class Bot {
             res.status(200).send('React app will be there');
         });
 
-        // this.app.post('/push', (req, res) => {
-        //     if (req.body.attachments) {
-        //         this.notifyAboutPR(req.body.attachments);
-        //     }
+        this.app.post('/push', (req, res) => {
+            if (req.body.attachments) {
+                notifyAboutPR(req.body.attachments);
+            }
+        });
+
+        // this.app.post('/add-user', (req, res) => {
+        //     addNewUser();
+        // });
+        //
+        // this.app.post('/add-repo', (req, res) => {
+        //     addNewRepo();
         // });
 
         this.app.post('/subscribe', (req, res) => {
@@ -47,28 +55,6 @@ class Bot {
             await this.slackInteractions.start(port);
         })();
     }
-
-    // notifyAboutPR(attachments) {
-    //     const {fallback, author_name: followed} = attachments[0];
-    //     if (fallback && followed) {
-    //         const result = fallback.match(/<(.*)\/pull-requests/);
-    //         if (result) {
-    //             const repoName = result[1];
-    //             this.client.connect(err => {
-    //                 const subscribes = this.client.db("subscribes").collection("followed");
-    //                 subscribes.find({followed, repoName}).toArray((err, docs) => {
-    //                     if (docs) {
-    //                         docs.forEach(doc => this.rtm.postMessageToUser(doc.follower, 'PR!', {attachments}));
-    //                     }
-    //                     this.client.close()
-    //                 });
-    //             });
-    //         }
-    //     }
-    // }
-    //
-    //
-
 }
 
 new Bot(process.env.BOT_TOKEN).start();

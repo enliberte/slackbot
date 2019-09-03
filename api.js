@@ -1,6 +1,7 @@
 require('dotenv').config();
+const {addSection} = require("./templates/common");
 const {addUsersListForSubscribe, addUsersListForUnsubscribe, addReposListForUnsubscribe, addReposListForSubscribe} = require('./templates/subscribe');
-const {getAllUsers, getAllUnsubscribedRepos, getAllSubscribedRepos, getAllSubscribedUsers, addSubscription, removeSubscription} = require('./db');
+const {getAllUsers, getAllUnsubscribedRepos, getAllSubscribedRepos, getAllSubscribedUsers, addSubscription, removeSubscription, getFollowerChannels, addUser, addRepo} = require('./db');
 const {WebClient} = require('@slack/web-api');
 const web = new WebClient(process.env.BOT_TOKEN);
 
@@ -53,14 +54,43 @@ const listReposForUnsubscribe = async (followed, follower, respond) => {
 const subscribe = async (followed, follower, repoName, respond) => {
     const err = await addSubscription(followed, follower, repoName);
     const msgText = err ? 'insert into db failed' : `You have subscribed to ${followed} on ${repoName}`;
-    respond({text: msgText});
+    await respond({text: msgText});
 };
 
 const unsubscribe = async (followed, follower, repoName, respond) => {
     const err = await removeSubscription(followed, follower, repoName);
     const msgText = err ? 'delete from db failed' : `You have unsubscribed from ${followed} on ${repoName}`;
-    respond({text: msgText});
+    await respond({text: msgText});
+};
+
+const addNewUser = async (username) => {
+    const err = await addUser(username);
+    const msgText = err ? 'insert into db failed' : `You have added new user ${username}`;
+    await web.chat.postMessage(addSection(msgText));
+};
+
+const addNewRepo = async (reponame) => {
+    const err = await addRepo(reponame);
+    const msgText = err ? 'insert into db failed' : `You have added new repository ${reponame}`;
+    await web.chat.postMessage(addSection(msgText));
+};
+
+const notifyAboutPR = async (attachments) => {
+    const {fallback, author_name: followed} = attachments[0];
+    if (fallback && followed) {
+        const result = fallback.match(/<(.*)\/pull-requests/);
+        if (result) {
+            const reponame = result[1];
+            const followers = await getFollowerChannels(followed, reponame);
+            followers.map(async follower => {
+                await web.chat.postMessage({
+                    ...attachments,
+                    channel: follower
+                })
+            });
+        }
+    }
 };
 
 
-module.exports = {listUsersForSubscribe, listUsersForUnsubscribe, listReposForSubscribe, listReposForUnsubscribe, subscribe, unsubscribe};
+module.exports = {listUsersForSubscribe, listUsersForUnsubscribe, listReposForSubscribe, listReposForUnsubscribe, subscribe, unsubscribe, notifyAboutPR, addNewUser, addNewRepo};

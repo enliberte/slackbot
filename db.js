@@ -18,6 +18,21 @@ const getAllUsers = async () => {
     return usernames;
 };
 
+const getFollowerChannels = async (followed, reponame) => {
+    let followerChannels = [];
+    const conn = await client.connect();
+    try {
+        const followedCollection = conn.db("subscribes").collection("followed");
+        const followers = await followedCollection.find({followed, reponame}).toArray();
+        followerChannels = followers.map(doc => doc.follower);
+    } catch (e) {
+        console.log(e);
+    } finally {
+        await conn.close();
+    }
+    return followerChannels;
+};
+
 const getAllRepos = async () => {
     let reponames = [];
     const conn = await client.connect();
@@ -111,5 +126,35 @@ const removeSubscription = async (followed, follower, reponame) => {
     return err;
 };
 
+const addUser = async (username) => {
+    let err = false;
+    const conn = await client.connect();
+    try {
+        const usersCollection = conn.db("subscribes").collection("users");
+        await usersCollection.updateOne({username}, {$set: {username}}, {upsert: true});
+    } catch (e) {
+        console.log(e);
+        err = true;
+    } finally {
+        await conn.close();
+    }
+    return err;
+};
 
-module.exports = {getAllUsers, getAllRepos, getAllSubscribedRepos, getAllSubscribedUsers, addSubscription, removeSubscription, getAllUnsubscribedRepos};
+const addRepo = async (reponame) => {
+    let err = false;
+    const conn = await client.connect();
+    try {
+        const reposCollection = conn.db("subscribes").collection("repos");
+        await reposCollection.updateOne({reponame}, {$set: {reponame}}, {upsert: true});
+    } catch (e) {
+        console.log(e);
+        err = true;
+    } finally {
+        await conn.close();
+    }
+    return err;
+};
+
+
+module.exports = {getAllUsers, getAllRepos, getAllSubscribedRepos, getAllSubscribedUsers, addSubscription, removeSubscription, getAllUnsubscribedRepos, getFollowerChannels, addUser, addRepo};
