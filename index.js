@@ -4,6 +4,7 @@ const {WebClient} = require('@slack/web-api');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const {addUsersListForSubscribe} = require('./templates/subscribe');
 require('dotenv').config();
 
 
@@ -50,7 +51,7 @@ class Bot {
         });
 
         this.app.post('/subscribe', (req, res) => {
-            this.processSubscriptionEvent(req, res, true);
+            this.listUsersForSubscribe(req, res);
         });
 
         this.app.post('/unsubscribe', (req, res) => {
@@ -112,6 +113,22 @@ class Bot {
                 console.log(err);
                 res.status(404).send(err)
             });
+    }
+
+    listUsersForSubscribe(req, res) {
+        this.client.connect(err => {
+            const users = this.client.db("subscribes").collection("users");
+            users.find({}).toArray((err, docs) => {
+                if (docs) {
+                    const usernames = docs.map(doc => doc.username);
+                    this.web.chat.postMessage({
+                        blocks: addUsersListForSubscribe(usernames),
+                        channel: req.body.channel_id
+                    }).then(res.status(200).send, res.status(404).send);
+                }
+                this.client.close();
+            });
+        });
     }
 
     subscribe(channel_id, followed, follower, repoName) {
