@@ -63,16 +63,28 @@ const unsubscribe = async (followed, follower, repoName, respond) => {
     await respond({text: msgText});
 };
 
-const addNewUser = async (username) => {
-    const err = await addUser(username);
-    const msgText = err ? 'insert into db failed' : `You have added new user ${username}`;
-    await web.chat.postMessage(addSection(msgText));
+const addNewUser = async (username, res) => {
+    if (username.length !== 0) {
+        const err = await addUser(username);
+        const msgText = err ? 'insert into db failed' : `You have added new user ${username}`;
+        await res.status(200).send();
+        await web.chat.postMessage(addSection(msgText));
+    } else {
+        await res.status(404).send();
+        await web.chat.postMessage(addSection(`Incorrect username ${username}`));
+    }
 };
 
-const addNewRepo = async (reponame) => {
-    const err = await addRepo(reponame);
-    const msgText = err ? 'insert into db failed' : `You have added new repository ${reponame}`;
-    await web.chat.postMessage(addSection(msgText));
+const addNewRepo = async (reponame, res) => {
+    if (username.length !== 0) {
+        const err = await addRepo(reponame);
+        const msgText = err ? 'insert into db failed' : `You have added new repository ${reponame}`;
+        await res.status(200).send();
+        await web.chat.postMessage(addSection(msgText));
+    } else {
+        await res.status(404).send();
+        await web.chat.postMessage(addSection(`Incorrect reponame ${reponame}`));
+    }
 };
 
 const notifyAboutPR = async (attachments) => {

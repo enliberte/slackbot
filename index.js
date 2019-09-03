@@ -29,13 +29,13 @@ class Bot {
             }
         });
 
-        // this.app.post('/add-user', (req, res) => {
-        //     addNewUser();
-        // });
-        //
-        // this.app.post('/add-repo', (req, res) => {
-        //     addNewRepo();
-        // });
+        this.app.post('/add-user', (req, res) => {
+            addNewUser(req.body.text, res);
+        });
+
+        this.app.post('/add-repo', (req, res) => {
+            addNewRepo(req.body.text, res);
+        });
 
         this.app.post('/subscribe', (req, res) => {
             console.log(req.body);
