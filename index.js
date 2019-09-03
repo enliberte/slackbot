@@ -88,24 +88,21 @@ class Bot {
     testRichMessages(req, res) {
         console.log(req.body);
         this.web.chat.postMessage({
-            blocks: [
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: `Welcome to the channel. We're here to help. Let us know if you have an issue.`,
-                    },
-                    accessory: {
-                        type: 'button',
-                        text: {
-                            type: 'plain_text',
-                            text: 'Get Help',
-                        },
-                        value: 'get_help',
-                    },
-                },
-            ],
-            channel: req.body.channel_id,
+            mrkdwn :true,
+            link_names: true,
+            attachments :[{
+                mrkdwn: ["pretext","text","title","fields","fallback"],
+                fields:[
+                    {title:"Source","value":"_Alexey Sumatokhin.EXT — bbb_\n`bugfix`",short:true},
+                    {title:"Destination","value":"_Alexey Sumatokhin.EXT — bbb_\n`master`",short:true}],
+                fallback:"Alexey Sumatokhin.EXT opened pull request \"'test'\". <https://stash.firmglobal.com/users/alexeysu/repos/bbb/pull-requests/9/overview|(open)>",
+                color:"#2267c4","text":"opened pull request <https://stash.firmglobal.com/users/alexeysu/repos/bbb/pull-requests/9/overview|#9: 'test'>",
+                author_name:"Alexey Sumatokhin.EXT","author_icon":"https://secure.gravatar.com/avatar/0935625e030219ae5492d9f4e6c31219.jpg?s=16&d=mm",
+            }],
+            username:"",
+            icon_url:"",
+            icon_emoji:"",
+            channel: req.body.channel_id
         })
             .then(result => {
                 console.log(result);
