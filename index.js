@@ -18,9 +18,9 @@ class Bot {
         this.client = new MongoClient(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
         //app settings
+        this.app.use('/interactive-messages', this.slackInteractions.requestListener());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
-        this.app.use('/interactive-messages', this.slackInteractions.requestListener());
     }
 
     processSubscriptionEvent(req, res, subscribe) {
