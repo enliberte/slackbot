@@ -65,9 +65,10 @@ const addSubscription = async (followed, follower, reponame) => {
     try {
         const subscribes = conn.db("subscribes").collection("followed");
         const subscribe = {followed, follower, reponame};
-        err = await subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true});
+        await subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true});
     } catch (e) {
         console.log(e);
+        err = true;
     } finally {
         await conn.close();
     }
@@ -79,9 +80,10 @@ const removeSubscription = async (followed, follower, reponame) => {
     const conn = await client.connect();
     try {
         const subscribes = conn.db("subscribes").collection("followed");
-        err = await subscribes.deleteOne({followed, follower, reponame});
+        await subscribes.deleteOne({followed, follower, reponame});
     } catch (e) {
         console.log(e);
+        err = true;
     } finally {
         await conn.close();
     }
