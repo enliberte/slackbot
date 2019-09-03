@@ -31,12 +31,12 @@ const getAllRepos = async () => {
     return repos;
 };
 
-const getAllSubscribedRepos = async (follower) => {
+const getAllSubscribedRepos = async (followed, follower) => {
     let repos = [];
     const conn = await client.connect();
     try {
         const followedCollection = conn.db("subscribes").collection("followed");
-        repos = await followedCollection.find({follower}).toArray();
+        repos = await followedCollection.find({followed, follower}).toArray();
     } catch (e) {
         console.log(e);
     } finally {
@@ -45,12 +45,12 @@ const getAllSubscribedRepos = async (follower) => {
     return repos;
 };
 
-const getAllSubscribedUsers = async (reponame, follower) => {
+const getAllSubscribedUsers = async (follower) => {
     let users = [];
     const conn = await client.connect();
     try {
         const followedCollection = conn.db("subscribes").collection("followed");
-        users = await followedCollection.find({follower, reponame}).toArray();
+        users = await followedCollection.find({follower}).toArray();
     } catch (e) {
         console.log(e);
     } finally {
