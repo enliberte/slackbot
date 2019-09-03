@@ -142,7 +142,7 @@ class Bot {
             const repos = this.client.db("subscribes").collection("repos");
             repos.find({}).toArray((err, docs) => {
                 if (docs) {
-                    const reponames = docs.map(doc => doc.repoName);
+                    const reponames = docs.map(doc => doc.reponame);
                     respond({blocks: addReposListForSubscribe(user, reponames)});
                 }
                 this.client.close();
