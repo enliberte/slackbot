@@ -91,6 +91,9 @@ const notifyAboutPR = async (attachments) => {
     const {fallback, author_name: followed} = attachments[0];
     if (fallback && followed) {
         const result = fallback.match(/<(.*)\/pull-requests/);
+        console.log('--------------------------------');
+        console.log(fallback, result, followed);
+        console.log('--------------------------------');
         if (result) {
             const reponame = result[1];
             const followers = await getFollowerChannels(followed, reponame);
