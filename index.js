@@ -119,12 +119,17 @@ class Bot {
         this.client.connect(err => {
             const users = this.client.db("subscribes").collection("users");
             users.find({}).toArray((err, docs) => {
-                if (docs) {
-                    const usernames = docs.map(doc => doc.username);
-                    this.web.chat.postMessage({
-                        blocks: addUsersListForSubscribe(usernames),
-                        channel: req.body.channel_id
-                    }).then(res.status(200).send, res.status(404).send);
+                if (err) {
+                    res.status(404).send();
+                } else {
+                    res.status(200).send();
+                    if (docs) {
+                        const usernames = docs.map(doc => doc.username);
+                        this.web.chat.postMessage({
+                            blocks: addUsersListForSubscribe(usernames),
+                            channel: req.body.channel_id
+                        });
+                    }
                 }
                 this.client.close();
             });
