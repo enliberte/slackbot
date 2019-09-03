@@ -71,7 +71,7 @@ class Bot {
                         this.listReposForSubscribe(args[1], respond);
                         break;
                     case 'subscribe':
-                        this.subscribe(args[2], payload.channel.id, args[1], respond);
+                        this.subscribe(args[1], payload.channel.id, args[2], respond);
                         break;
                 }
             }
