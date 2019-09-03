@@ -45,7 +45,7 @@ const listReposForSubscribe = async (followed, respond) => {
 };
 
 const listReposForUnsubscribe = async (followed, follower, respond) => {
-    const docs = await getAllSubscribedRepos();
+    const docs = await getAllSubscribedRepos(follower);
     const reponames = docs.map(doc => doc.reponame);
     try {
         await respond({blocks: addReposListForUnsubscribe(followed, reponames)});
