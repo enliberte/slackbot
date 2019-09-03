@@ -53,9 +53,8 @@ const getAllUnsubscribedRepos = async (followed, follower) => {
     const conn = await client.connect();
     try {
         const reposCollection = conn.db("subscribes").collection("repos");
-        const followedCollection = conn.db("subscribes").collection("followed");
-        const subscribedRepos = await followedCollection.find({followed, follower}).toArray();
-        const subscribedRepoNames = subscribedRepos.map(repo => repo.reponame);
+        const subscribedRepoNames = await getAllSubscribedRepos(followed, follower);
+        console.log('subscribedRepoNames', subscribedRepoNames);
         const repos = await reposCollection.find({reponame: {$nin: subscribedRepoNames}}).toArray();
         reponames = repos.map(repo => repo.reponame);
     } catch (e) {
