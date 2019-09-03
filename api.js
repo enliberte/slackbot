@@ -32,8 +32,8 @@ const listUsersForUnsubscribe = async (channelId, res) => {
     }
 };
 
-const listReposForSubscribe = async (followed, respond) => {
-    const reponames = await getAllUnsubscribedRepos();
+const listReposForSubscribe = async (followed, follower, respond) => {
+    const reponames = await getAllUnsubscribedRepos(followed, follower);
     try {
         await respond({blocks: addReposListForSubscribe(followed, reponames)});
     } catch (e) {
