@@ -105,7 +105,7 @@ class Bot {
                     },
                 },
             ],
-            channel: req.body.user_name,
+            channel: req.body.channel_id,
         })
             .then(result => {
                 console.log(result);
