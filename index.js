@@ -86,6 +86,7 @@ class Bot {
     }
 
     testRichMessages(req, res) {
+        console.log(req.body);
         this.web.chat.postMessage({
             blocks: [
                 {
