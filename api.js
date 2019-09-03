@@ -87,19 +87,17 @@ const addNewRepo = async (reponame, channelId, res) => {
     }
 };
 
-const notifyAboutPR = async (attachments) => {
-    const {fallback, author_name: followed} = attachments[0];
+const notifyAboutPR = async (data) => {
+    const {fallback, author_name: followed} = data.attachments[0];
     if (fallback && followed) {
         const result = fallback.match(/<(.*)\/pull-requests/);
         if (result) {
             const reponame = result[1];
             const followers = await getFollowerChannels(followed, reponame);
-            console.log('--------------------------------');
-            console.log(followers);
-            console.log('--------------------------------');
             followers.map(async follower => {
                 await web.chat.postMessage({
-                    ...attachments,
+                    text: 'Added new Pull request',
+                    ...data,
                     channel: follower
                 })
             });

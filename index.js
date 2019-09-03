@@ -25,7 +25,7 @@ class Bot {
 
         this.app.post('/push', (req, res) => {
             if (req.body.attachments) {
-                notifyAboutPR(req.body.attachments);
+                notifyAboutPR(req.body);
             }
         });
 
@@ -38,7 +38,6 @@ class Bot {
         });
 
         this.app.post('/subscribe', (req, res) => {
-            console.log(req.body);
             listUsersForSubscribe(req.body.channel_id, res);
         });
 
