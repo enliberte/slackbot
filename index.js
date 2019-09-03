@@ -5,7 +5,7 @@ const {createMessageAdapter} = require('@slack/interactive-messages');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
-const {addUsersListForSubscribe} = require('./templates/subscribe');
+const {addUsersListForSubscribe, addReposListForSubscribe} = require('./templates/subscribe');
 require('dotenv').config();
 
 
@@ -63,6 +63,14 @@ class Bot {
 
         this.slackInteractions.action({type: 'button'}, (payload, respond) => {
             console.log('payload', payload);
+            const value = payload.actions[0].value;
+            const args = value.split('_');
+            if (args.length !== 0) {
+                switch (args[0]) {
+                    case 'follow':
+                        this.listReposForSubscribe(args[1], respond);
+                }
+            }
         });
     }
 
@@ -140,6 +148,21 @@ class Bot {
                             channel: req.body.channel_id
                         });
                     }
+                }
+                this.client.close();
+            });
+        });
+    }
+
+    listReposForSubscribe(user, respond) {
+        this.client.connect(err => {
+            const repos = this.client.db("subscribes").collection("repos");
+            repos.find({}).toArray((err, docs) => {
+                if (docs) {
+                    const reponames = docs.map(doc => doc.reponame);
+                    respond({
+                        blocks: addReposListForSubscribe(user, reponames)
+                    });
                 }
                 this.client.close();
             });

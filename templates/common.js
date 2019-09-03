@@ -10,7 +10,7 @@ const addDivider = () => ({
     "type": "divider"
 });
 
-const addSectionWithButton = (text, buttonText) => ({
+const addSectionWithButton = (text, buttonText, buttonValue) => ({
     ...addSection(text),
     "accessory": {
         "type": "button",
@@ -19,7 +19,7 @@ const addSectionWithButton = (text, buttonText) => ({
             "text": buttonText,
             "emoji": true
         },
-        "value": "click_me_123"
+        "value": buttonValue
     }
 });
 
