@@ -59,4 +59,34 @@ const getAllSubscribedUsers = async (reponame, follower) => {
     return users;
 };
 
-module.exports = {getAllUsers, getAllRepos, getAllSubscribedRepos, getAllSubscribedUsers};
+const addSubscription = async (followed, follower, reponame) => {
+    let err = false;
+    const conn = await client.connect();
+    try {
+        const subscribes = conn.db("subscribes").collection("followed");
+        const subscribe = {followed, follower, reponame};
+        err = await subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        await conn.close();
+    }
+    return err;
+};
+
+const removeSubscription = async (followed, follower, reponame) => {
+    let err = false;
+    const conn = await client.connect();
+    try {
+        const subscribes = conn.db("subscribes").collection("followed");
+        err = await subscribes.deleteOne({followed, follower, reponame});
+    } catch (e) {
+        console.log(e);
+    } finally {
+        await conn.close();
+    }
+    return err;
+};
+
+
+module.exports = {getAllUsers, getAllRepos, getAllSubscribedRepos, getAllSubscribedUsers, addSubscription, removeSubscription};
