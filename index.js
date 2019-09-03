@@ -69,6 +69,8 @@ class Bot {
                 switch (args[0]) {
                     case 'follow':
                         this.listReposForSubscribe(args[1], respond);
+                    case 'subscribe':
+                        this.subscribe(args[2], payload.channel.id, args[1], respond);
                 }
             }
         });
@@ -160,26 +162,21 @@ class Bot {
             repos.find({}).toArray((err, docs) => {
                 if (docs) {
                     const reponames = docs.map(doc => doc.reponame);
-                    respond({
-                        blocks: addReposListForSubscribe(user, reponames)
-                    });
+                    respond({blocks: addReposListForSubscribe(user, reponames)});
                 }
                 this.client.close();
             });
         });
     }
 
-    subscribe(channel_id, followed, follower, repoName) {
+    subscribe(followed, follower, repoName, respond) {
         this.client.connect(err => {
             const subscribes = this.client.db("subscribes").collection("followed");
             const subscribe = {followed, follower, repoName};
             subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => {
                 this.client.close();
                 const msgText = err ? 'insert into db failed' : `You have subscribed to ${followed} on ${repoName}`;
-                this.web.chat.postMessage({
-                    text: msgText,
-                    channel: channel_id
-                });
+                respond({text: msgText});
             });
         });
     }
