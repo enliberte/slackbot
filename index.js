@@ -1,6 +1,7 @@
 const express = require('express');
 const {RTMClient} = require('@slack/rtm-api');
 const {WebClient} = require('@slack/web-api');
+const {createMessageAdapter} = require('@slack/interactive-messages');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
@@ -12,6 +13,7 @@ class Bot {
     constructor(token) {
         this.rtm = new RTMClient(token);
         this.web = new WebClient(token);
+        this.slackInteractions = createMessageAdapter(process.env.SIGNING_SECRET);
         this.app = express();
         this.client = new MongoClient(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -57,6 +59,10 @@ class Bot {
         this.app.post('/unsubscribe', (req, res) => {
             this.processSubscriptionEvent(req, res, false);
         });
+
+        this.slackInteractions.action({type: 'button'}, (payload, respond) => {
+            console.log('payload', payload);
+        });
     }
 
     start() {
@@ -64,6 +70,9 @@ class Bot {
         this.router();
         (async () => {
             await this.rtm.start();
+        })();
+        (async () => {
+            await this.slackInteractions.start(port);
         })();
     }
 
