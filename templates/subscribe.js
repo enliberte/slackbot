@@ -8,3 +8,5 @@ const addUsersListForSubscribe = (users) => {
     });
     return blocks;
 };
+
+module.exports = {addUsersListForSubscribe};
