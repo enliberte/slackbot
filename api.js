@@ -21,7 +21,7 @@ const listUsersForSubscribe = async (channelId, res) => {
 
 const listUsersForUnsubscribe = async (channelId, res) => {
     const docs = await getAllSubscribedUsers(channelId);
-    const usernames = docs.map(doc => doc.follower);
+    const usernames = docs.map(doc => doc.followed);
     try {
         await web.chat.postMessage({
             blocks: addUsersListForUnsubscribe(usernames),
