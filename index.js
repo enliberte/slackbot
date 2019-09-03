@@ -33,28 +33,6 @@ class Bot {
         }
     }
 
-    test(req, res) {
-        const params = {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "Alex"
-            },
-            "accessory": {
-                "type": "button",
-                "text": {
-                    "type": "plain_text",
-                    "text": "Follow",
-                    "emoji": true
-                },
-                "value": "click_me_123"
-            }
-        };
-
-        this.instance.postMessageToUser(req.body.user_name, 'Test', params);
-        res.status(200).send();
-    }
-
     router() {
         this.app.get('/', (req, res) => {
             res.status(200).send('React app will be there');
@@ -72,10 +50,6 @@ class Bot {
 
         this.app.post('/unsubscribe', (req, res) => {
             this.processSubscriptionEvent(req, res, false);
-        });
-
-        this.app.post('/test', (req, res) => {
-            this.test(req, res);
         });
     }
 
