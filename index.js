@@ -38,6 +38,7 @@ class Bot {
         // });
 
         this.app.post('/subscribe', (req, res) => {
+            console.log(req.body);
             listUsersForSubscribe(req.body.channel_id, res);
         });
 
