@@ -24,7 +24,7 @@ class Bot {
         if (result) {
             const [, followed, repo] = result;
             if (subscribe) {
-                this.subscribe(followed, req.body.user_name, repo);
+                this.subscribe(req.body.channel_id, followed, req.body.user_name, repo);
             } else {
                 this.unsubscribe(followed, req.body.user_name, repo);
             }
@@ -114,13 +114,19 @@ class Bot {
             });
     }
 
-    subscribe(followed, follower, repoName) {
+    subscribe(channel_id, followed, follower, repoName) {
         this.client.connect(err => {
             const subscribes = this.client.db("subscribes").collection("followed");
             const subscribe = {followed, follower, repoName};
-            subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => this.client.close());
+            subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => {
+                this.client.close();
+                const msgText = err ? 'insert into db failed' : `You have subscribed to ${followed} on ${repoName}`;
+                this.web.chat.postMessage({
+                    text: msgText,
+                    channel: channel_id
+                });
+            });
         });
-        this.rtm.postMessageToUser(follower, `You have subscribed to ${followed} on ${repoName}`);
     }
 
     unsubscribe(followed, follower, repoName) {
