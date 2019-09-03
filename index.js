@@ -69,8 +69,10 @@ class Bot {
                 switch (args[0]) {
                     case 'follow':
                         this.listReposForSubscribe(args[1], respond);
+                        break;
                     case 'subscribe':
                         this.subscribe(args[2], payload.channel.id, args[1], respond);
+                        break;
                 }
             }
         });
