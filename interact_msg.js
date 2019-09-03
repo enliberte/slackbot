@@ -9,7 +9,7 @@ const interactMessagesRouter = (payload, respond) => {
                 listReposForSubscribe(args[1], respond);
                 break;
             case 'unfollow':
-                listReposForUnsubscribe(args[1], respond);
+                listReposForUnsubscribe(args[1], payload.channel.id, respond);
                 break;
             case 'subscribe':
                 subscribe(args[1], payload.channel.id, args[2], respond);
