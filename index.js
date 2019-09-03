@@ -5,7 +5,7 @@ const {createMessageAdapter} = require('@slack/interactive-messages');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
-const {addUsersListForSubscribe, addReposListForSubscribe} = require('./templates/subscribe');
+const {addUsersListForSubscribe, addReposListForSubscribe, addReposListForUnsubscribe, addUsersListForUnsubscribe} = require('./templates/subscribe');
 require('dotenv').config();
 
 
@@ -23,21 +23,6 @@ class Bot {
         this.app.use(bodyParser.urlencoded({extended: true}));
     }
 
-    processSubscriptionEvent(req, res, subscribe) {
-        const result = req.body.text.match(/(^.*) (.*$)/);
-        if (result) {
-            const [, followed, repo] = result;
-            if (subscribe) {
-                this.subscribe(req.body.channel_id, followed, req.body.user_name, repo);
-            } else {
-                this.unsubscribe(req.body.channel_id, followed, req.body.user_name, repo);
-            }
-            res.status(200).send();
-        } else {
-            res.status(404).send();
-        }
-    }
-
     router() {
         this.app.get('/', (req, res) => {
             res.status(200).send('React app will be there');
@@ -49,16 +34,12 @@ class Bot {
             }
         });
 
-        this.app.post('/test', (req, res) => {
-            this.testRichMessages(req, res);
-        });
-
         this.app.post('/subscribe', (req, res) => {
             this.listUsersForSubscribe(req, res);
         });
 
         this.app.post('/unsubscribe', (req, res) => {
-            this.processSubscriptionEvent(req, res, false);
+            this.listUsersForUnsubscribe(req, res);
         });
 
         this.slackInteractions.action({type: 'button'}, (payload, respond) => {
@@ -70,7 +51,13 @@ class Bot {
                     case 'follow':
                         this.listReposForSubscribe(args[1], respond);
                         break;
+                    case 'unfollow':
+                        this.listReposForUnsubscribe(args[1], respond);
+                        break;
                     case 'subscribe':
+                        this.subscribe(args[1], payload.channel.id, args[2], respond);
+                        break;
+                    case 'unsubscribe':
                         this.subscribe(args[1], payload.channel.id, args[2], respond);
                         break;
                 }
@@ -108,35 +95,6 @@ class Bot {
         }
     }
 
-    testRichMessages(req, res) {
-        console.log(req.body);
-        this.web.chat.postMessage({
-            mrkdwn :true,
-            link_names: true,
-            attachments :[{
-                mrkdwn: ["pretext","text","title","fields","fallback"],
-                fields:[
-                    {title:"Source","value":"_Alexey Sumatokhin.EXT — bbb_\n`bugfix`",short:true},
-                    {title:"Destination","value":"_Alexey Sumatokhin.EXT — bbb_\n`master`",short:true}],
-                fallback:"Alexey Sumatokhin.EXT opened pull request \"'test'\". <https://stash.firmglobal.com/users/alexeysu/repos/bbb/pull-requests/9/overview|(open)>",
-                color:"#2267c4","text":"opened pull request <https://stash.firmglobal.com/users/alexeysu/repos/bbb/pull-requests/9/overview|#9: 'test'>",
-                author_name:"Alexey Sumatokhin.EXT","author_icon":"https://secure.gravatar.com/avatar/0935625e030219ae5492d9f4e6c31219.jpg?s=16&d=mm",
-            }],
-            username:"",
-            icon_url:"",
-            icon_emoji:"",
-            channel: req.body.channel_id
-        })
-            .then(result => {
-                console.log(result);
-                res.status(200).send()
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(404).send(err)
-            });
-    }
-
     listUsersForSubscribe(req, res) {
         this.client.connect(err => {
             const users = this.client.db("subscribes").collection("users");
@@ -158,13 +116,47 @@ class Bot {
         });
     }
 
+    listUsersForUnsubscribe(req, res) {
+        this.client.connect(err => {
+            const followed = this.client.db("subscribes").collection("followed");
+            followed.find({follower: req.body.channel_id}).toArray((err, docs) => {
+                if (err) {
+                    res.status(404).send();
+                } else {
+                    res.status(200).send();
+                    if (docs) {
+                        const usernames = docs.map(doc => doc.followed);
+                        this.web.chat.postMessage({
+                            blocks: addUsersListForUnsubscribe(usernames),
+                            channel: req.body.channel_id
+                        });
+                    }
+                }
+                this.client.close();
+            });
+        });
+    }
+
     listReposForSubscribe(user, respond) {
         this.client.connect(err => {
             const repos = this.client.db("subscribes").collection("repos");
             repos.find({}).toArray((err, docs) => {
                 if (docs) {
-                    const reponames = docs.map(doc => doc.reponame);
+                    const reponames = docs.map(doc => doc.repoName);
                     respond({blocks: addReposListForSubscribe(user, reponames)});
+                }
+                this.client.close();
+            });
+        });
+    }
+
+    listReposForUnsubscribe(followed, follower, respond) {
+        this.client.connect(err => {
+            const followed = this.client.db("subscribes").collection("followed");
+            followed.find({followed, follower}).toArray((err, docs) => {
+                if (docs) {
+                    const reponames = docs.map(doc => doc.repoName);
+                    respond({blocks: addReposListForUnsubscribe(followed, reponames)});
                 }
                 this.client.close();
             });
@@ -183,16 +175,13 @@ class Bot {
         });
     }
 
-    unsubscribe(channel_id, followed, follower, repoName) {
+    unsubscribe(followed, follower, repoName, respond) {
         this.client.connect(err => {
             const subscribes = this.client.db("subscribes").collection("followed");
             subscribes.deleteOne({followed, follower, repoName}, {}, err => {
                 this.client.close();
                 const msgText = err ? 'delete from db failed' : `You have unsubscribed from ${followed} on ${repoName}`;
-                this.web.chat.postMessage({
-                    text: msgText,
-                    channel: channel_id
-                });
+                respond({text: msgText});
             });
         });
     }
