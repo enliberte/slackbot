@@ -132,9 +132,15 @@ class Bot {
     unsubscribe(followed, follower, repoName) {
         this.client.connect(err => {
             const subscribes = this.client.db("subscribes").collection("followed");
-            subscribes.deleteOne({followed, follower, repoName}, {}, err => this.client.close());
+            subscribes.deleteOne({followed, follower, repoName}, {}, err => {
+                this.client.close();
+                const msgText = err ? 'delete from db failed' : `You have unsubscribed from ${followed} on ${repoName}`;
+                this.web.chat.postMessage({
+                    text: msgText,
+                    channel: channel_id
+                });
+            });
         });
-        this.rtm.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repoName}`);
     }
 }
 
