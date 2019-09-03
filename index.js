@@ -26,7 +26,7 @@ class Bot {
             if (subscribe) {
                 this.subscribe(req.body.channel_id, followed, req.body.user_name, repo);
             } else {
-                this.unsubscribe(followed, req.body.user_name, repo);
+                this.unsubscribe(req.body.channel_id, followed, req.body.user_name, repo);
             }
             res.status(200).send();
         } else {
@@ -129,7 +129,7 @@ class Bot {
         });
     }
 
-    unsubscribe(followed, follower, repoName) {
+    unsubscribe(channel_id, followed, follower, repoName) {
         this.client.connect(err => {
             const subscribes = this.client.db("subscribes").collection("followed");
             subscribes.deleteOne({followed, follower, repoName}, {}, err => {
