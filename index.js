@@ -20,6 +20,7 @@ class Bot {
         //app settings
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
+        this.app.use('/interactive-messages', this.slackInteractions.requestListener());
     }
 
     processSubscriptionEvent(req, res, subscribe) {
