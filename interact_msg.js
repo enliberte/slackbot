@@ -1,4 +1,4 @@
-const {listUsers, listRepos, subscribe, unsubscribe, deleteRepo} = require("./api");
+const {listUsers, listRepos, subscribe, unsubscribe, deleteRepo, deleteUser} = require("./api");
 
 const interactMessagesRouter = (payload, respond) => {
     const value = payload.actions[0].value;
@@ -21,6 +21,9 @@ const interactMessagesRouter = (payload, respond) => {
             break;
         case 'deleteRepo':
             deleteRepo(args[1], payload.channel.id, respond);
+            break;
+        case 'deleteUser':
+            deleteUser(args[1], payload.channel.id, respond);
             break;
     }
 };
