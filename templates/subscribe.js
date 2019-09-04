@@ -7,7 +7,7 @@ const addUsersList = (users, reponame) => {
         const buttonText = isFollowed ? 'Unfollow' : 'Follow';
         const buttonValue = isFollowed ? `unfollow_${username}_${reponame}` : `follow_${username}_${reponame}`;
         blocks.push(addDivider());
-        blocks.push(addSectionWithButton(user, buttonText, buttonValue));
+        blocks.push(addSectionWithButton(username, buttonText, buttonValue));
     });
     blocks.push(addButton('Close', 'close_userlist'));
     return blocks;

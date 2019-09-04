@@ -12,7 +12,9 @@ const interactMessagesRouter = (payload, respond) => {
                 listUsers(payload.channel.id, args[1], respond);
                 break;
             case 'follow':
+                console.log('-----------------------------------------------');
                 console.log(args, payload);
+                console.log('-----------------------------------------------');
                 // subscribe(args[1], payload.channel.id, args[2], respond);
                 break;
             case 'unfollow':
