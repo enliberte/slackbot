@@ -9,6 +9,9 @@ const interactMessagesRouter = (payload, respond) => {
                 respond({text: 'See you later'});
                 break;
             case 'select':
+                console.log('------------------------------');
+                console.log(args);
+                console.log('------------------------------');
                 listUsers(payload.channel.id, args[1], respond);
                 break;
             case 'follow':

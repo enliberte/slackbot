@@ -18,9 +18,6 @@ const addReposList = (repos) => {
     let blocks = [addSection('Select repository')];
     repos.forEach(repo => {
         const {reponame} = repo;
-        console.log('---------------------------');
-        console.log(repo, reponame);
-        console.log('---------------------------');
         blocks.push(addDivider());
         blocks.push(addSectionWithButton(reponame, 'Select', `select_${reponame}`));
     });
