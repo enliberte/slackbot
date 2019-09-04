@@ -61,13 +61,13 @@ const removeSubscription = async (followed, follower, channelId, reponame) => {
     return err;
 };
 
-const subscribe = async (followed, follower, repoName, respond) => {
-    const err = await addSubscription(followed, follower, repoName);
+const subscribe = async (followed, follower, channelId, repoName, respond) => {
+    const err = await addSubscription(followed, follower, channelId, repoName);
     const msgText = err ? 'insert into db failed' : `You have subscribed to ${followed} on ${repoName}`;
     await respond({text: msgText});
 };
 
-const unsubscribe = async (followed, follower, repoName, respond) => {
+const unsubscribe = async (followed, follower, channelId, repoName, respond) => {
     const err = await removeSubscription(followed, follower, repoName);
     const msgText = err ? 'delete from db failed' : `You have unsubscribed from ${followed} on ${repoName}`;
     await respond({text: msgText});
