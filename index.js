@@ -37,6 +37,10 @@ class Bot {
             addNewRepo(req.body.text, req.body.user_name, req.body.channel_id, res);
         });
 
+        this.app.post('/repos', (req, res) => {
+            listRepos(req.body.channel_id, res, undefined, 'Delete', 'deleteRepo');
+        });
+
         this.app.post('/subscribe', (req, res) => {
             listRepos(req.body.channel_id, res);
         });

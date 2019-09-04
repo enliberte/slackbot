@@ -14,16 +14,38 @@ const addUsersList = (users, reponame) => {
 };
 
 
-const addReposList = (repos) => {
+const addReposList = (repos, buttonText='Select', command='select') => {
     let blocks = [addSection('Select repository')];
     repos.forEach(repo => {
         const {reponame} = repo;
         blocks.push(addDivider());
-        blocks.push(addSectionWithButton(reponame, 'Select', `select_${reponame}`));
+        blocks.push(addSectionWithButton(reponame, buttonText, `${command}_${reponame}`));
     });
     blocks.push(addButton('Close', 'close'));
     return blocks;
 };
 
 
-module.exports = {addUsersList, addReposList};
+const addAllUsersList = (users) => {
+    let blocks = [addSection("Added users:")];
+    users.forEach(user => {
+        const {username} = user;
+        blocks.push(addDivider());
+        blocks.push(addSectionWithButton(username, 'Delete', `deleteUser_${username}`));
+    });
+    blocks.push(addButton('Close', 'close'));
+    return blocks;
+};
+
+const addAllReposList = (repos) => {
+    let blocks = [addSection('Added repositories')];
+    repos.forEach(repo => {
+        const {reponame} = repo;
+        blocks.push(addDivider());
+        blocks.push(addSectionWithButton(reponame, 'Delete', `deleteRepo_${reponame}`));
+    });
+    blocks.push(addButton('Close', 'close'));
+    return blocks;
+};
+
+module.exports = {addUsersList, addReposList, addAllUsersList, addAllReposList};
