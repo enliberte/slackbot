@@ -1,4 +1,5 @@
 require('dotenv').config();
+const {addSection} = require('./templates/common');
 const {addUsersList, addReposList} = require('./templates/subscribe');
 const {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels, addSubscription, removeSubscription} = require('./db');
 const {WebClient} = require('@slack/web-api');
@@ -7,10 +8,14 @@ const web = new WebClient(process.env.BOT_TOKEN);
 const listUsers = async (channelId, reponame, respond) => {
     try {
         const addedUsers = await getAddedUsers(channelId);
-        const followedUsers = await getFollowedUsers(channelId, reponame);
-        const followedUserNames = followedUsers.map(user => user.followed);
-        const users = addedUsers.map(user => ({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1}));
-        await respond({blocks: addUsersList(users, reponame)});
+        if (addedUsers.length === 0) {
+            await respond(addSection("You don't have added users yet. To add them please use command /add_user"));
+        } else {
+            const followedUsers = await getFollowedUsers(channelId, reponame);
+            const followedUserNames = followedUsers.map(user => user.followed);
+            const users = addedUsers.map(user => ({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1}));
+            await respond({blocks: addUsersList(users, reponame)});
+        }
     } catch (e) {
         console.log(e);
     }
@@ -19,15 +24,28 @@ const listUsers = async (channelId, reponame, respond) => {
 const listRepos = async (channelId, res, respond) => {
     try {
         const repos = await getAddedRepos(channelId);
-        if (respond) {
-            await respond({blocks: addReposList(repos)});
+        if (repos.length === 0) {
+            if (respond) {
+                await respond(addSection("You don't have added repositories yet. To add them please use command /add_repo"));
+            } else {
+                await web.chat.postMessage({
+                    ...addSection("You don't have added repositories yet. To add them please use command /add_repo"),
+                    channel: channelId
+                });
+                res.status(200).send();
+            }
         } else {
-            await web.chat.postMessage({
-                blocks: addReposList(repos),
-                channel: channelId
-            });
-            res.status(200).send();
+            if (respond) {
+                await respond({blocks: addReposList(repos)});
+            } else {
+                await web.chat.postMessage({
+                    blocks: addReposList(repos),
+                    channel: channelId
+                });
+                res.status(200).send();
+            }
         }
+
     } catch (e) {
         console.log(e);
     }
