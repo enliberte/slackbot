@@ -85,7 +85,7 @@ const deleteRepo = async (reponame, channelId, respond) => {
 
 const deleteUser = async (username, channelId, respond) => {
     await removeUser(username, channelId);
-    await listAllUsers(channelId, undefined, respond);
+    await listUsers(channelId, undefined, undefined, respond);
 };
 
 const notifyAboutPR = async (data) => {
