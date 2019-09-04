@@ -8,7 +8,7 @@ const getAddedUsers = async (channelId) => {
     const conn = await client.connect();
     try {
         const usersCollection = conn.db("subscribes").collection("users");
-        users = await usersCollection.find({channelId}).toArray();
+        users = await usersCollection.find({channelId}).sort({username: 1}).toArray();
     } catch (e) {
         console.log(e);
     } finally {
@@ -22,7 +22,7 @@ const getFollowedUsers = async (channelId, reponame) => {
     const conn = await client.connect();
     try {
         const usersCollection = conn.db("subscribes").collection("followed");
-        users = await usersCollection.find({channelId, reponame}).toArray();
+        users = await usersCollection.find({channelId, reponame}).sort({reponame: 1}).toArray();
     } catch (e) {
         console.log(e);
     } finally {
@@ -51,7 +51,7 @@ const getAddedRepos = async (channelId) => {
     const conn = await client.connect();
     try {
         const reposCollection = conn.db("subscribes").collection("repos");
-        repos = await reposCollection.find({channelId}).toArray();
+        repos = await reposCollection.find({channelId}).sort({reponame: 1}).toArray();
     } catch (e) {
         console.log(e);
     } finally {
@@ -123,4 +123,38 @@ const removeSubscription = async (followed, follower, channelId, reponame) => {
     return err;
 };
 
-module.exports = {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels, addSubscription, removeSubscription};
+const removeRepo = async (reponame, channelId) => {
+    let err = false;
+    const conn = await client.connect();
+    try {
+        const repos = conn.db("subscribes").collection("repos");
+        const followed = conn.db("subscribes").collection("followed");
+        await repos.deleteOne({reponame, channelId});
+        await followed.deleteMany({reponame, channelId});
+    } catch (e) {
+        console.log(e);
+        err = true;
+    } finally {
+        await conn.close();
+    }
+    return err;
+};
+
+const removeUser = async (username, channelId) => {
+    let err = false;
+    const conn = await client.connect();
+    try {
+        const users = conn.db("subscribes").collection("users");
+        const followed = conn.db("subscribes").collection("followed");
+        await users.deleteOne({username, channelId});
+        await followed.deleteMany({username, channelId});
+    } catch (e) {
+        console.log(e);
+        err = true;
+    } finally {
+        await conn.close();
+    }
+    return err;
+};
+
+module.exports = {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels, addSubscription, removeSubscription, removeRepo, removeUser};

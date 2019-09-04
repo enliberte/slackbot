@@ -1,7 +1,7 @@
 require('dotenv').config();
 const {addSection} = require('./templates/common');
-const {addUsersList, addReposList} = require('./templates/subscribe');
-const {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels, addSubscription, removeSubscription} = require('./db');
+const {addUsersList, addReposList, addAllReposList, addAllUsersList} = require('./templates/subscribe');
+const {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels, addSubscription, removeSubscription, removeRepo, removeUser} = require('./db');
 const {WebClient} = require('@slack/web-api');
 const web = new WebClient(process.env.BOT_TOKEN);
 
@@ -21,7 +21,7 @@ const listUsers = async (channelId, reponame, respond) => {
     }
 };
 
-const listRepos = async (channelId, res, respond) => {
+const listRepos = async (channelId, res, respond, buttonText='Select', command='select') => {
     try {
         const repos = await getAddedRepos(channelId);
         if (repos.length === 0) {
@@ -36,12 +36,38 @@ const listRepos = async (channelId, res, respond) => {
             }
         } else {
             if (respond) {
-                await respond({blocks: addReposList(repos)});
+                await respond({blocks: addReposList(repos, buttonText, command)});
             } else {
                 await web.chat.postMessage({
-                    blocks: addReposList(repos),
+                    blocks: addReposList(repos, buttonText, command),
                     channel: channelId
                 });
+                res.status(200).send();
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+const listAllUsers = async (channelId, res, respond) => {
+    try {
+        const addedUsers = await getAddedUsers(channelId);
+        if (addedUsers.length === 0) {
+            if (respond) {
+                await respond({text: "You don't have added users yet. To add them please use command /add_user"});
+            } else {
+                await web.chat.postMessage({
+                    text: "You don't have added repositories yet. To add them please use command /add_repo",
+                    channel: channelId
+                });
+                res.status(200).send();
+            }
+        } else {
+            if (respond) {
+                await respond({blocks: addAllUsersList(addedUsers)});
+            } else {
+                await web.chat.postMessage({blocks: addAllUsersList(addedUsers), channel: channelId});
                 res.status(200).send();
             }
         }
@@ -84,6 +110,16 @@ const addNewRepo = async (reponame, addedByName, channelId, res) => {
     }
 };
 
+const deleteRepo = async (reponame, channelId, respond) => {
+    await removeRepo(reponame, channelId);
+    await listRepos(channelId, undefined, respond, 'Delete', 'deleteRepo');
+};
+
+const deleteUser = async (username, channelId, respond) => {
+    await removeUser(username, channelId);
+    await listAllUsers(channelId, undefined, respond);
+};
+
 const notifyAboutPR = async (data) => {
     const {fallback, author_name: followed} = data.attachments[0];
     if (fallback && followed) {
@@ -103,4 +139,4 @@ const notifyAboutPR = async (data) => {
 };
 
 
-module.exports = {listUsers, listRepos, subscribe, unsubscribe, notifyAboutPR, addNewUser, addNewRepo, addSubscription, removeSubscription};
+module.exports = {listUsers, listRepos, subscribe, unsubscribe, notifyAboutPR, addNewUser, addNewRepo, addSubscription, removeSubscription, deleteRepo, listAllUsers, deleteUser};
