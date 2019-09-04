@@ -2,7 +2,7 @@ const express = require('express');
 const {createMessageAdapter} = require('@slack/interactive-messages');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
-const {listRepos, listAllUsers, notifyAboutPR, addNewUser, addNewRepo} = require('./api');
+const {listRepos, listUsers, notifyAboutPR, addNewUser, addNewRepo} = require('./api');
 const {interactMessagesRouter} = require('./interact_msg');
 require('dotenv').config();
 
@@ -42,7 +42,7 @@ class Bot {
         });
 
         this.app.post('/users', (req, res) => {
-            listAllUsers(req.body.channel_id, res);
+            listUsers(req.body.channel_id, undefined, res);
         });
 
         this.app.post('/subscribe', (req, res) => {
