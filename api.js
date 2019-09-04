@@ -128,11 +128,7 @@ const notifyAboutPR = async (data) => {
             const reponame = result[1];
             const followerChannels = await getFollowerChannels(followed, reponame);
             followerChannels.map(async channel => {
-                await web.chat.postMessage({
-                    text: 'Added new Pull request',
-                    ...data,
-                    channel
-                })
+                await web.chat.postMessage({text: 'Added new Pull request', ...data, channel})
             });
         }
     }
