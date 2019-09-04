@@ -1,39 +1,29 @@
-const {addSection, addDivider, addSectionWithButton} = require('./common');
+const {addSection, addDivider, addSectionWithButton, addButton} = require('./common');
 
-const addUsersListForSubscribe = (users) => {
-    let blocks = [addSection("Users you can follow")];
+const addUsersList = (users, reponame) => {
+    let blocks = [addSection("Your subscribes:")];
     users.forEach(user => {
+        const {username, isFollowed} = user;
+        const buttonText = isFollowed ? 'Unfollow' : 'Follow';
+        const buttonValue = isFollowed ? `unfollow_${username}_${reponame}` : `follow_${username}_${reponame}`;
         blocks.push(addDivider());
-        blocks.push(addSectionWithButton(user, 'Follow', `follow_${user}`));
+        blocks.push(addSectionWithButton(user, buttonText, buttonValue));
     });
+    blocks.push(addButton('Close', 'close_userlist'));
     return blocks;
 };
 
-const addReposListForSubscribe = (user, repos) => {
+
+const addReposList = (repos) => {
     let blocks = [addSection(`Select repositories for tracking PR of ${user}`)];
     repos.forEach(repo => {
+        const {reponame} = repo;
         blocks.push(addDivider());
-        blocks.push(addSectionWithButton(repo, 'Select', `subscribe_${user}_${repo}`));
+        blocks.push(addSectionWithButton(reponame, 'Select', `select_${reponame}`));
     });
+    blocks.push(addButton('Close', 'close_repolist'));
     return blocks;
 };
 
-const addUsersListForUnsubscribe = (users) => {
-    let blocks = [addSection("Users you follow")];
-    users.forEach(user => {
-        blocks.push(addDivider());
-        blocks.push(addSectionWithButton(user, 'Unfollow', `unfollow_${user}`));
-    });
-    return blocks;
-};
 
-const addReposListForUnsubscribe = (user, repos) => {
-    let blocks = [addSection(`Unselect repositories to stop track PR of ${user}`)];
-    repos.forEach(repo => {
-        blocks.push(addDivider());
-        blocks.push(addSectionWithButton(repo, 'Unselect', `unsubscribe_${user}_${repo}`));
-    });
-    return blocks;
-};
-
-module.exports = {addUsersListForSubscribe, addReposListForSubscribe, addUsersListForUnsubscribe, addReposListForUnsubscribe};
+module.exports = {addUsersList, addReposList};

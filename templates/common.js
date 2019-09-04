@@ -23,4 +23,19 @@ const addSectionWithButton = (text, buttonText, buttonValue) => ({
     }
 });
 
-module.exports = {addDivider, addSection, addSectionWithButton};
+const addButton = (buttonText, buttonValue) => ({
+    "type": "actions",
+    "elements": [
+        {
+            "type": "button",
+            "text": {
+                "type": "plain_text",
+                "text": buttonText,
+                "emoji": true
+            },
+            "value": buttonValue
+        }
+    ]
+});
+
+module.exports = {addDivider, addSection, addSectionWithButton, addButton};

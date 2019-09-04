@@ -1,15 +1,26 @@
 require('dotenv').config();
-const {addSection} = require("./templates/common");
-const {addUsersListForSubscribe, addUsersListForUnsubscribe, addReposListForUnsubscribe, addReposListForSubscribe} = require('./templates/subscribe');
-const {getAllUsers, getAllUnsubscribedRepos, getAllSubscribedRepos, getAllSubscribedUsers, addSubscription, removeSubscription, getFollowerChannels, addUser, addRepo} = require('./db');
+const {addUsersList, addReposList} = require('./templates/subscribe');
+const {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels} = require('./db');
 const {WebClient} = require('@slack/web-api');
 const web = new WebClient(process.env.BOT_TOKEN);
 
-const listUsersForSubscribe = async (channelId, res) => {
-    const usernames = await getAllUsers();
+const listUsers = async (channelId, reponame, respond) => {
     try {
+        const addedUsers = await getAddedUsers(channelId);
+        const followedUsers = await getFollowedUsers(channelId, reponame);
+        const followedUserNames = followedUsers.map(user => user.followed);
+        const users = addedUsers.map(user => ({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1}));
+        await respond({blocks: addUsersList(users)});
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+const listRepos = async (channelId, res) => {
+    try {
+        const repos = await getAddedRepos(channelId);
         await web.chat.postMessage({
-            blocks: addUsersListForSubscribe(usernames),
+            blocks: addReposList(repos),
             channel: channelId
         });
         res.status(200).send();
@@ -19,36 +30,35 @@ const listUsersForSubscribe = async (channelId, res) => {
     }
 };
 
-const listUsersForUnsubscribe = async (channelId, res) => {
-    const usernames = await getAllSubscribedUsers(channelId);
+const addSubscription = async (followed, follower, channelId, reponame) => {
+    let err = false;
+    const conn = await client.connect();
     try {
-        await web.chat.postMessage({
-            blocks: addUsersListForUnsubscribe(usernames),
-            channel: channelId
-        });
-        res.status(200).send();
+        const subscribes = conn.db("subscribes").collection("followed");
+        const subscribe = {followed, follower, channelId, reponame};
+        await subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true});
     } catch (e) {
         console.log(e);
-        res.status(404).send();
+        err = true;
+    } finally {
+        await conn.close();
     }
+    return err;
 };
 
-const listReposForSubscribe = async (followed, follower, respond) => {
-    const reponames = await getAllUnsubscribedRepos(followed, follower);
+const removeSubscription = async (followed, follower, channelId, reponame) => {
+    let err = false;
+    const conn = await client.connect();
     try {
-        await respond({blocks: addReposListForSubscribe(followed, reponames)});
+        const subscribes = conn.db("subscribes").collection("followed");
+        await subscribes.deleteOne({followed, follower, channelId, reponame});
     } catch (e) {
-        console.log(e)
+        console.log(e);
+        err = true;
+    } finally {
+        await conn.close();
     }
-};
-
-const listReposForUnsubscribe = async (followed, follower, respond) => {
-    const reponames = await getAllSubscribedRepos(followed, follower);
-    try {
-        await respond({blocks: addReposListForUnsubscribe(followed, reponames)});
-    } catch (e) {
-        console.log(e)
-    }
+    return err;
 };
 
 const subscribe = async (followed, follower, repoName, respond) => {
@@ -93,12 +103,12 @@ const notifyAboutPR = async (data) => {
         const result = fallback.match(/<(.*)\/pull-requests/);
         if (result) {
             const reponame = result[1];
-            const followers = await getFollowerChannels(followed, reponame);
-            followers.map(async follower => {
+            const followerChannels = await getFollowerChannels(followed, reponame);
+            followerChannels.map(async channel => {
                 await web.chat.postMessage({
                     text: 'Added new Pull request',
                     ...data,
-                    channel: follower
+                    channel
                 })
             });
         }
@@ -106,4 +116,4 @@ const notifyAboutPR = async (data) => {
 };
 
 
-module.exports = {listUsersForSubscribe, listUsersForUnsubscribe, listReposForSubscribe, listReposForUnsubscribe, subscribe, unsubscribe, notifyAboutPR, addNewUser, addNewRepo};
+module.exports = {listUsers, listRepos, subscribe, unsubscribe, notifyAboutPR, addNewUser, addNewRepo, addSubscription, removeSubscription};
