@@ -15,7 +15,7 @@ const addUsersList = (users, reponame) => {
 
 
 const addReposList = (repos) => {
-    let blocks = [addSection(`Select repositories for tracking PR of ${user}`)];
+    let blocks = [addSection('Select repository')];
     repos.forEach(repo => {
         const {reponame} = repo;
         blocks.push(addDivider());
