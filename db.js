@@ -51,7 +51,7 @@ const getAddedRepos = async (channelId) => {
     const conn = await client.connect();
     try {
         const reposCollection = conn.db("subscribes").collection("repos");
-        const repos = await reposCollection.find({channelId}).toArray();
+        repos = await reposCollection.find({channelId}).toArray();
     } catch (e) {
         console.log(e);
     } finally {
