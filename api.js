@@ -77,7 +77,7 @@ const addNewUser = async (username, addedByName, channelId, res) => {
 
 const addNewRepo = async (reponame, channelId, res) => {
     if (reponame.length !== 0) {
-        const err = await addRepo(reponame);
+        const err = await addRepo(reponame, channelId, res);
         const msgText = err ? 'insert into db failed' : `You have added new repository ${reponame}`;
         await res.status(200).send();
         await web.chat.postMessage({text: msgText, channel: channelId});
