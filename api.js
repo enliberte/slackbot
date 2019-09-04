@@ -37,7 +37,7 @@ const subscribe = async (followed, follower, channelId, repoName, respond) => {
 };
 
 const unsubscribe = async (followed, follower, channelId, repoName, respond) => {
-    const err = await removeSubscription(followed, follower, repoName);
+    const err = await removeSubscription(followed, follower, channelId, repoName);
     const msgText = err ? 'delete from db failed' : `You have unsubscribed from ${followed} on ${repoName}`;
     await respond({text: msgText});
 };
