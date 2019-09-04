@@ -31,7 +31,7 @@ const listRepos = async (channelId, res, respond, buttonText='Select', command='
             } :
             async msg => {await respond(msg)};
         const repos = await getAddedRepos(channelId);
-        const msg = repos.length === 0 ? emptyReposMsg : {blocks: addReposList(repos, buttonText, command)};
+        const msg = repos.length === 0 ? {text: emptyReposMsg} : {blocks: addReposList(repos, buttonText, command)};
         await postFunc(msg);
     } catch (e) {
         console.log(e);
