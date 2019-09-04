@@ -11,7 +11,7 @@ const interactMessagesRouter = (payload, respond) => {
             listRepos(payload.channel.id, undefined, respond);
             break;
         case 'select':
-            listUsers(payload.channel.id, args[1], respond);
+            listUsers(payload.channel.id, args[1], undefined, respond);
             break;
         case 'follow':
             subscribe(args[1], payload.user.username, payload.channel.id, args[2], respond);
