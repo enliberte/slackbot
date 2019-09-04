@@ -1,6 +1,6 @@
 require('dotenv').config();
 const {addUsersList, addReposList} = require('./templates/subscribe');
-const {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels} = require('./db');
+const {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels, addSubscription, removeSubscription} = require('./db');
 const {WebClient} = require('@slack/web-api');
 const web = new WebClient(process.env.BOT_TOKEN);
 
@@ -28,37 +28,6 @@ const listRepos = async (channelId, res) => {
         console.log(e);
         res.status(404).send();
     }
-};
-
-const addSubscription = async (followed, follower, channelId, reponame) => {
-    let err = false;
-    const conn = await client.connect();
-    try {
-        const subscribes = conn.db("subscribes").collection("followed");
-        const subscribe = {followed, follower, channelId, reponame};
-        await subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true});
-    } catch (e) {
-        console.log(e);
-        err = true;
-    } finally {
-        await conn.close();
-    }
-    return err;
-};
-
-const removeSubscription = async (followed, follower, channelId, reponame) => {
-    let err = false;
-    const conn = await client.connect();
-    try {
-        const subscribes = conn.db("subscribes").collection("followed");
-        await subscribes.deleteOne({followed, follower, channelId, reponame});
-    } catch (e) {
-        console.log(e);
-        err = true;
-    } finally {
-        await conn.close();
-    }
-    return err;
 };
 
 const subscribe = async (followed, follower, channelId, repoName, respond) => {

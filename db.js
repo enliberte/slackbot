@@ -92,5 +92,35 @@ const addRepo = async (reponame, addedByName, channelId) => {
     return err;
 };
 
+const addSubscription = async (followed, follower, channelId, reponame) => {
+    let err = false;
+    const conn = await client.connect();
+    try {
+        const subscribes = conn.db("subscribes").collection("followed");
+        const subscribe = {followed, follower, channelId, reponame};
+        await subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true});
+    } catch (e) {
+        console.log(e);
+        err = true;
+    } finally {
+        await conn.close();
+    }
+    return err;
+};
 
-module.exports = {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels};
+const removeSubscription = async (followed, follower, channelId, reponame) => {
+    let err = false;
+    const conn = await client.connect();
+    try {
+        const subscribes = conn.db("subscribes").collection("followed");
+        await subscribes.deleteOne({followed, follower, channelId, reponame});
+    } catch (e) {
+        console.log(e);
+        err = true;
+    } finally {
+        await conn.close();
+    }
+    return err;
+};
+
+module.exports = {getAddedUsers, getFollowedUsers, getAddedRepos, addUser, addRepo, getFollowerChannels, addSubscription, removeSubscription};
