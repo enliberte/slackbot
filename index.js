@@ -30,7 +30,8 @@ class Bot {
         });
 
         this.app.post('/add-user', (req, res) => {
-            addNewUser(req.body.text, req.body.channel_id, res);
+            console.log(req.body);
+            addNewUser(req.body.text, req.body.username, req.body.channel_id, res);
         });
 
         this.app.post('/add-repo', (req, res) => {

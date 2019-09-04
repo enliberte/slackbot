@@ -126,12 +126,13 @@ const removeSubscription = async (followed, follower, reponame) => {
     return err;
 };
 
-const addUser = async (username) => {
+const addUser = async (username, addedByName, channelId) => {
     let err = false;
     const conn = await client.connect();
     try {
+        const record = {username, addedByName, channelId};
         const usersCollection = conn.db("subscribes").collection("users");
-        await usersCollection.updateOne({username}, {$set: {username}}, {upsert: true});
+        await usersCollection.updateOne({record}, {$set: {record}}, {upsert: true});
     } catch (e) {
         console.log(e);
         err = true;

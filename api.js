@@ -63,9 +63,9 @@ const unsubscribe = async (followed, follower, repoName, respond) => {
     await respond({text: msgText});
 };
 
-const addNewUser = async (username, channelId, res) => {
+const addNewUser = async (username, addedByName, channelId, res) => {
     if (username.length !== 0) {
-        const err = await addUser(username);
+        const err = await addUser(username, addedByName, channelId);
         const msgText = err ? 'insert into db failed' : `You have added new user ${username}`;
         await res.status(200).send();
         await web.chat.postMessage({text: msgText, channel: channelId});
