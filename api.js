@@ -9,7 +9,7 @@ const listUsers = async (channelId, reponame, respond) => {
     try {
         const addedUsers = await getAddedUsers(channelId);
         if (addedUsers.length === 0) {
-            await respond(addSection("You don't have added users yet. To add them please use command /add_user"));
+            await respond({text: "You don't have added users yet. To add them please use command /add_user"});
         } else {
             const followedUsers = await getFollowedUsers(channelId, reponame);
             const followedUserNames = followedUsers.map(user => user.followed);
@@ -26,10 +26,10 @@ const listRepos = async (channelId, res, respond) => {
         const repos = await getAddedRepos(channelId);
         if (repos.length === 0) {
             if (respond) {
-                await respond(addSection("You don't have added repositories yet. To add them please use command /add_repo"));
+                await respond({text: "You don't have added repositories yet. To add them please use command /add_repo"});
             } else {
                 await web.chat.postMessage({
-                    ...addSection("You don't have added repositories yet. To add them please use command /add_repo"),
+                    text: "You don't have added repositories yet. To add them please use command /add_repo",
                     channel: channelId
                 });
                 res.status(200).send();
@@ -45,7 +45,6 @@ const listRepos = async (channelId, res, respond) => {
                 res.status(200).send();
             }
         }
-
     } catch (e) {
         console.log(e);
     }
