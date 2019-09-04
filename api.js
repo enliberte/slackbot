@@ -10,6 +10,9 @@ const listUsers = async (channelId, reponame, respond) => {
         const followedUsers = await getFollowedUsers(channelId, reponame);
         const followedUserNames = followedUsers.map(user => user.followed);
         const users = addedUsers.map(user => ({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1}));
+        console.log('--------------------------------------');
+        console.log(addedUsers, followedUsers, followedUserNames, users);
+        console.log('--------------------------------------');
         await respond({blocks: addUsersList(users)});
     } catch (e) {
         console.log(e);
