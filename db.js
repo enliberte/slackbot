@@ -132,7 +132,7 @@ const addUser = async (username, addedByName, channelId) => {
     try {
         const record = {username, addedByName, channelId};
         const usersCollection = conn.db("subscribes").collection("users");
-        await usersCollection.updateOne({record}, {$set: {record}}, {upsert: true});
+        await usersCollection.updateOne(record, {$set: record}, {upsert: true});
     } catch (e) {
         console.log(e);
         err = true;
@@ -142,12 +142,13 @@ const addUser = async (username, addedByName, channelId) => {
     return err;
 };
 
-const addRepo = async (reponame) => {
+const addRepo = async (reponame, addedByName, channelId) => {
     let err = false;
     const conn = await client.connect();
     try {
+        const record = {reponame, addedByName, channelId};
         const reposCollection = conn.db("subscribes").collection("repos");
-        await reposCollection.updateOne({reponame}, {$set: {reponame}}, {upsert: true});
+        await reposCollection.updateOne(record, {$set: record}, {upsert: true});
     } catch (e) {
         console.log(e);
         err = true;
