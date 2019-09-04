@@ -23,28 +23,16 @@ const listUsers = async (channelId, reponame, respond) => {
 
 const listRepos = async (channelId, res, respond, buttonText='Select', command='select') => {
     try {
+        const emptyReposMsg = "You don't have added repositories yet. To add them please use command /add_repo";
+        const postFunc = res ?
+            async msg => {
+                await web.chat.postMessage({...msg, channel: channelId});
+                res.status(200).send();
+            } :
+            async msg => {await respond(msg)};
         const repos = await getAddedRepos(channelId);
-        if (repos.length === 0) {
-            if (respond) {
-                await respond({text: "You don't have added repositories yet. To add them please use command /add_repo"});
-            } else {
-                await web.chat.postMessage({
-                    text: "You don't have added repositories yet. To add them please use command /add_repo",
-                    channel: channelId
-                });
-                res.status(200).send();
-            }
-        } else {
-            if (respond) {
-                await respond({blocks: addReposList(repos, buttonText, command)});
-            } else {
-                await web.chat.postMessage({
-                    blocks: addReposList(repos, buttonText, command),
-                    channel: channelId
-                });
-                res.status(200).send();
-            }
-        }
+        const msg = repos.length === 0 ? emptyReposMsg : {blocks: addReposList(repos, buttonText, command)};
+        await postFunc(msg);
     } catch (e) {
         console.log(e);
     }
