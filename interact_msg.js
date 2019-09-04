@@ -7,6 +7,7 @@ const interactMessagesRouter = (payload, respond) => {
         switch (args[0]) {
             case 'close':
                 respond({text: 'See you later'});
+                break;
             case 'select':
                 listUsers(payload.channel.id, args[1], respond);
                 break;
