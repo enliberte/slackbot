@@ -1,36 +1,21 @@
 const express = require('express');
-const SlackBot = require('slackbots');
+const {createMessageAdapter} = require('@slack/interactive-messages');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
+const {listRepos, listUsers, notifyAboutPR, addNewUser, addNewRepo} = require('./api');
+const {interactMessagesRouter} = require('./interact_msg');
 require('dotenv').config();
 
 
 class Bot {
-    constructor(token, name) {
-        this.instance = new SlackBot({token, name});
-        this.subscribes = {};
+    constructor(token) {
+        this.slackInteractions = createMessageAdapter(process.env.SIGNING_SECRET);
         this.app = express();
-        this.client = new MongoClient(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
         //app settings
+        this.app.use('/interactive-messages', this.slackInteractions.requestListener());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({extended: true}));
-    }
-
-    processSubscriptionEvent(req, res, subscribe) {
-        const result = req.body.text.match(/(^.*) (.*$)/);
-        if (result) {
-            const [, followed, repo] = result;
-            if (subscribe) {
-                this.subscribe(followed, req.body.user_name, repo);
-            } else {
-                this.unsubscribe(followed, req.body.user_name, repo);
-            }
-            res.status(200).send();
-        } else {
-            res.status(404).send();
-        }
     }
 
     router() {
@@ -40,68 +25,32 @@ class Bot {
 
         this.app.post('/push', (req, res) => {
             if (req.body.attachments) {
-                this.notifyAboutPR(req.body.attachments);
+                notifyAboutPR(req.body);
             }
         });
 
-        this.app.post('/subscribe', (req, res) => {
-            this.processSubscriptionEvent(req, res, true);
+        this.app.post('/add-user', (req, res) => {
+            addNewUser(req.body.text, req.body.user_name, req.body.channel_id, res);
         });
 
-        this.app.post('/unsubscribe', (req, res) => {
-            this.processSubscriptionEvent(req, res, false);
+        this.app.post('/add-repo', (req, res) => {
+            addNewRepo(req.body.text, req.body.user_name, req.body.channel_id, res);
         });
+
+        this.app.post('/subscribe', (req, res) => {
+            listRepos(req.body.channel_id, res);
+        });
+
+        this.slackInteractions.action({type: 'button'}, interactMessagesRouter);
     }
 
     start() {
         this.app.listen(port);
         this.router();
-        this.listenStart();
-    }
-
-    listenStart() {
-        this.instance.on('start', () => {
-            this.instance.postMessageToChannel('pushes', "I'm alive (Skynet)", {});
-        });
-    }
-
-    notifyAboutPR(attachments) {
-        const {fallback, author_name: followed} = attachments[0];
-        if (fallback && followed) {
-            const result = fallback.match(/<(.*)\/pull-requests/);
-            if (result) {
-                const repoName = result[1];
-                this.client.connect(err => {
-                    const subscribes = this.client.db("subscribes").collection("followed");
-                    subscribes.find({followed, repoName}).toArray((err, docs) => {
-                        if (docs) {
-                            docs.forEach(doc => this.instance.postMessageToUser(doc.follower, 'PR!', {attachments}));
-                        }
-                        this.client.close()
-                    });
-                });
-            }
-        }
-    }
-
-
-
-    subscribe(followed, follower, repoName) {
-        this.client.connect(err => {
-            const subscribes = this.client.db("subscribes").collection("followed");
-            const subscribe = {followed, follower, repoName};
-            subscribes.updateOne(subscribe, {$set: subscribe}, {upsert: true}, err => this.client.close());
-        });
-        this.instance.postMessageToUser(follower, `You have subscribed to ${followed} on ${repoName}`);
-    }
-
-    unsubscribe(followed, follower, repoName) {
-        this.client.connect(err => {
-            const subscribes = this.client.db("subscribes").collection("followed");
-            subscribes.deleteOne({followed, follower, repoName}, {}, err => this.client.close());
-        });
-        this.instance.postMessageToUser(follower, `You have unsubscribed from ${followed} on ${repoName}`);
+        (async () => {
+            await this.slackInteractions.start(port);
+        })();
     }
 }
 
-new Bot(process.env.BOT_TOKEN,  'testbot').start();
+new Bot(process.env.BOT_TOKEN).start();
