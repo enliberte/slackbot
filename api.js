@@ -70,10 +70,7 @@ const addNewRepo = async (reponame, addedByName, channelId, res) => {
 const notifyAboutPR = async (data) => {
     const {fallback, author_name: followed} = data.attachments[0];
     if (fallback && followed) {
-        console.log('---------------------------------------------');
-        console.log(fallback);
-        console.log('---------------------------------------------');
-        const result = fallback.match(/<(.*)\/pull-requests/);
+        const result = fallback.match(/opened pull request.*<(.*)\/pull-requests/);
         if (result) {
             const reponame = result[1];
             const followerChannels = await getFollowerChannels(followed, reponame);
