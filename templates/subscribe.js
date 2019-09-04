@@ -9,7 +9,7 @@ const addUsersList = (users, reponame) => {
         blocks.push(addDivider());
         blocks.push(addSectionWithButton(username, buttonText, buttonValue));
     });
-    blocks.push(addButton('Close', 'close_userlist'));
+    blocks.push(addButton('Return', 'return'));
     return blocks;
 };
 
@@ -21,7 +21,7 @@ const addReposList = (repos) => {
         blocks.push(addDivider());
         blocks.push(addSectionWithButton(reponame, 'Select', `select_${reponame}`));
     });
-    blocks.push(addButton('Close', 'close_repolist'));
+    blocks.push(addButton('Close', 'close'));
     return blocks;
 };
 

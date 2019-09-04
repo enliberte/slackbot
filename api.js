@@ -16,17 +16,20 @@ const listUsers = async (channelId, reponame, respond) => {
     }
 };
 
-const listRepos = async (channelId, res) => {
+const listRepos = async (channelId, res, respond) => {
     try {
         const repos = await getAddedRepos(channelId);
-        await web.chat.postMessage({
-            blocks: addReposList(repos),
-            channel: channelId
-        });
-        res.status(200).send();
+        if (respond) {
+            await respond({blocks: addReposList(repos)});
+        } else {
+            await web.chat.postMessage({
+                blocks: addReposList(repos),
+                channel: channelId
+            });
+            res.status(200).send();
+        }
     } catch (e) {
         console.log(e);
-        res.status(404).send();
     }
 };
 
