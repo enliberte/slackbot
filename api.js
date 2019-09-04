@@ -68,6 +68,7 @@ const listAllUsers = async (channelId, res, respond) => {
                 await respond({blocks: addAllUsersList(addedUsers)});
             } else {
                 await web.chat.postMessage({blocks: addAllUsersList(addedUsers), channel: channelId});
+                res.status(200).send();
             }
         }
     } catch (e) {
