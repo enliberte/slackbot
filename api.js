@@ -31,15 +31,13 @@ const listRepos = async (channelId, res) => {
 };
 
 const subscribe = async (followed, follower, channelId, repoName, respond) => {
-    const err = await addSubscription(followed, follower, channelId, repoName);
-    const msgText = err ? 'insert into db failed' : `You have subscribed to ${followed} on ${repoName}`;
-    await respond({text: msgText});
+    await addSubscription(followed, follower, channelId, repoName);
+    await listUsers(channelId, repoName, respond);
 };
 
 const unsubscribe = async (followed, follower, channelId, repoName, respond) => {
-    const err = await removeSubscription(followed, follower, channelId, repoName);
-    const msgText = err ? 'delete from db failed' : `You have unsubscribed from ${followed} on ${repoName}`;
-    await respond({text: msgText});
+    await removeSubscription(followed, follower, channelId, repoName);
+    await listUsers(channelId, repoName, respond);
 };
 
 const addNewUser = async (username, addedByName, channelId, res) => {
