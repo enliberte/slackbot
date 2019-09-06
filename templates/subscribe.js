@@ -1,18 +1,23 @@
 const {addSection, addDivider, addSectionWithButton, addButton} = require('./common');
 
 const addUsersList = (users, reponame) => {
-    let blocks = [addSection("Your subscribes:")];
+    const sectionMsg = reponame ? "Your subscribes:" : "Added users:";
+    const mainBtnText = reponame ? 'Return' : 'Close';
+    const mainBtnValue = reponame ? 'return' : 'close';
+    let blocks = [addSection(sectionMsg)];
     users.forEach(user => {
-        const {username, isFollowed} = user;
-        const buttonText = isFollowed ? 'Unfollow' : 'Follow';
-        const buttonValue = isFollowed ? `unfollow_${username}_${reponame}` : `follow_${username}_${reponame}`;
+        let buttonText = 'Delete';
+        let buttonValue = `deleteUser_${user.username}`;
+        if (reponame) {
+            buttonText = user.isFollowed ? 'Unfollow' : 'Follow';
+            buttonValue = user.isFollowed ? `unfollow_${user.username}_${reponame}` : `follow_${user.username}_${reponame}`;
+        }
         blocks.push(addDivider());
-        blocks.push(addSectionWithButton(username, buttonText, buttonValue));
+        blocks.push(addSectionWithButton(user.username, buttonText, buttonValue));
     });
-    blocks.push(addButton('Return', 'return'));
+    blocks.push(addButton(mainBtnText, mainBtnValue));
     return blocks;
 };
-
 
 const addReposList = (repos, buttonText='Select', command='select') => {
     let blocks = [addSection('Select repository')];
@@ -25,27 +30,4 @@ const addReposList = (repos, buttonText='Select', command='select') => {
     return blocks;
 };
 
-
-const addAllUsersList = (users) => {
-    let blocks = [addSection("Added users:")];
-    users.forEach(user => {
-        const {username} = user;
-        blocks.push(addDivider());
-        blocks.push(addSectionWithButton(username, 'Delete', `deleteUser_${username}`));
-    });
-    blocks.push(addButton('Close', 'close'));
-    return blocks;
-};
-
-const addAllReposList = (repos) => {
-    let blocks = [addSection('Added repositories')];
-    repos.forEach(repo => {
-        const {reponame} = repo;
-        blocks.push(addDivider());
-        blocks.push(addSectionWithButton(reponame, 'Delete', `deleteRepo_${reponame}`));
-    });
-    blocks.push(addButton('Close', 'close'));
-    return blocks;
-};
-
-module.exports = {addUsersList, addReposList, addAllUsersList, addAllReposList};
+module.exports = {addUsersList, addReposList};

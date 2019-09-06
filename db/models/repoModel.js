@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {BaseController} = require('./baseController');
 
 const repoSchema = new mongoose.Schema({
     channelId: String,
@@ -8,4 +9,14 @@ const repoSchema = new mongoose.Schema({
 
 const Repo = mongoose.model('Repo', repoSchema);
 
-export default Repo;
+class RepoController extends BaseController {
+    constructor() {
+        super(Repo);
+    }
+
+    async get(filter) {
+        return await this.model.find(filter).sort({reponame: 1}).toArray();
+    }
+}
+
+module.exports = {RepoController};

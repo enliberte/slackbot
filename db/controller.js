@@ -1,42 +1,33 @@
 const mongoose = require('mongoose');
 const {MONGO_URI} = require('./../config');
 
-
 class DBController {
-    constructor(Model) {
-        mongoose.connect(MONGO_URI);
-        this.Model = Model;
+    constructor(controller) {
+        this.controller = controller;
+        mongoose.connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
+    }
+
+    async actionWrapper(action) {
+        try {
+            return await action();
+        } catch (e) {
+            console.log(e);
+        } finally {
+            await mongoose.disconnect();
+        }
     }
 
     async get(filter) {
-        try {
-            return await this.Model.find(filter).toArray();
-        } catch (e) {
-            console.log(e);
-        } finally {
-            await mongoose.disconnect();
-        }
+        await this.actionWrapper(() => this.controller.get(filter));
     }
 
-    async add(data) {
-        try {
-            await this.Model.update(data, {upsert: true});
-        } catch (e) {
-            console.log(e);
-        } finally {
-            await mongoose.disconnect();
-        }
+    async add(obj) {
+        await this.actionWrapper(() => this.controller.add(obj));
     }
 
     async remove(filter) {
-        try {
-            await this.Model.deleteOne(filter);
-        } catch (e) {
-            console.log(e);
-        } finally {
-            await mongoose.disconnect();
-        }
+        await this.actionWrapper(() => this.controller.remove(filter));
     }
 }
 
-module.exports = {DBController};
+module.exports = DBController;

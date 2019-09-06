@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const {BaseController} = require('./baseController');
+
 
 const subscribeSchema = new mongoose.Schema({
     channelId: String,
@@ -9,4 +11,15 @@ const subscribeSchema = new mongoose.Schema({
 
 const Subscribe = mongoose.model('Subscribe', subscribeSchema);
 
-export default Subscribe;
+class SubscribeController extends BaseController {
+    constructor() {
+        super(Subscribe);
+    }
+
+    async get(filter) {
+        return await this.model.find(filter).sort({reponame: 1}).toArray();
+    }
+}
+
+
+module.exports = {SubscribeController};
