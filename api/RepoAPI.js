@@ -28,6 +28,10 @@ class RepoAPI extends BaseAPI {
         const {reponame} = obj;
         if (reponame.length !== 0) {
             const channelId = this.channelId;
+            const testObj = {...obj, channelId};
+            console.log('--------------------------------------');
+            console.log('testObj', testObj);
+            console.log('--------------------------------------');
             const err = await this.repoDB.add({...obj, channelId});
             const msgText = err ? 'insert into db failed' : `You have added new repository ${reponame}`;
             await this.post({text: msgText});
