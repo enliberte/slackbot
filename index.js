@@ -1,7 +1,11 @@
 const express = require('express');
 const port = process.env.PORT || 8080;
 const bodyParser = require('body-parser');
-const {InteractiveMessagesRouter, UserRouter, SubscribeRouter, RepoRouter, NotifyRouter} = require('./router');
+const InteractiveMessagesRouter = require('./router/interactMsgRouter');
+const UserRouter = require('./router/userRouter');
+const SubscribeRouter = require('./router/subscribeRouter');
+const RepoRouter = require('./router/repoRouter');
+const NotifyRouter = require('./router/notifyRouter');
 require('dotenv').config();
 
 

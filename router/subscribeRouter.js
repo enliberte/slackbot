@@ -1,5 +1,5 @@
 const express = require('express');
-const {RepoAPI} = require('./../api');
+const RepoAPI = require('./../api/RepoAPI');
 
 const SubscribeRouter = express.Router();
 

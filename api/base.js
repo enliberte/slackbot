@@ -2,7 +2,7 @@ const {WebClient} = require('@slack/web-api');
 const {BOT_TOKEN} = require('./../config');
 
 class BaseAPI {
-    constructor(channelId, res, respond) {
+    constructor(channelId, res=undefined, respond=undefined) {
         this.web = new WebClient(BOT_TOKEN);
         this.channelId = channelId;
         this.res = res;

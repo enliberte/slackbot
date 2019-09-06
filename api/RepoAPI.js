@@ -1,10 +1,12 @@
 const {BaseAPI} = require('./base');
-const {DBController, RepoController, SubscribeController} = require('./../db');
+const {DBController} = require('./../db/controller');
+const {SubscribeController} = require('./../db/models/subscribeModel');
+const {RepoController} = require('./../db/models/repoModel');
 const {addReposList} = require('./../templates/subscribe');
 
 
 class RepoAPI extends BaseAPI {
-    constructor(channelId, res, respond) {
+    constructor(channelId, res=undefined, respond=undefined) {
         super(channelId, res, respond);
         this.repoDB = new DBController(RepoController);
         this.subscribeDB = new DBController(SubscribeController);

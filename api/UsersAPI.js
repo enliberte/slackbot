@@ -1,10 +1,12 @@
 const {BaseAPI} = require('./base');
-const {DBController, UserController, SubscribeController} = require('./../db');
+const {DBController} = require('./../db/controller');
+const {SubscribeController} = require('./../db/models/subscribeModel');
+const {UserController} = require('./../db/models/userModel');
 const {addUsersList} = require('./../templates/subscribe');
 
 
 class UserAPI extends BaseAPI {
-    constructor(channelId, res, respond) {
+    constructor(channelId, res=undefined, respond=undefined) {
         super(channelId, res, respond);
         this.userDB = new DBController(UserController);
         this.subscribeDB = new DBController(SubscribeController);

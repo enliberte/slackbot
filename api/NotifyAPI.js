@@ -1,4 +1,5 @@
-const {DBController, SubscribeController} = require('./../db');
+const DBController = require('./../db/controller');
+const SubscribeController = require('./../db/models/subscribeModel');
 const {WebClient} = require('@slack/web-api');
 const {BOT_TOKEN} = require('./../config');
 

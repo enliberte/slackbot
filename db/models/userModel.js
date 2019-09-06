@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {BaseController} = require('./baseController');
+const BaseController = require('./baseController');
 
 const userSchema = new mongoose.Schema({
     channelId: String,
@@ -19,4 +19,4 @@ class UserController extends BaseController {
     }
 }
 
-module.exports = {UserController};
+module.exports = UserController;

@@ -1,5 +1,5 @@
 const express = require('express');
-const {NotifyAPI} = require('./../api');
+const NotifyAPI = require('./../api/NotifyAPI');
 
 const NotifyRouter = express.Router();
 

@@ -1,5 +1,6 @@
 const {BaseAPI} = require('./base');
-const {DBController, SubscribeController} = require('./../db');
+const {DBController} = require('./../db/controller');
+const {SubscribeController} = require('./../db/models/subscribeModel');
 const {UserAPI} = require('./UsersAPI');
 
 

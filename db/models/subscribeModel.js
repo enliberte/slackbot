@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {BaseController} = require('./baseController');
+const BaseController = require('./baseController');
 
 
 const subscribeSchema = new mongoose.Schema({
@@ -22,4 +22,4 @@ class SubscribeController extends BaseController {
 }
 
 
-module.exports = {SubscribeController};
+module.exports = SubscribeController;
