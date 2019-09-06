@@ -11,7 +11,7 @@ class BaseAPI {
 
     async post(msg) {
         console.log('-------------------------------------');
-        console.log(this.res, this.respond);
+        console.log(this.res === undefined, this.respond === undefined);
         console.log('-------------------------------------');
         const postFunc = this.res ?
             async msg => {
