@@ -14,8 +14,9 @@ class RepoAPI extends BaseAPI {
 
     async list(buttonText='Select', command='select') {
         try {
+            const channelId = this.channelId;
             const emptyReposMsg = "You don't have added repositories yet. To add them please use command /add_repo";
-            const repos = await this.repoDB.get(this.channelId);
+            const repos = await this.repoDB.get({channelId});
             const msg = repos.length === 0 ? {text: emptyReposMsg} : {blocks: addReposList(repos, buttonText, command)};
             await this.post(msg);
         } catch (e) {

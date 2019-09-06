@@ -10,9 +10,9 @@ require('dotenv').config();
 
 
 const app = express();
+app.use(InteractiveMessagesRouter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(InteractiveMessagesRouter);
 app.use(UserRouter);
 app.use(SubscribeRouter);
 app.use(RepoRouter);
