@@ -33,9 +33,8 @@ class UserAPI extends BaseAPI {
         const {username} = obj;
         if (username.length !== 0) {
             const channelId = this.channelId;
-            const err = await this.userDB.add({...obj, channelId});
-            const msgText = err ? 'insert into db failed' : `You have added new user ${username}`;
-            await this.post({text: msgText});
+            await this.userDB.add({...obj, channelId});
+            await this.post({text: `You have added new user ${username}`});
         } else {
             await this.post({text: `Incorrect username ${username}`});
         }
