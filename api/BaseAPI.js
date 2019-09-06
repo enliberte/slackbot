@@ -7,12 +7,17 @@ class BaseAPI {
         this.channelId = channelId;
         this.res = res;
         this.respond = respond;
-        this.post = this.res ?
+    }
+
+    async post(msg) {
+        const postFunc = this.res ?
             async msg => {
                 await this.web.chat.postMessage({...msg, channel: this.channelId});
                 await this.res.status(200).send();
             } :
             async msg => {await this.respond(msg)};
+        console.log(postFunc);
+        await postFunc(msg);
     }
 }
 
