@@ -4,7 +4,7 @@ const {MONGO_URI} = require('./../config');
 class DBController {
     constructor(controller) {
         this.controller = new controller;
-        mongoose.connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true}).then(res => console.log('YES!!!!!!!!!!')).catch(err => console.log('NO!!!!!!!!!!!!!!!'));
+        mongoose.connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
     }
 
     async actionWrapper(action) {
