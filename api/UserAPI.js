@@ -1,7 +1,7 @@
-const {BaseAPI} = require('./base');
-const {DBController} = require('./../db/controller');
-const {SubscribeController} = require('./../db/models/subscribeModel');
-const {UserController} = require('./../db/models/userModel');
+const BaseAPI = require('./BaseAPI');
+const DBController = require('./../db/controller');
+const SubscribeController = require('./../db/models/subscribeModel');
+const UserController = require('./../db/models/userModel');
 const {addUsersList} = require('./../templates/subscribe');
 
 

@@ -1,7 +1,7 @@
-const {BaseAPI} = require('./base');
-const {DBController} = require('./../db/controller');
-const {SubscribeController} = require('./../db/models/subscribeModel');
-const {UserAPI} = require('./UsersAPI');
+const BaseAPI = require('./BaseAPI');
+const DBController = require('./../db/controller');
+const SubscribeController = require('./../db/models/subscribeModel');
+const UserAPI = require('./UserAPI');
 
 
 class SubscribeAPI extends BaseAPI {

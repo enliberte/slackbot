@@ -1,6 +1,6 @@
 const express = require('express');
 const {createMessageAdapter} = require('@slack/interactive-messages');
-const UserAPI = require('./../api/UsersAPI');
+const UserAPI = require('../api/UserAPI');
 const RepoAPI = require('./../api/RepoAPI');
 const InteractiveMessagesRouter = express.Router();
 const {SIGNING_SECRET} = require('./../config');
