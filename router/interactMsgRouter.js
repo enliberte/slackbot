@@ -45,4 +45,4 @@ InteractiveMessagesRouter.use('/interactive-messages', slackInteractions.request
 slackInteractions.action({type: 'button'}, processMessages);
 
 
-module.exports = {InteractiveMessagesRouter};
+module.exports = InteractiveMessagesRouter;
