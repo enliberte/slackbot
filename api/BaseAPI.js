@@ -10,6 +10,9 @@ class BaseAPI {
     }
 
     async post(msg) {
+        console.log('-------------------------------------');
+        console.log(this.res, this.respond);
+        console.log('-------------------------------------');
         const postFunc = this.res ?
             async msg => {
                 await this.web.chat.postMessage({...msg, channel: this.channelId});
