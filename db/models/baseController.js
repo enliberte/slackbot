@@ -4,7 +4,7 @@ class BaseController {
     }
 
     async get(filter) {
-        return await this.model.find(filter);
+        return await this.model.find(filter).toArray();
     }
 
     async add(obj) {

@@ -15,7 +15,7 @@ class RepoController extends BaseController {
     }
 
     async get(filter) {
-        return await this.model.find(filter).sort({reponame: 1});
+        return await this.model.find(filter).sort({reponame: 1}).toArray();
     }
 }
 
