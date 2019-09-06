@@ -10,17 +10,13 @@ class BaseAPI {
     }
 
     async post(msg) {
-        console.log('-------------------------------------');
-        console.log(this.res === undefined, this.respond === undefined);
-        console.log('-------------------------------------');
-        const postFunc = this.res ?
-            async msg => {
-                await this.web.chat.postMessage({...msg, channel: this.channelId});
-                await this.res.status(200).send();
-            } :
-            async msg => {await this.respond(msg)};
-        console.log(postFunc);
-        await postFunc(msg);
+        console.log(msg);
+        if (this.res) {
+            await this.web.chat.postMessage({...msg, channel: this.channelId});
+            await this.res.status(200).send();
+        } else {
+            await this.respond(msg);
+        }
     }
 }
 
