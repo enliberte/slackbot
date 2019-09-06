@@ -8,11 +8,11 @@ class BaseController {
     }
 
     async add(obj) {
-        return await this.model.update(obj, {upsert: true});
+        return await this.model.update(obj, {}, {upsert: true});
     }
 
     async remove(filter) {
-        return await this.model.deleteOne(filter);
+        return await this.model.deleteMany(filter);
     }
 }
 
