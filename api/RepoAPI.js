@@ -13,6 +13,7 @@ class RepoAPI extends BaseAPI {
     }
 
     async list(buttonText='Select', command='select') {
+        console.log('---------------------list--------------------');
         try {
             const channelId = this.channelId;
             const emptyReposMsg = "You don't have added repositories yet. To add them please use command /add_repo";
