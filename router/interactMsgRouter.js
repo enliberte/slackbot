@@ -32,9 +32,6 @@ const processMessages = async (payload, respond) => {
             await new SubscribeAPI(payload.channel.id, respond).unsubscribe({followed, follower, reponame});
             break;
         case 'deleteRepo':
-            console.log('------------------------------------------------------');
-            console.log(payload);
-            console.log('------------------------------------------------------');
             [, reponame] = args;
             await new RepoAPI(payload.channel.id, null, respond).delete({reponame});
             break;
