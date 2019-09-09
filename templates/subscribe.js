@@ -1,6 +1,10 @@
 const {addSection, addDivider, addSectionWithButton, addButton} = require('./common');
 
 const addUsersList = (users, reponame) => {
+    console.log('------------------------------------------------');
+    console.log(users);
+    console.log('------------------------------------------------');
+
     const sectionMsg = reponame ? "Your subscribes:" : "Added users:";
     const mainBtnText = reponame ? 'Return' : 'Close';
     const mainBtnValue = reponame ? 'return' : 'close';

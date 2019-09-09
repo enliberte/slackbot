@@ -19,14 +19,8 @@ class UserAPI extends BaseAPI {
             let users = await this.userDB.get({channelId});
             if (reponame) {
                 const followedUsers = await this.subscribeDB.get({channelId, reponame});
-                console.log('------------------------------------------');
-                console.log(followedUsers);
-                console.log('------------------------------------------');
                 const followedUserNames = followedUsers.map(user => user.followed);
                 users = users.map(user => ({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1}));
-                console.log('------------------------------------------');
-                console.log(users);
-                console.log('------------------------------------------');
             }
             const msg = users.length === 0 ? {text: emptyUsersMsg} : {blocks: addUsersList(users, reponame)};
             await this.post(msg);
