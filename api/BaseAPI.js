@@ -14,7 +14,7 @@ class BaseAPI {
             await this.web.chat.postMessage({...msg, channel: this.channelId});
             await this.res.status(200).send();
         } else {
-            await this.respond(msg);
+            await this.respond({...msg, replace_original: true});
         }
     }
 }
