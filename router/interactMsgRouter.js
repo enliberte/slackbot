@@ -15,46 +15,30 @@ const processMessages = async (payload, respond) => {
             respond({text: 'See you later'});
             break;
         case 'return':
-            respond(await new RepoAPI(payload.channel.id).list());
+            await respond(await new RepoAPI(payload.channel.id).list());
             break;
         case 'select':
-            respond(await new UserAPI(payload.channel.id).list(args[1]));
+            await respond(await new UserAPI(payload.channel.id).list(args[1]));
             break;
         case 'follow':
             await new SubscribeAPI(payload.channel.id).subscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
-            console.log('---------------------------------------');
-            console.log('BEFORE RESPOND');
-            console.log('---------------------------------------');
-            const msgF = await new UserAPI(payload.channel.id).list(args[2]);
-            console.log('---------------------------------------');
-            console.log('MESSAGE');
-            console.log(msgF);
-            console.log('---------------------------------------');
-            respond(msgF);
+            await respond(await new UserAPI(payload.channel.id).list(args[2]));
             break;
         case 'unfollow':
             await new SubscribeAPI(payload.channel.id).unsubscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
-            console.log('---------------------------------------');
-            console.log('BEFORE RESPOND');
-            console.log('---------------------------------------');
-            const msgU = await new UserAPI(payload.channel.id).list(args[2]);
-            console.log('---------------------------------------');
-            console.log('MESSAGE');
-            console.log(msgU);
-            console.log('---------------------------------------');
-            respond(msgU);
+            await respond(await new UserAPI(payload.channel.id).list(args[2]));
             break;
         case 'deleteRepo':
-            await new RepoAPI(payload.channel.id, null, respond).delete({reponame: args[1]});
-            respond(await new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo'));
+            await new RepoAPI(payload.channel.id).delete({reponame: args[1]});
+            await respond(await new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo'));
             break;
         case 'deleteUser':
-            await new UserAPI(payload.channel.id).delete({username: args[1]});
-            respond(await new UserAPI(payload.channel.id).list());
+            await new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
+            await respond(await new UserAPI(payload.channel.id).list());
             break;
     }
 };
