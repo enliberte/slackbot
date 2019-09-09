@@ -7,7 +7,7 @@ const InteractiveMessagesRouter = express.Router();
 const {SIGNING_SECRET} = require('./../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 
-const processMessages = (payload, respond) => {
+const processMessages = async (payload, respond) => {
     const value = payload.actions[0].value;
     const args = value.split('_');
     switch (args[0]) {
@@ -15,30 +15,30 @@ const processMessages = (payload, respond) => {
             respond({text: 'See you later'});
             break;
         case 'return':
-            new RepoAPI(payload.channel.id, null, respond).list();
+            respond(await new RepoAPI(payload.channel.id).list());
             break;
         case 'select':
-            new UserAPI(payload.channel.id, null, respond).list(args[1]);
+            respond(await new UserAPI(payload.channel.id).list(args[1]));
             break;
         case 'follow':
-            new SubscribeAPI(payload.channel.id, respond).subscribe({
+            await new SubscribeAPI(payload.channel.id).subscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
-            new UserAPI(payload.channel.id, null, respond).list(args[2]);
+            respond(await new UserAPI(payload.channel.id).list(args[2]));
             break;
         case 'unfollow':
-            new SubscribeAPI(payload.channel.id, respond).unsubscribe({
+            await new SubscribeAPI(payload.channel.id).unsubscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
-            new UserAPI(payload.channel.id, null, respond).list(args[2]);
+            respond(await new UserAPI(payload.channel.id).list(args[2]));
             break;
         case 'deleteRepo':
-            new RepoAPI(payload.channel.id, null, respond).delete({reponame: args[1]});
-            new RepoAPI(payload.channel.id, null, respond).list('Delete', 'deleteRepo');
+            await new RepoAPI(payload.channel.id, null, respond).delete({reponame: args[1]});
+            respond(await new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo'));
             break;
         case 'deleteUser':
-            new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
-            new UserAPI(payload.channel.id, null, respond).list();
+            await new UserAPI(payload.channel.id).delete({username: args[1]});
+            respond(await new UserAPI(payload.channel.id).list());
             break;
     }
 };

@@ -1,11 +1,10 @@
-const BaseAPI = require('./BaseAPI');
 const DBController = require('./../db/controller');
 const SubscribeController = require('./../db/models/subscribeModel');
 
 
-class SubscribeAPI extends BaseAPI {
-    constructor(channelId, respond) {
-        super(channelId, null, respond);
+class SubscribeAPI {
+    constructor(channelId) {
+        this.channelId = channelId;
         this.subscribeDB = new DBController(SubscribeController);
     }
 

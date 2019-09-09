@@ -1,21 +1,17 @@
-const BaseAPI = require('./BaseAPI');
 const DBController = require('./../db/controller');
 const SubscribeController = require('./../db/models/subscribeModel');
 const UserController = require('./../db/models/userModel');
 const {addUsersList} = require('./../templates/subscribe');
 
 
-class UserAPI extends BaseAPI {
-    constructor(channelId, res=undefined, respond=undefined) {
-        super(channelId, res, respond);
+class UserAPI {
+    constructor(channelId) {
+        this.channelId = channelId;
         this.userDB = new DBController(UserController);
         this.subscribeDB = new DBController(SubscribeController);
     }
 
     async list(reponame) {
-        console.log('-----------------------------');
-        console.log('LIST USERS');
-        console.log('-----------------------------');
         try {
             const channelId = this.channelId;
             const emptyUsersMsg = "You don't have added users yet. To add them please use command /add_user";
@@ -27,22 +23,23 @@ class UserAPI extends BaseAPI {
                     user.isFollowed = followedUserNames.indexOf(user.username) !== -1
                 }
             }
-            const msg = users.length === 0 ? {text: emptyUsersMsg} : {blocks: addUsersList(users, reponame)};
-            await this.post(msg);
+            return users.length === 0 ? {text: emptyUsersMsg} : {blocks: addUsersList(users, reponame)};
         } catch (e) {
             console.log(e);
         }
     }
 
     async add(obj) {
+        let msg;
         const {username} = obj;
         if (username.length !== 0) {
             const channelId = this.channelId;
             await this.userDB.add({...obj, channelId});
-            await this.post({text: `You have added new user ${username}`});
+            msg = {text: `You have added new user ${username}`};
         } else {
-            await this.post({text: `Incorrect username ${username}`});
+            msg = {text: `Incorrect username ${username}`};
         }
+        return msg;
     }
 
     async delete(obj) {
