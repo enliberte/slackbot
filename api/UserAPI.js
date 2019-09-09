@@ -23,6 +23,9 @@ class UserAPI extends BaseAPI {
                 users = users.map(user => ({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1}));
             }
             const msg = users.length === 0 ? {text: emptyUsersMsg} : {blocks: addUsersList(users, reponame)};
+            console.log('----------------------------------------------');
+            console.log(msg);
+            console.log('----------------------------------------------');
             await this.post(msg);
         } catch (e) {
             console.log(e);
