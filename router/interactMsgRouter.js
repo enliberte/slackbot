@@ -24,13 +24,29 @@ const processMessages = async (payload, respond) => {
             await new SubscribeAPI(payload.channel.id).subscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
-            respond(await new UserAPI(payload.channel.id).list(args[2]));
+            console.log('---------------------------------------');
+            console.log('BEFORE RESPOND');
+            console.log('---------------------------------------');
+            const msgF = await new UserAPI(payload.channel.id).list(args[2]);
+            console.log('---------------------------------------');
+            console.log('MESSAGE');
+            console.log(msgF);
+            console.log('---------------------------------------');
+            respond(msgF);
             break;
         case 'unfollow':
             await new SubscribeAPI(payload.channel.id).unsubscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
-            respond(await new UserAPI(payload.channel.id).list(args[2]));
+            console.log('---------------------------------------');
+            console.log('BEFORE RESPOND');
+            console.log('---------------------------------------');
+            const msgU = await new UserAPI(payload.channel.id).list(args[2]);
+            console.log('---------------------------------------');
+            console.log('MESSAGE');
+            console.log(msgU);
+            console.log('---------------------------------------');
+            respond(msgU);
             break;
         case 'deleteRepo':
             await new RepoAPI(payload.channel.id, null, respond).delete({reponame: args[1]});
