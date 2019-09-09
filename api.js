@@ -14,7 +14,7 @@ const listUsers = async (channelId, reponame, res, respond) => {
                 await web.chat.postMessage({...msg, channel: channelId});
                 res.status(200).send();
             } :
-            async msg => {await respond({...msg, replace_original: true})};
+            async msg => {await respond({...msg, delete_original: true})};
         if (reponame) {
             const followedUsers = await getFollowedUsers(channelId, reponame);
             const followedUserNames = followedUsers.map(user => user.followed);
@@ -35,7 +35,7 @@ const listRepos = async (channelId, res, respond, buttonText='Select', command='
                 await web.chat.postMessage({...msg, channel: channelId});
                 res.status(200).send();
             } :
-            async msg => {await respond({...msg, replace_original: true})};
+            async msg => {await respond({...msg, delete_original: true})};
         const repos = await getAddedRepos(channelId);
         const msg = repos.length === 0 ? {text: emptyReposMsg} : {blocks: addReposList(repos, buttonText, command)};
         await postFunc(msg);
