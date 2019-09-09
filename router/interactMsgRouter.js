@@ -8,6 +8,9 @@ const {SIGNING_SECRET} = require('./../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 
 const processMessages = (payload, respond) => {
+    console.log('----------------------------------------------');
+    console.log(payload.actions[0].value);
+    console.log('----------------------------------------------');
     const value = payload.actions[0].value;
     const args = value.split('_');
     switch (args[0]) {
