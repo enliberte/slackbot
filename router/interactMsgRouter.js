@@ -29,7 +29,10 @@ const processMessages = (payload, respond) => {
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             })
                 .then(() => new UserAPI(payload.channel.id).list(args[2]))
-                .then(msg => respond({...msg, replace_original: true}))
+                .then(msg => {
+                    console.log(msg);
+                    respond({...msg, replace_original: true})
+                })
                 .catch(err => console.log('FOLLOW', err));
             break;
         case 'unfollow':
@@ -53,7 +56,6 @@ const processMessages = (payload, respond) => {
                 .catch(err => console.log('DELETE USER', err));
             break;
     }
-    return {text: 'Processing...'};
 };
 
 InteractiveMessagesRouter.use('/interactive-messages', slackInteractions.requestListener());
