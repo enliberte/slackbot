@@ -53,6 +53,7 @@ const processMessages = (payload, respond) => {
                 .catch(err => console.log('DELETE USER', err));
             break;
     }
+    return {text: 'Processing...'};
 };
 
 InteractiveMessagesRouter.use('/interactive-messages', slackInteractions.requestListener());
