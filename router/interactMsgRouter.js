@@ -21,6 +21,9 @@ const processMessages = (payload, respond) => {
             new UserAPI(payload.channel.id, null, respond).list(args[1]);
             break;
         case 'follow':
+            console.log('----------------------------------------------');
+            console.log(args);
+            console.log('----------------------------------------------');
             new SubscribeAPI(payload.channel.id, respond).subscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
