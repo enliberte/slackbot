@@ -30,7 +30,7 @@ const processMessages = (payload, respond) => {
             })
                 .then(() => new UserAPI(payload.channel.id).list(args[2]))
                 .then(msg => {
-                    console.log(msg);
+                    console.log(JSON.stringify(msg));
                     respond({...msg, replace_original: true})
                 })
                 .catch(err => console.log('FOLLOW', err));
