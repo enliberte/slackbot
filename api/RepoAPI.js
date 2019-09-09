@@ -42,7 +42,7 @@ class RepoAPI extends BaseAPI {
         const {reponame} = obj;
         await this.repoDB.remove(obj);
         await this.subscribeDB.remove({reponame});
-        await this.list('Delete', 'deleteRepo');
+        // await this.list('Delete', 'deleteRepo');
     }
 }
 

@@ -32,7 +32,8 @@ const processMessages = (payload, respond) => {
             break;
         case 'deleteRepo':
             new RepoAPI(payload.channel.id, null, respond).delete({reponame: args[1]});
-            respond({text: 'Delete repo'});
+            new RepoAPI(payload.channel.id, null, respond).list('Delete', 'deleteRepo');
+            // respond({text: 'Delete repo'});
             break;
         case 'deleteUser':
             new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
