@@ -10,14 +10,11 @@ class BaseAPI {
     }
 
     async post(msg) {
-        console.log('-------------------------------------------------------');
-        console.log(msg);
-        console.log('-------------------------------------------------------');
         if (this.res) {
             await this.web.chat.postMessage({...msg, channel: this.channelId});
             await this.res.status(200).send();
         } else {
-            this.respond(msg);
+            await this.respond(msg);
         }
     }
 }
