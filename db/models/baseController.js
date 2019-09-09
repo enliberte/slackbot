@@ -4,15 +4,15 @@ class BaseController {
     }
 
     async get(filter) {
-        return await this.model.find(filter);
+        return await this.model.find(filter, () => {});
     }
 
     async add(obj) {
-        return await this.model.update(obj, {}, {upsert: true});
+        return await this.model.update(obj, {}, {upsert: true}, () => {});
     }
 
     async remove(filter) {
-        return await this.model.deleteMany(filter);
+        return await this.model.deleteMany(filter, () => {});
     }
 }
 
