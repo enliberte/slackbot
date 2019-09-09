@@ -15,22 +15,22 @@ const processMessages = async (payload, respond) => {
             respond({text: 'See you later'});
             break;
         case 'return':
-            await respond(await new RepoAPI(payload.channel.id).list());
+            respond(await new RepoAPI(payload.channel.id).list());
             break;
         case 'select':
-            await respond(await new UserAPI(payload.channel.id).list(args[1]));
+            respond(await new UserAPI(payload.channel.id).list(args[1]));
             break;
         case 'follow':
             await new SubscribeAPI(payload.channel.id).subscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
-            await respond(await new UserAPI(payload.channel.id).list(args[2]));
+            respond(await new UserAPI(payload.channel.id).list(args[2]));
             break;
         case 'unfollow':
             await new SubscribeAPI(payload.channel.id).unsubscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
-            await respond(await new UserAPI(payload.channel.id).list(args[2]));
+            respond(await new UserAPI(payload.channel.id).list(args[2]));
             break;
         case 'deleteRepo':
             await new RepoAPI(payload.channel.id).delete({reponame: args[1]});
@@ -38,7 +38,7 @@ const processMessages = async (payload, respond) => {
             break;
         case 'deleteUser':
             await new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
-            await respond(await new UserAPI(payload.channel.id).list());
+            respond(await new UserAPI(payload.channel.id).list());
             break;
     }
 };
