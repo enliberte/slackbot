@@ -17,7 +17,7 @@ class SubscribeController extends BaseController {
     }
 
     async get(filter) {
-        return await this.model.find(filter).sort({reponame: 1}).exec();
+        return this.model.find(filter).sort({reponame: 1}).exec();
     }
 }
 
