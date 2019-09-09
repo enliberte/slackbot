@@ -18,9 +18,6 @@ class RepoAPI extends BaseAPI {
             const emptyReposMsg = "You don't have added repositories yet. To add them please use command /add_repo";
             const repos = await this.repoDB.get({channelId});
             const msg = repos.length === 0 ? {text: emptyReposMsg} : {blocks: addReposList(repos, buttonText, command)};
-            console.log('-------------------------------------------------------');
-            console.log(msg);
-            console.log('-------------------------------------------------------');
             await this.post(msg);
         } catch (e) {
             console.log(e);
@@ -42,6 +39,9 @@ class RepoAPI extends BaseAPI {
         const {reponame} = obj;
         await this.repoDB.remove(obj);
         await this.subscribeDB.remove({reponame});
+        console.log('-------------------------------------------------------');
+        console.log(obj);
+        console.log('-------------------------------------------------------');
         await this.list('Delete', 'deleteRepo');
     }
 }
