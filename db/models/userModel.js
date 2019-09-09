@@ -15,7 +15,7 @@ class UserController extends BaseController {
     }
 
     async get(filter) {
-        return await this.model.find(filter, () => {}).sort({username: 1});
+        return await this.model.find(filter).sort({username: 1}).exec();
     }
 }
 
