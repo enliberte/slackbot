@@ -34,7 +34,11 @@ const processMessages = async (payload, respond) => {
             break;
         case 'deleteRepo':
             await new RepoAPI(payload.channel.id).delete({reponame: args[1]});
-            respond(await new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo'));
+            const newRepoList = await new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo');
+            console.log('-------------------------------------');
+            console.log(newRepoList);
+            console.log('-------------------------------------');
+            respond(newRepoList);
             break;
         case 'deleteUser':
             await new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
