@@ -15,10 +15,7 @@ UserRouter.post('/add-user', async (req, res) => {
 
 UserRouter.post('/users', async (req, res) => {
     const {channel_id} = req.body;
-    const msg = new UserAPI(channel_id).list();
-    console.log('----------------------------');
-    console.log(msg);
-    console.log('----------------------------');
+    const msg = await new UserAPI(channel_id).list();
     await web.chat.postMessage({...msg, channel: channel_id});
     res.status(200).send();
 });
