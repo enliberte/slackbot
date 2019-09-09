@@ -16,12 +16,12 @@ const processMessages = (payload, respond) => {
             break;
         case 'return':
             new RepoAPI(payload.channel.id).list()
-                .then(msg => respond(msg))
+                .then(msg => respond({...msg, replace_original: true}))
                 .catch(err => console.log('RETURN', err));
             break;
         case 'select':
             new UserAPI(payload.channel.id).list(args[1])
-                .then(msg => respond(msg))
+                .then(msg => respond({...msg, replace_original: true}))
                 .catch(err => console.log('SELECT', err));
             break;
         case 'follow':
@@ -29,7 +29,7 @@ const processMessages = (payload, respond) => {
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             })
                 .then(() => new UserAPI(payload.channel.id).list(args[2]))
-                .then(msg => respond(msg))
+                .then(msg => respond({...msg, replace_original: true}))
                 .catch(err => console.log('FOLLOW', err));
             break;
         case 'unfollow':
@@ -37,7 +37,7 @@ const processMessages = (payload, respond) => {
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             })
                 .then(() => new UserAPI(payload.channel.id).list(args[2]))
-                .then(msg => respond(msg))
+                .then(msg => respond({...msg, replace_original: true}))
                 .catch(err => console.log('UNFOLLOW', err));
             break;
         case 'deleteRepo':
@@ -49,7 +49,7 @@ const processMessages = (payload, respond) => {
         case 'deleteUser':
             new UserAPI(payload.channel.id, null, respond).delete({username: args[1]})
                 .then(() => new UserAPI(payload.channel.id).list())
-                .then(msg => respond(msg))
+                .then(msg => respond({...msg, replace_original: true}))
                 .catch(err => console.log('DELETE USER', err));
             break;
     }
