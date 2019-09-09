@@ -18,10 +18,7 @@ class DBController {
     }
 
     async get(filter) {
-        return await this.actionWrapper(async () => {
-            const query = await this.controller.get(filter);
-            await query.exec();
-        });
+        return await this.actionWrapper(() => this.controller.get(filter));
     }
 
     async add(obj) {
