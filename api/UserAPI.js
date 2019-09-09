@@ -44,7 +44,6 @@ class UserAPI extends BaseAPI {
         const {username} = obj;
         await this.userDB.remove(obj);
         await this.subscribeDB.remove({username});
-        await this.list(null);
     }
 }
 

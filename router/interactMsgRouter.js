@@ -24,19 +24,21 @@ const processMessages = (payload, respond) => {
             new SubscribeAPI(payload.channel.id, respond).subscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
+            new UserAPI(payload.channel.id, null, respond).list(args[2]);
             break;
         case 'unfollow':
             new SubscribeAPI(payload.channel.id, respond).unsubscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
+            new UserAPI(payload.channel.id, null, respond).list(args[2]);
             break;
         case 'deleteRepo':
             new RepoAPI(payload.channel.id, null, respond).delete({reponame: args[1]});
             new RepoAPI(payload.channel.id, null, respond).list('Delete', 'deleteRepo');
-            // respond({text: 'Delete repo'});
             break;
         case 'deleteUser':
             new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
+            new UserAPI(payload.channel.id, null, respond).list();
             break;
     }
 };
