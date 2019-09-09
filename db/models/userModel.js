@@ -14,7 +14,7 @@ class UserController extends BaseController {
         super(User);
     }
 
-    async get(filter) {
+    get(filter) {
         return this.model.find(filter).sort({username: 1}).exec();
     }
 }

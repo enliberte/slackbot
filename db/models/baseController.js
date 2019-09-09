@@ -3,16 +3,16 @@ class BaseController {
         this.model = model;
     }
 
-    async get(filter) {
+    get(filter) {
         return this.model.find(filter).exec();
     }
 
-    async add(obj) {
+    add(obj) {
         return this.model.update(obj, {}, {upsert: true}).exec();
     }
 
-    async remove(filter) {
-        return await this.model.deleteMany(filter).exec();
+    remove(filter) {
+        return this.model.deleteMany(filter).exec();
     }
 }
 
