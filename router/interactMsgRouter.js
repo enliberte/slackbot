@@ -7,7 +7,7 @@ const InteractiveMessagesRouter = express.Router();
 const {SIGNING_SECRET} = require('./../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 
-const processMessages = async (payload, respond) => {
+const processMessages = (payload, respond) => {
     const value = payload.actions[0].value;
     const args = value.split('_');
     switch (args[0]) {
@@ -15,34 +15,42 @@ const processMessages = async (payload, respond) => {
             respond({text: 'See you later'});
             break;
         case 'return':
-            respond(await new RepoAPI(payload.channel.id).list());
+            new RepoAPI(payload.channel.id).list()
+                .then(msg => respond(msg))
+                .catch(err => console.log('RETURN', err));
             break;
         case 'select':
-            respond(await new UserAPI(payload.channel.id).list(args[1]));
+            new UserAPI(payload.channel.id).list(args[1])
+                .then(msg => respond(msg))
+                .catch(err => console.log('SELECT', err));
             break;
         case 'follow':
-            await new SubscribeAPI(payload.channel.id).subscribe({
+            new SubscribeAPI(payload.channel.id).subscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
-            });
-            respond(await new UserAPI(payload.channel.id).list(args[2]));
+            })
+                .then(() => new UserAPI(payload.channel.id).list(args[2]))
+                .then(msg => respond(msg))
+                .catch(err => console.log('FOLLOW', err));
             break;
         case 'unfollow':
-            await new SubscribeAPI(payload.channel.id).unsubscribe({
+            new SubscribeAPI(payload.channel.id).unsubscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
-            });
-            respond(await new UserAPI(payload.channel.id).list(args[2]));
+            })
+                .then(() => new UserAPI(payload.channel.id).list(args[2]))
+                .then(msg => respond(msg))
+                .catch(err => console.log('UNFOLLOW', err));
             break;
         case 'deleteRepo':
-            await new RepoAPI(payload.channel.id).delete({reponame: args[1]});
-            const newRepoList = await new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo');
-            console.log('-------------------------------------');
-            console.log(newRepoList);
-            console.log('-------------------------------------');
-            respond(newRepoList);
+            new RepoAPI(payload.channel.id).delete({reponame: args[1]})
+                .then(() => new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo'))
+                .then(msg => respond(msg))
+                .catch(err => console.log('DELETE REPO', err));
             break;
         case 'deleteUser':
-            await new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
-            respond(await new UserAPI(payload.channel.id).list());
+            new UserAPI(payload.channel.id, null, respond).delete({username: args[1]})
+                .then(() => new UserAPI(payload.channel.id).list())
+                .then(msg => respond(msg))
+                .catch(err => console.log('DELETE USER', err));
             break;
     }
 };
