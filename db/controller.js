@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const {MONGO_URI} = require('./../config');
+mongoose.connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
 
 class DBController {
     constructor(controller) {
         this.controller = new controller;
-        mongoose.connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
     }
 
     async actionWrapper(action) {
@@ -12,8 +12,6 @@ class DBController {
             return await action();
         } catch (e) {
             console.log(e);
-        } finally {
-            await mongoose.disconnect();
         }
     }
 
