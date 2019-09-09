@@ -13,6 +13,9 @@ class UserAPI extends BaseAPI {
     }
 
     async list(reponame) {
+        console.log('-----------------------------');
+        console.log('LIST USERS');
+        console.log('-----------------------------');
         try {
             const channelId = this.channelId;
             const emptyUsersMsg = "You don't have added users yet. To add them please use command /add_user";
