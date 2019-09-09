@@ -40,7 +40,10 @@ const processMessages = (payload, respond) => {
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             })
                 .then(() => new UserAPI(payload.channel.id).list(args[2]))
-                .then(msg => respond({...msg, replace_original: true}))
+                .then(msg => {
+                    console.log(JSON.stringify(msg));
+                    respond({...msg, replace_original: true})
+                })
                 .catch(err => console.log('UNFOLLOW', err));
             break;
         case 'deleteRepo':
