@@ -32,12 +32,12 @@ const processMessages = (payload, respond) => {
             break;
         case 'deleteRepo':
             new RepoAPI(payload.channel.id, null, respond).delete({reponame: args[1]});
+            respond({text: 'Delete repo'});
             break;
         case 'deleteUser':
             new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
             break;
     }
-    return {text: 'Processing...'};
 };
 
 InteractiveMessagesRouter.use('/interactive-messages', slackInteractions.requestListener());
