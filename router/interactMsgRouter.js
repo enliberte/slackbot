@@ -37,6 +37,7 @@ const processMessages = (payload, respond) => {
             new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
             break;
     }
+    return {text: 'Processing...'};
 };
 
 InteractiveMessagesRouter.use('/interactive-messages', slackInteractions.requestListener());
