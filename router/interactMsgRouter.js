@@ -18,12 +18,12 @@ const processMessages = (payload, respond) => {
             new RepoAPI(payload.channel.id, null, respond).list();
             break;
         case 'select':
-            new UserAPI(payload.channel.id, null, respond).list(args[1]);
-            break;
-        case 'follow':
             console.log('----------------------------------------------');
             console.log(args);
             console.log('----------------------------------------------');
+            new UserAPI(payload.channel.id, null, respond).list(args[1]);
+            break;
+        case 'follow':
             new SubscribeAPI(payload.channel.id, respond).subscribe({
                 followed: args[1], follower: payload.user.username, reponame: args[2]
             });
