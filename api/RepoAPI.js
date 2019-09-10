@@ -36,6 +36,9 @@ class RepoAPI {
     }
 
     async delete(obj) {
+        console.log('------------------------------------');
+        console.log(obj);
+        console.log('------------------------------------');
         const {reponame} = obj;
         await this.repoDB.remove(obj);
         await this.subscribeDB.remove({reponame});

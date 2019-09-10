@@ -24,9 +24,6 @@ class DBController {
     }
 
     async remove(filter) {
-        console.log('--------------------------------------');
-        console.log(filter);
-        console.log('--------------------------------------');
         return await this.actionWrapper(() => this.controller.remove(filter));
     }
 }
