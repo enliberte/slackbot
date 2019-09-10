@@ -12,6 +12,9 @@ class BaseController {
     }
 
     remove(filter) {
+        console.log('----------------------------------------------');
+        console.log(filter);
+        console.log('----------------------------------------------');
         return this.model.deleteMany(filter).exec();
     }
 }
