@@ -35,9 +35,6 @@ const processMessages = async (payload, respond) => {
             respond(await getMsg(new UserAPI(payload.channel.id).list(args[2])));
             break;
         case 'deleteRepo':
-            console.log('------------------------------------');
-            console.log('deleteRepo');
-            console.log('------------------------------------');
             await RepoAPI(payload.channel.id).delete({reponame: args[1]});
             respond(await getMsg(new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo')));
             break;
