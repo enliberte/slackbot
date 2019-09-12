@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "node index.ts"
+    "start": "node index.js",
+    "postinstall": "tsc"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "mongodb": "^3.3.2",
-    "mongoose": "^5.6.12"
+    "mongoose": "^5.6.12",
+    "typescript": "^3.6.3"
   }
 }
