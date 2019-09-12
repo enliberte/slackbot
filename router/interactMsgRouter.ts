@@ -1,15 +1,16 @@
-const express = require('express');
-const {createMessageAdapter} = require('@slack/interactive-messages');
-const UserAPI = require('../api/UserAPI');
-const RepoAPI = require('./../api/RepoAPI');
-const SubscribeAPI = require('./../api/SubscribeAPI');
-const InteractiveMessagesRouter = express.Router();
+import {IBlockMessage} from "../templates/builders/elements";
+import {Router} from "express";
+import {createMessageAdapter} from '@slack/interactive-messages';
+import UserAPI from '../api/UserAPI';
+import RepoAPI from '../api/RepoAPI';
+import SubscribeAPI from '../api/SubscribeAPI';
+const InteractiveMessagesRouter = Router();
 const {SIGNING_SECRET} = require('./../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 
-const getMsg = async (promise) => ({...await promise, replace_original: true});
+const getMsg = async (promise: Promise<IBlockMessage>) => ({...await promise, replace_original: true});
 
-const processMessages = async (payload, respond) => {
+const processMessages = async (payload: any, respond: any) => {
     const value = payload.actions[0].value;
     const args = value.split('_');
     switch (args[0]) {
@@ -23,14 +24,14 @@ const processMessages = async (payload, respond) => {
             respond(await getMsg(new UserAPI(payload.channel.id).list(args[1])));
             break;
         case 'follow':
-            await new SubscribeAPI(payload.channel.id).subscribe({
-                followed: args[1], follower: payload.user.username, reponame: args[2]
+            await new SubscribeAPI().subscribe({
+                channelId: payload.channel.id, followed: args[1], follower: payload.user.username, reponame: args[2]
             });
             respond(await getMsg(new UserAPI(payload.channel.id).list(args[2])));
             break;
         case 'unfollow':
-            await new SubscribeAPI(payload.channel.id).unsubscribe({
-                followed: args[1], follower: payload.user.username, reponame: args[2]
+            await new SubscribeAPI().unsubscribe({
+                channelId: payload.channel.id, followed: args[1], follower: payload.user.username, reponame: args[2]
             });
             respond(await getMsg(new UserAPI(payload.channel.id).list(args[2])));
             break;
@@ -39,7 +40,7 @@ const processMessages = async (payload, respond) => {
             respond(await getMsg(new RepoAPI(payload.channel.id).list('Delete', 'deleteRepo')));
             break;
         case 'deleteUser':
-            await new UserAPI(payload.channel.id, null, respond).delete({username: args[1]});
+            await new UserAPI(payload.channel.id).delete({username: args[1]});
             respond(await getMsg(new UserAPI(payload.channel.id).list()));
             break;
     }
@@ -49,4 +50,4 @@ InteractiveMessagesRouter.use('/interactive-messages', slackInteractions.request
 slackInteractions.action({type: 'button'}, processMessages);
 
 
-module.exports = InteractiveMessagesRouter;
+export default InteractiveMessagesRouter;
