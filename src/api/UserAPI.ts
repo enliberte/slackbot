@@ -13,7 +13,6 @@ interface IUserAPI {
 }
 
 
-
 class UserAPI implements IUserAPI {
     channelId: string;
     userDB: UserController;
@@ -51,6 +50,9 @@ class UserAPI implements IUserAPI {
                 director.buildUsersList(users);
             }
         }
+        console.log('-----------------------------------------------');
+        console.log(builder.getMsg());
+        console.log('-----------------------------------------------');
         return builder.getMsg();
     }
 
