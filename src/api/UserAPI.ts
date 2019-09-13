@@ -1,6 +1,5 @@
 import SubscribeController from '../db/controllers/subscribeController';
 import UserController from '../db/controllers/userController';
-const {addUsersList} = require('../templates/subscribe');
 import {IUserRequired, IUserWithFollowSign} from "../db/models/userModel";
 import DirectorMsgBuilder from "../templates/director";
 import MsgBuilder from "../templates/builders/MsgBuilder";
