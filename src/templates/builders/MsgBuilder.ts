@@ -1,5 +1,5 @@
 import IMsgBuilder from "./IBuilder";
-import {IButton, ISectionWithButton, IActions, ISection, IDivider, IChannelId, IBlockMessage} from "./elements";
+import {IButton, ISectionWithButton, IActions, ISection, IDivider, IBlockMessage} from "./elements";
 
 class MsgBuilder implements IMsgBuilder {
     private msg: IBlockMessage;
@@ -20,7 +20,6 @@ class MsgBuilder implements IMsgBuilder {
             text: {
                 type: "mrkdwn",
                 text: text,
-                emoji: true
             }
         }
     }
@@ -31,7 +30,6 @@ class MsgBuilder implements IMsgBuilder {
             text: {
                 type: "plain_text",
                 text: text,
-                emoji: true
             },
             value: value
         };

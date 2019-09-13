@@ -1,6 +1,5 @@
 interface IText {
     text: string;
-    emoji: boolean;
 }
 
 interface IChannelId {
@@ -46,4 +45,4 @@ interface IBlockMessage {
     blocks: Blocks[];
 }
 
-export {IButton, ISection, IActions, ISectionWithButton, IText, IDivider, IChannelId, IBlockMessage}
+export {IButton, ISection, IActions, ISectionWithButton, IText, IDivider, IBlockMessage}
