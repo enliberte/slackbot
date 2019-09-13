@@ -6,6 +6,7 @@ class MsgBuilder implements IMsgBuilder {
 
     constructor() {
         this.msg = {
+            text: '',
             blocks: []
         };
     }

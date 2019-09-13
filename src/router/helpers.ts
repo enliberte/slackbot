@@ -6,7 +6,7 @@ const web = new WebClient(BOT_TOKEN);
 
 
 const postMessage: (res: Response, msg: IBlockMessage, channel: string) => void = async (res, msg, channel) => {
-    await web.chat.postMessage({text: '', ...msg, channel});
+    await web.chat.postMessage({...msg, channel});
     res.status(200).send();
 };
 

@@ -2,10 +2,6 @@ interface IText {
     text: string;
 }
 
-interface IChannelId {
-    channel: string;
-}
-
 interface IMrkdwnText extends IText {
     type: "mrkdwn";
 }
@@ -41,6 +37,7 @@ interface IActions {
 type Blocks = ISection | IButton | ISectionWithButton | IActions | IDivider
 
 interface IBlockMessage {
+    text: string;
     channel?: string;
     blocks: Blocks[];
 }
