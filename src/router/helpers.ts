@@ -1,7 +1,7 @@
 import {WebClient} from '@slack/web-api';
 import {IBlockMessage} from "../templates/builders/elements";
 import {Response} from "express";
-const {BOT_TOKEN} = require('./../config');
+const {BOT_TOKEN} = require('../../config');
 const web = new WebClient(BOT_TOKEN);
 
 

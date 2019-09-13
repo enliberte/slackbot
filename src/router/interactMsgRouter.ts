@@ -5,7 +5,7 @@ import UserAPI from '../api/UserAPI';
 import RepoAPI from '../api/RepoAPI';
 import SubscribeAPI from '../api/SubscribeAPI';
 const InteractiveMessagesRouter = Router();
-const {SIGNING_SECRET} = require('./../config');
+const {SIGNING_SECRET} = require('../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 
 const getMsg = async (promise: Promise<IBlockMessage>) => ({...await promise, replace_original: true});

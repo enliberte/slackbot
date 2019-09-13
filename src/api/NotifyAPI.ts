@@ -1,6 +1,6 @@
 import SubscribeController from '../db/controllers/subscribeController';
 import {WebClient} from "@slack/web-api";
-const {BOT_TOKEN} = require('../config');
+const {BOT_TOKEN} = require('../../config');
 
 
 interface IStashPullRequestAttachment {
