@@ -50,9 +50,6 @@ class UserAPI implements IUserAPI {
                 director.buildUsersList(users);
             }
         }
-        console.log('-----------------------------------------------');
-        console.log(builder.getMsg());
-        console.log('-----------------------------------------------');
         return builder.getMsg();
     }
 
