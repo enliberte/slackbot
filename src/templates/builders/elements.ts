@@ -37,7 +37,6 @@ interface IActions {
 type Blocks = ISection | IButton | ISectionWithButton | IActions | IDivider
 
 interface IBlockMessage {
-    text: string;
     channel?: string;
     blocks: Blocks[];
 }
