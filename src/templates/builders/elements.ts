@@ -1,5 +1,6 @@
 interface IText {
     text: string;
+    emoji: boolean;
 }
 
 interface IChannelId {

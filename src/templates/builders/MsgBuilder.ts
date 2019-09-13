@@ -19,7 +19,8 @@ class MsgBuilder implements IMsgBuilder {
             type: "section",
             text: {
                 type: "mrkdwn",
-                text: text
+                text: text,
+                emoji: true
             }
         }
     }
@@ -30,6 +31,7 @@ class MsgBuilder implements IMsgBuilder {
             text: {
                 type: "plain_text",
                 text: text,
+                emoji: true
             },
             value: value
         };
