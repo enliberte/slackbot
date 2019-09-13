@@ -15,6 +15,9 @@ RepoRouter.post('/add-repo', async (req: Request, res: Response) => {
 RepoRouter.post('/repos', async (req: Request, res: Response) => {
     const {channel_id} = req.body;
     const msg = await new RepoAPI(channel_id).list('Delete', 'deleteRepo');
+    console.log('-----------------------------');
+    console.log(typeof postMessage);
+    console.log('-----------------------------');
     postMessage(res, msg, channel_id);
 });
 
