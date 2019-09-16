@@ -51,7 +51,7 @@ class RepoAPI implements IRepoAPI {
         }
         console.log('-----------------------------------------');
         console.log('ADD_REPO');
-        console.log(builder.getMsg());
+        console.log(JSON.stringify(builder.getMsg()));
         console.log('-----------------------------------------');
         return builder.getMsg();
     }

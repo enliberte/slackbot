@@ -65,7 +65,7 @@ class UserAPI implements IUserAPI {
         }
         console.log('-----------------------------------------');
         console.log('ADD_USER');
-        console.log(builder.getMsg());
+        console.log(JSON.stringify(builder.getMsg()));
         console.log('-----------------------------------------');
         return builder.getMsg();
     }
