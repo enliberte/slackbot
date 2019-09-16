@@ -29,11 +29,13 @@ class UserAPI implements IUserAPI {
         const followedUserNames = followedUsers.map(user => user.followed);
         let allUsersWithFollowSign: IUserWithFollowSign[] = [];
         for (let user of users) {
+            let userWithFollowSign: IUserWithFollowSign = user;
+            userWithFollowSign.isFollowed = followedUserNames.indexOf(user.username) !== -1;
             console.log('--------------------------------------');
             console.log(JSON.stringify(user));
             console.log(JSON.stringify({...user}));
             console.log('--------------------------------------');
-            allUsersWithFollowSign.push({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1});
+            allUsersWithFollowSign.push(userWithFollowSign);
         }
         return allUsersWithFollowSign;
     }

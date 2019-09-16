@@ -21,6 +21,11 @@ const processMessages = async (payload: any, respond: any) => {
             respond(await getMsg(new RepoAPI(payload.channel.id).list()));
             break;
         case 'select':
+            const msg = await new UserAPI(payload.channel.id).list(args[1]);
+            console.log('---------------------------------------------------');
+            console.log('SELECT');
+            console.log(JSON.stringify(msg));
+            console.log('---------------------------------------------------');
             respond(await new UserAPI(payload.channel.id).list(args[1]));
             break;
         case 'follow':
