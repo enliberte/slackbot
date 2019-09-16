@@ -15,7 +15,7 @@ const processMessages = async (payload: any, respond: any) => {
     const args = value.split('_');
     switch (args[0]) {
         case 'close':
-            respond({blocks: []});
+            respond({delete_original: true});
             break;
         case 'return':
             respond(await getMsg(new RepoAPI(payload.channel.id).list()));
