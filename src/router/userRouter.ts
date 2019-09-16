@@ -13,6 +13,10 @@ UserRouter.post('/add-user', async (req: Request, res: Response) => {
 UserRouter.post('/users', async (req: Request, res: Response) => {
     const {channel_id} = req.body;
     const msg = await new UserAPI(channel_id).list();
+    console.log('---------------------------------------------------');
+    console.log('USERS');
+    console.log(JSON.stringify(msg));
+    console.log('---------------------------------------------------');
     postMessage(res, msg, channel_id);
 });
 
