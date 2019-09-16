@@ -17,7 +17,8 @@ class DirectorMsgBuilder {
             this.builder.buildDivider();
             this.builder.buildSectionWithButton(reponame, btnText, `${command}_${reponame}`);
         });
-        this.builder.buildActions([{btnText: 'Close', btnValue: 'close'}])
+        this.builder.buildDivider();
+        this.builder.buildActions([{btnText: 'Close', btnValue: 'close'}]);
         this.builder.buildDivider();
     }
 
@@ -38,6 +39,7 @@ class DirectorMsgBuilder {
             this.builder.buildDivider();
             this.builder.buildSectionWithButton(user.username, btnText, btnValue);
         });
+        this.builder.buildDivider();
         this.builder.buildActions(actionBtns);
         this.builder.buildDivider();
     }

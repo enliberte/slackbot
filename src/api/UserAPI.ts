@@ -31,10 +31,6 @@ class UserAPI implements IUserAPI {
         for (let user of users) {
             let userWithFollowSign: IUserWithFollowSign = user;
             userWithFollowSign.isFollowed = followedUserNames.indexOf(user.username) !== -1;
-            console.log('--------------------------------------');
-            console.log(JSON.stringify(user));
-            console.log(JSON.stringify({...user}));
-            console.log('--------------------------------------');
             allUsersWithFollowSign.push(userWithFollowSign);
         }
         return allUsersWithFollowSign;
@@ -51,10 +47,6 @@ class UserAPI implements IUserAPI {
             const director = new DirectorMsgBuilder(builder);
             if (reponame) {
                 const usersWithFollowSign = await this.getUsersWithFollowSign(users, channelId, reponame);
-                console.log('------------------------------------------');
-                console.log('FOLLOWED USERS');
-                console.log(JSON.stringify(usersWithFollowSign));
-                console.log('------------------------------------------');
                 director.buildUsersList(usersWithFollowSign, reponame);
             } else {
                 director.buildUsersList(users);
