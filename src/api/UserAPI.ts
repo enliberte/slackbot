@@ -31,6 +31,7 @@ class UserAPI implements IUserAPI {
         for (let user of users) {
             console.log('--------------------------------------');
             console.log(JSON.stringify(user));
+            console.log(JSON.stringify({...user}));
             console.log('--------------------------------------');
             allUsersWithFollowSign.push({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1});
         }
