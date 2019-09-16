@@ -49,10 +49,6 @@ class RepoAPI implements IRepoAPI {
         } else {
             builder.buildSection(`Incorrect reponame ${reponame}`);
         }
-        console.log('-----------------------------------------');
-        console.log('ADD_REPO');
-        console.log(JSON.stringify(builder.getMsg()));
-        console.log('-----------------------------------------');
         return builder.getMsg();
     }
 

@@ -63,10 +63,6 @@ class UserAPI implements IUserAPI {
         } else {
             builder.buildSection(`Incorrect username ${username}`);
         }
-        console.log('-----------------------------------------');
-        console.log('ADD_USER');
-        console.log(JSON.stringify(builder.getMsg()));
-        console.log('-----------------------------------------');
         return builder.getMsg();
     }
 
