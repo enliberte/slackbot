@@ -14,9 +14,9 @@ interface IUserAPI {
 
 
 class UserAPI implements IUserAPI {
-    channelId: string;
-    userDB: UserController;
-    subscribeDB: SubscribeController;
+    readonly channelId: string;
+    private userDB: UserController;
+    private subscribeDB: SubscribeController;
 
     constructor(channelId: string) {
         this.channelId = channelId;
@@ -63,6 +63,10 @@ class UserAPI implements IUserAPI {
         } else {
             builder.buildSection(`Incorrect username ${username}`);
         }
+        console.log('-----------------------------------------');
+        console.log('ADD_USER');
+        console.log(builder.getMsg());
+        console.log('-----------------------------------------');
         return builder.getMsg();
     }
 

@@ -1,8 +1,6 @@
-import {Request, Response} from "express";
-import {Router} from 'express';
+import {Request, Response, Router} from "express";
 import RepoAPI from '../api/RepoAPI';
 const postMessage = require('./helpers');
-
 
 const RepoRouter = Router();
 
