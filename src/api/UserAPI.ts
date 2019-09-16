@@ -45,6 +45,10 @@ class UserAPI implements IUserAPI {
             const director = new DirectorMsgBuilder(builder);
             if (reponame) {
                 const usersWithFollowSign = await this.getUsersWithFollowSign(users, channelId, reponame);
+                console.log('------------------------------------------');
+                console.log('FOLLOWED USERS');
+                console.log(JSON.stringify(usersWithFollowSign));
+                console.log('------------------------------------------');
                 director.buildUsersList(usersWithFollowSign, reponame);
             } else {
                 director.buildUsersList(users);

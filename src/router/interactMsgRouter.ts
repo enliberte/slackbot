@@ -24,7 +24,6 @@ const processMessages = async (payload: any, respond: any) => {
             const msg = await new UserAPI(payload.channel.id).list(args[1]);
             console.log('---------------------------------------------------');
             console.log('SELECT');
-            console.log(args[1]);
             console.log(JSON.stringify(msg));
             console.log('---------------------------------------------------');
             respond(await new UserAPI(payload.channel.id).list(args[1]));
