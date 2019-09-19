@@ -1,6 +1,7 @@
-import SubscribeController from '../db/controllers/subscribeController';
 import {WebClient} from "@slack/web-api";
-const {BOT_TOKEN} = require('../../config');
+import {IDBController} from "../../db/controllers/baseController";
+import {ISubscribe, ISubscribeRequired} from "../../db/models/subscribeModel";
+const {BOT_TOKEN} = require('../../../config');
 
 
 interface IStashPullRequestAttachment {
@@ -16,20 +17,20 @@ interface IStashPullRequestBody {
 
 class NotifyAPI {
     protected web: WebClient;
-    protected subscribeDB: SubscribeController;
+    protected subscribeDB: IDBController<ISubscribe, ISubscribeRequired>;
 
-    constructor() {
+    constructor(subscribeDB: IDBController<ISubscribe, ISubscribeRequired>) {
         this.web = new WebClient(BOT_TOKEN);
-        this.subscribeDB = new SubscribeController();
+        this.subscribeDB = subscribeDB;
     }
 
-    async notify(subscribersChannelId: string[], data: any) {
+    async notify(subscribersChannelId: string[], data: any): Promise<void> {
         subscribersChannelId.map(async channel => {
             await this.web.chat.postMessage({text: 'New pull request', ...data, channel})
         });
     }
 
-    async notifyAboutPR (data: IStashPullRequestBody) {
+    async notifyAboutPR (data: IStashPullRequestBody): Promise<void> {
         const {fallback, author_name: followed} = data.attachments[0];
         if (fallback && followed) {
             const result = fallback.match(/<(.*)\/pull-requests/);

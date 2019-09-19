@@ -6,8 +6,9 @@ class RepoController extends BaseController<IRepoModel, IRepo, IRepoRequired> {
         super(RepoModel);
     }
 
-    get(filter: IRepo) {
-        return this.model.find(filter).sort({reponame: 1}).exec();
+    async get(filter: IRepo): Promise<IRepoRequired[]> {
+        const docs = await this.model.find(filter).sort({reponame: 1}).exec();
+        return docs.map(doc => ({reponame: doc.reponame, addedByName: doc.addedByName, channelId: doc.channelId}));
     }
 }
 

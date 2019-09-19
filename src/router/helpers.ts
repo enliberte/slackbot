@@ -5,9 +5,12 @@ const {BOT_TOKEN} = require('../../config');
 const web = new WebClient(BOT_TOKEN);
 
 
-const postMessage: (res: Response, msg: IBlockMessage, channel: string) => void = async (res, msg, channel) => {
-    await web.chat.postMessage({text: '123', ...msg, channel});
+interface IPostMessage {
+    (res: Response, msg: IBlockMessage, channel: string): void;
+}
+
+
+export const postMessage: IPostMessage = async (res, msg, channel) => {
+    await web.chat.postMessage({text: '', ...msg, channel});
     res.status(200).send();
 };
-
-export default postMessage;

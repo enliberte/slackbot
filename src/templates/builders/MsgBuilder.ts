@@ -49,27 +49,32 @@ class MsgBuilder implements IMsgBuilder {
         }
     }
 
-    buildChannelId(channelId: string): void {
-        this.msg.channel = channelId
+    buildChannelId(channelId: string): IMsgBuilder {
+        this.msg.channel = channelId;
+        return this;
     }
 
-    buildSection(text: string): void {
+    buildSection(text: string): IMsgBuilder {
         this.msg.blocks.push(this.getSection(text));
+        return this;
     }
 
-    buildDivider(): void {
+    buildDivider(): IMsgBuilder {
         const msgPart: IDivider = {
             "type": "divider"
         };
-        this.msg.blocks.push(msgPart)
+        this.msg.blocks.push(msgPart);
+        return this;
     }
 
-    buildSectionWithButton(text: string, btnText: string, btnValue: string): void {
+    buildSectionWithButton(text: string, btnText: string, btnValue: string): IMsgBuilder {
         this.msg.blocks.push(this.getSectionWithButton(text, btnText, btnValue));
+        return this;
     }
 
-    buildActions(buttons: {btnText: string; btnValue: string }[]): void {
+    buildActions(buttons: {btnText: string; btnValue: string }[]): IMsgBuilder {
         this.msg.blocks.push(this.getActions(buttons));
+        return this;
     }
 }
 

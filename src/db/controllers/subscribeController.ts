@@ -6,8 +6,11 @@ class SubscribeController extends BaseController<ISubscribeModel, ISubscribe, IS
         super(SubscribeModel);
     }
 
-    get(filter: ISubscribe) {
-        return this.model.find(filter).sort({reponame: 1}).exec();
+    async get(filter: ISubscribe): Promise<ISubscribeRequired[]> {
+        const docs = await this.model.find(filter).sort({reponame: 1}).exec();
+        return docs.map(doc =>
+            ({channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame})
+        );
     }
 }
 

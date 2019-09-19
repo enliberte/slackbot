@@ -6,8 +6,9 @@ class UserController extends BaseController<IUserModel, IUser, IUserRequired> {
         super(UserModel);
     }
 
-    get(filter: IUser) {
-        return this.model.find(filter).sort({username: 1}).exec();
+    async get(filter: IUser): Promise<IUserRequired[]> {
+        const docs = await this.model.find(filter).sort({username: 1}).exec();
+        return docs.map(doc => ({username: doc.username, channelId: doc.channelId, addedByName: doc.addedByName}));
     }
 }
 
