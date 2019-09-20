@@ -56,7 +56,7 @@ export default class InteractiveMsgRouter extends BaseRouter {
         const args = value.split('_');
         switch (args[0]) {
             case 'close':
-                await this.closeButtonHandler(respond);
+                this.closeButtonHandler(respond);
                 break;
             case 'return':
                 await this.returnButtonHandler(respond, payload.channel.id);
