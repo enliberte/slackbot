@@ -1,43 +1,47 @@
-import {WebClient} from "@slack/web-api";
-import {IDBController} from "../../db/controllers/baseController";
-import {ISubscribe, ISubscribeRequired} from "../../db/models/subscribeModel";
-const {BOT_TOKEN} = require('../../../config');
+import {IWebChatAdapter} from "./adapters/WebChatAdapter";
+import {ISubscribeController} from "../../db/controllers/subscribeController";
 
 
-interface IStashPullRequestAttachment {
+export interface IStashPullRequestAttachment {
     fallback: string;
     author_name: string;
 }
 
-
-interface IStashPullRequestBody {
+export interface IStashPullRequestBody {
     attachments: IStashPullRequestAttachment[];
 }
 
+export interface INotifyAPI {
+    notifyAboutPR(data: IStashPullRequestBody): Promise<void>;
+}
 
-class NotifyAPI {
-    protected web: WebClient;
-    protected subscribeDB: IDBController<ISubscribe, ISubscribeRequired>;
+class NotifyAPI implements INotifyAPI {
+    protected webChatAdapter: IWebChatAdapter;
+    protected subscribeDB: ISubscribeController;
 
-    constructor(subscribeDB: IDBController<ISubscribe, ISubscribeRequired>) {
-        this.web = new WebClient(BOT_TOKEN);
+    constructor(webChatAdapter: IWebChatAdapter, subscribeDB: ISubscribeController) {
+        this.webChatAdapter = webChatAdapter;
         this.subscribeDB = subscribeDB;
     }
 
-    async notify(subscribersChannelId: string[], data: any): Promise<void> {
-        subscribersChannelId.map(async channel => {
-            await this.web.chat.postMessage({text: 'New pull request', ...data, channel})
+    private async getSubscribersChannelId(followed: string, reponame: string): Promise<string[]> {
+        const subscribes = await this.subscribeDB.get({followed, reponame});
+        return subscribes.map(subscribe => subscribe.channelId);
+    }
+
+    private async notify(subscribersChannelId: string[], data: any): Promise<void> {
+        subscribersChannelId.map(async channelId => {
+            await this.webChatAdapter.post({text: 'New pull request', ...data, channelId})
         });
     }
 
-    async notifyAboutPR (data: IStashPullRequestBody): Promise<void> {
+    async notifyAboutPR(data: IStashPullRequestBody): Promise<void> {
         const {fallback, author_name: followed} = data.attachments[0];
         if (fallback && followed) {
             const result = fallback.match(/<(.*)\/pull-requests/);
             if (result) {
-                const reponame: string = result[1];
-                const subscribes = await this.subscribeDB.get({followed, reponame});
-                const subscribersChannelId = subscribes.map(subscribe => subscribe.channelId);
+                const reponame = result[1];
+                const subscribersChannelId = await this.getSubscribersChannelId(followed, reponame);
                 await this.notify(subscribersChannelId, data);
             }
         }

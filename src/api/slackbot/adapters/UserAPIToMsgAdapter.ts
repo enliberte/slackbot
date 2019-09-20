@@ -2,11 +2,12 @@ import {IBlockMessage} from '../../../templates/builders/elements';
 import IMsgBuilder from "../../../templates/builders/IBuilder";
 import {IUserAPI} from "../../admin/UserAPI";
 import buildUsersList from "../../../templates/common/buildUsersList";
+import {IUserRequired} from "../../../db/models/userModel";
 
 
-interface IUserAPIToMsgAdapter {
-    getUsersListMsg(reponame?: string): Promise<IBlockMessage>;
-    getAddResultMsg(obj: {username: string, addedByName: string}): Promise<IBlockMessage>;
+export interface IUserAPIToMsgAdapter {
+    getUsersListMsg(channelId: string, reponame?: string): Promise<IBlockMessage>;
+    getAddResultMsg(obj: IUserRequired): Promise<IBlockMessage>;
 }
 
 
@@ -19,9 +20,9 @@ export default class UserAPIToMsgAdapter implements IUserAPIToMsgAdapter {
         this.builder = builder;
     }
 
-    async getUsersListMsg(reponame?: string) {
+    async getUsersListMsg(channelId: string, reponame?: string) {
         const emptyUsersMsg = "You don't have added users yet. To add them please use command /add_user";
-        const users = await this.api.list(reponame);
+        const users = await this.api.list(channelId, reponame);
         if (users.length === 0) {
             return this.builder.buildSection(emptyUsersMsg).getMsg();
         } else {
@@ -29,17 +30,16 @@ export default class UserAPIToMsgAdapter implements IUserAPIToMsgAdapter {
         }
     }
 
-    async getAddResultMsg(obj: {username: string, addedByName: string}) {
-        const {username} = obj;
-        if (username.length !== 0) {
+    async getAddResultMsg(obj: IUserRequired) {
+        if (obj.username.length !== 0) {
             const addOperationSuccess = await this.api.add(obj);
             if (addOperationSuccess) {
-                this.builder.buildSection(`You have added new user ${username}`);
+                this.builder.buildSection(`You have added new user ${obj.username}`);
             } else {
                 this.builder.buildSection(`DB Error has been occurred`);
             }
         } else {
-            this.builder.buildSection(`Incorrect username ${username}`);
+            this.builder.buildSection(`Incorrect username ${obj.username}`);
         }
         return this.builder.getMsg();
     }

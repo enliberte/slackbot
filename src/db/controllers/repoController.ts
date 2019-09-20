@@ -1,7 +1,9 @@
 import {IRepoModel, IRepo, RepoModel, IRepoRequired} from '../models/repoModel';
-import BaseController from './baseController';
+import BaseController, {IDBController} from './baseController';
 
-class RepoController extends BaseController<IRepoModel, IRepo, IRepoRequired> {
+export interface IRepoController extends IDBController<IRepo, IRepoRequired> {}
+
+class RepoController extends BaseController<IRepoModel, IRepo, IRepoRequired> implements IRepoController {
     constructor() {
         super(RepoModel);
     }

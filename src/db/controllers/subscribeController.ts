@@ -1,7 +1,9 @@
 import {ISubscribeModel, ISubscribe, SubscribeModel, ISubscribeRequired} from '../models/subscribeModel';
-import BaseController from './baseController';
+import BaseController, {IDBController} from './baseController';
 
-class SubscribeController extends BaseController<ISubscribeModel, ISubscribe, ISubscribeRequired> {
+export interface ISubscribeController extends IDBController<ISubscribe, ISubscribeRequired> {}
+
+class SubscribeController extends BaseController<ISubscribeModel, ISubscribe, ISubscribeRequired> implements ISubscribeController {
     constructor() {
         super(SubscribeModel);
     }

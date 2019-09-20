@@ -1,7 +1,9 @@
 import {IUser, UserModel, IUserModel, IUserRequired} from '../models/userModel';
-import BaseController from './baseController';
+import BaseController, {IDBController} from './baseController';
 
-class UserController extends BaseController<IUserModel, IUser, IUserRequired> {
+export interface IUserController extends IDBController<IUser, IUserRequired> {}
+
+class UserController extends BaseController<IUserModel, IUser, IUserRequired> implements IUserController {
     constructor() {
         super(UserModel);
     }

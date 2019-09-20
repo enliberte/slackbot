@@ -1,4 +1,4 @@
-import IMsgBuilder from "./IBuilder";
+import IMsgBuilder, {IButtonProps} from "./IBuilder";
 import {IButton, ISectionWithButton, IActions, ISection, IDivider, IBlockMessage} from "./elements";
 
 class MsgBuilder implements IMsgBuilder {
@@ -24,28 +24,29 @@ class MsgBuilder implements IMsgBuilder {
         }
     }
 
-    private getButton(text: string, value: string): IButton {
+    private getButton(button: IButtonProps): IButton {
+        const {btnText, btnValue} = button;
         return {
             type: "button",
             text: {
                 type: "plain_text",
-                text: text,
+                text: btnText,
             },
-            value: value
+            value: btnValue
         };
     }
 
-    private getSectionWithButton(text: string, btnText: string, btnValue: string): ISectionWithButton {
+    private getSectionWithButton(text: string, button: IButtonProps): ISectionWithButton {
         return {
             ...this.getSection(text),
-            accessory: this.getButton(btnText, btnValue)
+            accessory: this.getButton(button)
         }
     }
 
-    private getActions(buttons: {btnText: string, btnValue: string}[]): IActions {
+    private getActions(buttons: IButtonProps[]): IActions {
         return {
             type: "actions",
-            elements: buttons.map(button => this.getButton(button.btnText, button.btnValue))
+            elements: buttons.map(button => this.getButton(button))
         }
     }
 
@@ -67,8 +68,8 @@ class MsgBuilder implements IMsgBuilder {
         return this;
     }
 
-    buildSectionWithButton(text: string, btnText: string, btnValue: string): IMsgBuilder {
-        this.msg.blocks.push(this.getSectionWithButton(text, btnText, btnValue));
+    buildSectionWithButton(text: string, button: IButtonProps): IMsgBuilder {
+        this.msg.blocks.push(this.getSectionWithButton(text, button));
         return this;
     }
 

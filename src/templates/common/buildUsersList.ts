@@ -13,13 +13,14 @@ const buildUsersList: IBuildUsersList = (builder, users, reponame?) => {
         [{btnText: 'Close', btnValue: 'close'}];
     builder.buildDivider().buildSection(headerSectionMsg);
     users.forEach(user => {
-        let btnText = 'Delete';
-        let btnValue = `deleteUser_${user.username}`;
+        let commandButton = {btnText: 'Delete', btnValue: `deleteUser_${user.username}`};
         if (reponame) {
-            btnText = user.isFollowed ? 'Unfollow' : 'Follow';
-            btnValue = user.isFollowed ? `unfollow_${user.username}_${reponame}` : `follow_${user.username}_${reponame}`;
+            commandButton = {
+                btnText: user.isFollowed ? 'Unfollow' : 'Follow',
+                btnValue: user.isFollowed ? `unfollow_${user.username}_${reponame}` : `follow_${user.username}_${reponame}`
+            };
         }
-        builder.buildDivider().buildSectionWithButton(user.username, btnText, btnValue);
+        builder.buildDivider().buildSectionWithButton(user.username, commandButton);
     });
     builder.buildDivider().buildActions(actionBtns).buildDivider();
     return builder.getMsg();

@@ -1,26 +1,20 @@
-import {IUser, IUserRequired, IUserWithFollowSign} from "../../db/models/userModel";
-import {IDBController} from "../../db/controllers/baseController";
-import {ISubscribe, ISubscribeRequired} from "../../db/models/subscribeModel";
+import {IUserRequired, IUserWithFollowSign} from "../../db/models/userModel";
+import {IUserController} from "../../db/controllers/userController";
+import {ISubscribeController} from "../../db/controllers/subscribeController";
 
 
 export interface IUserAPI {
-    list(reponame?: string): Promise<IUserWithFollowSign[]>;
-    add(obj: {username: string, addedByName: string}): Promise<boolean>;
-    delete(obj: IUserRequired): Promise<boolean>;
+    list(channelId: string, reponame?: string): Promise<IUserWithFollowSign[]>;
+    add(obj: IUserRequired): Promise<boolean>;
+    delete(obj: {channelId: string, username: string}): Promise<boolean>;
 }
 
 
 export default class UserAPI implements IUserAPI {
-    readonly channelId: string;
-    private userDB: IDBController<IUser, IUserRequired>;
-    private subscribeDB: IDBController<ISubscribe, ISubscribeRequired>;
+    private userDB: IUserController;
+    private subscribeDB: ISubscribeController;
 
-    constructor(
-        channelId: string,
-        userDB: IDBController<IUser, IUserRequired>,
-        subscribeDB: IDBController<ISubscribe, ISubscribeRequired>
-    ) {
-        this.channelId = channelId;
+    constructor(userDB: IUserController, subscribeDB: ISubscribeController) {
         this.userDB = userDB;
         this.subscribeDB = subscribeDB;
     }
@@ -31,8 +25,7 @@ export default class UserAPI implements IUserAPI {
         return users.map(user => ({...user, isFollowed: followedUserNames.indexOf(user.username) !== -1}));
     }
 
-    async list(reponame?: string): Promise<IUserWithFollowSign[]> {
-        const channelId = this.channelId;
+    async list(channelId: string, reponame?: string): Promise<IUserWithFollowSign[]> {
         let users = await this.userDB.get({channelId});
         if (reponame) {
             users = await this.getUsersWithFollowSign(users, channelId, reponame);
@@ -40,20 +33,17 @@ export default class UserAPI implements IUserAPI {
         return users;
     }
 
-    async add(obj: {username: string, addedByName: string}): Promise<boolean> {
-        const {username} = obj;
-        if (username.length !== 0) {
-            const channelId = this.channelId;
-            return this.userDB.add({...obj, channelId});
+    async add(obj: IUserRequired): Promise<boolean> {
+        if (obj.username.length !== 0) {
+            return this.userDB.add(obj);
         } else {
             return false;
         }
     }
 
-    async delete(obj: {username: string}): Promise<boolean> {
-        const {username} = obj;
-        const channelId = this.channelId;
-        const userRemovingOperationResult = await this.userDB.remove({username, channelId});
+    async delete(obj: {channelId: string, username: string}): Promise<boolean> {
+        const {username, channelId} = obj;
+        const userRemovingOperationResult = await this.userDB.remove(obj);
         const subscribeRemovingOperationResult = await this.subscribeDB.remove({followed: username, channelId});
         return userRemovingOperationResult && subscribeRemovingOperationResult;
     }

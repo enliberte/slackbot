@@ -1,17 +1,17 @@
-import {ISubscribe, ISubscribeRequired} from "../../db/models/subscribeModel";
-import {IDBController} from "../../db/controllers/baseController";
+import {ISubscribeRequired} from "../../db/models/subscribeModel";
+import {ISubscribeController} from "../../db/controllers/subscribeController";
 
 
-interface ISubscribeAPI {
+export interface ISubscribeAPI {
     subscribe(obj: ISubscribeRequired): Promise<boolean>;
     unsubscribe(obj: ISubscribeRequired): Promise<boolean>;
 }
 
 
 export default class SubscribeAPI implements ISubscribeAPI {
-    private subscribeDB: IDBController<ISubscribe, ISubscribeRequired>;
+    private subscribeDB: ISubscribeController;
 
-    constructor(subscribeDB: IDBController<ISubscribe, ISubscribeRequired>) {
+    constructor(subscribeDB: ISubscribeController) {
         this.subscribeDB = subscribeDB;
     }
 
