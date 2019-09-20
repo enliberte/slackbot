@@ -13,7 +13,7 @@ export default class RepoRouter extends BaseRouter {
         });
 
         this.router.post('/repos', async (req: Request, res: Response) => {
-            const {channelId} = req.body;
+            const {channel_id: channelId} = req.body;
             const button = {btnText: 'Delete', btnValue: 'deleteRepo'};
             const msg = await this.api.repoMsg.getReposListMsg(channelId, button);
             postMessage(res, msg, channelId);
