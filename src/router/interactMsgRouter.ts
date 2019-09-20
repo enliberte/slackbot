@@ -54,9 +54,6 @@ export default class InteractiveMsgRouter extends BaseRouter {
         const args = value.split('_');
         switch (args[0]) {
             case 'close':
-                console.log('-------------------------------------------------------');
-                console.log(this.closeButtonHandler);
-                console.log('-------------------------------------------------------');
                 return this.closeButtonHandler(respond);
             case 'return':
                 return this.returnButtonHandler(respond, payload.channel.id);

@@ -9,6 +9,11 @@ export default class SubscribeRouter extends BaseRouter {
             const {channel_id: channelId} = req.body;
             const button = {btnText: 'Select', btnValue: 'select'};
             const msg = await this.api.repoMsg.getReposListMsg(channelId, button);
+
+            console.log('----------------------------------------------------------');
+            console.log(JSON.stringify(msg));
+            console.log('----------------------------------------------------------');
+
             postMessage(res, msg, channelId);
         });
     }
