@@ -10,7 +10,9 @@ const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});
 export default class InteractiveMsgRouter extends BaseRouter {
 
     private async closeButtonHandler(respond: any): Promise<void> {
+        console.log('------------------------------------');
         respond({delete_original: true});
+        console.log('------------------------------------');
     }
 
     private async returnButtonHandler(respond: any, channelId: string): Promise<void> {
@@ -54,9 +56,6 @@ export default class InteractiveMsgRouter extends BaseRouter {
         const args = value.split('_');
         switch (args[0]) {
             case 'close':
-                console.log('-------------------------------');
-                console.log(args);
-                console.log('-------------------------------');
                 await this.closeButtonHandler(respond);
                 break;
             case 'return':
