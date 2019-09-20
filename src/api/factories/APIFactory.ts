@@ -29,11 +29,11 @@ export default class APIFactory implements IAPIFactory {
     }
 
     getRepoAPIToMsgAdapter(): RepoAPIToMsgAdapter {
-        return new RepoAPIToMsgAdapter(this.getRepoAPI(), MsgBuilder.getInstance());
+        return new RepoAPIToMsgAdapter(this.getRepoAPI());
     }
 
     getUserAPIToMsgAdapter(): UserAPIToMsgAdapter {
-        return new UserAPIToMsgAdapter(this.getUserAPI(), MsgBuilder.getInstance());
+        return new UserAPIToMsgAdapter(this.getUserAPI());
     }
 
 }

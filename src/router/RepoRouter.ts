@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import {postMessage} from './helpers';
 import BaseRouter from "./BaseRouter";
+import MsgBuilder from "../templates/builders/MsgBuilder";
 
 
 export default class RepoRouter extends BaseRouter {
@@ -8,14 +9,14 @@ export default class RepoRouter extends BaseRouter {
 
         this.router.post('/add-repo', async (req: Request, res: Response) => {
             const {channel_id: channelId, text: reponame, user_name: addedByName} = req.body;
-            const msg = await this.api.repoMsg.getAddResultMsg({channelId, reponame, addedByName});
+            const msg = await this.api.repoMsg.getAddResultMsg(new MsgBuilder(), {channelId, reponame, addedByName});
             postMessage(res, msg, channelId);
         });
 
         this.router.post('/repos', async (req: Request, res: Response) => {
             const {channel_id: channelId} = req.body;
             const button = {btnText: 'Delete', btnValue: 'deleteRepo'};
-            const msg = await this.api.repoMsg.getReposListMsg(channelId, button);
+            const msg = await this.api.repoMsg.getReposListMsg(new MsgBuilder(), channelId, button);
             postMessage(res, msg, channelId);
         });
 

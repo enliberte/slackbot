@@ -4,6 +4,7 @@ const {SIGNING_SECRET} = require('../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 import BaseRouter from "./BaseRouter";
 import {ISubscribeRequired} from "../db/models/subscribeModel";
+import MsgBuilder from "../templates/builders/MsgBuilder";
 
 const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});
 
@@ -15,37 +16,37 @@ export default class InteractiveMsgRouter extends BaseRouter {
 
     private async returnButtonHandler(respond: any, channelId: string): Promise<void> {
         const selectButton = {btnText: 'Select', btnValue: 'select'};
-        const msg = await this.api.repoMsg.getReposListMsg(channelId, selectButton);
+        const msg = await this.api.repoMsg.getReposListMsg(new MsgBuilder(), channelId, selectButton);
         respond(replaceMsg(msg));
     }
 
     private async selectRepoButtonHandler(respond: any, channelId: string, reponame: string): Promise<void> {
-        const msg = await this.api.userMsg.getUsersListMsg(channelId, reponame);
+        const msg = await this.api.userMsg.getUsersListMsg(new MsgBuilder(), channelId, reponame);
         respond(replaceMsg(msg));
     }
 
     private async followButtonHandler(respond: any, subscribe: ISubscribeRequired): Promise<void> {
         await this.api.subscribe.subscribe(subscribe);
-        const msg = await this.api.userMsg.getUsersListMsg(subscribe.channelId, subscribe.reponame);
+        const msg = await this.api.userMsg.getUsersListMsg(new MsgBuilder(), subscribe.channelId, subscribe.reponame);
         respond(replaceMsg(msg));
     }
 
     private async unfollowButtonHandler(respond: any, subscribe: ISubscribeRequired): Promise<void> {
         await this.api.subscribe.unsubscribe(subscribe);
-        const msg = await this.api.userMsg.getUsersListMsg(subscribe.channelId, subscribe.reponame);
+        const msg = await this.api.userMsg.getUsersListMsg(new MsgBuilder(), subscribe.channelId, subscribe.reponame);
         respond(replaceMsg(msg));
     }
 
     private async deleteRepoButtonHandler(respond: any, channelId: string, reponame: string): Promise<void> {
         await this.api.repo.delete({channelId, reponame});
         const deleteRepoButton = {btnText: 'Delete', btnValue: 'deleteRepo'};
-        const msg = await this.api.repoMsg.getReposListMsg(channelId, deleteRepoButton);
+        const msg = await this.api.repoMsg.getReposListMsg(new MsgBuilder(), channelId, deleteRepoButton);
         respond(replaceMsg(msg));
     }
 
     private async deleteUserButtonHandler(respond: any, channelId: string, username: string): Promise<void> {
         await this.api.user.delete({channelId, username});
-        const deleteUserMsg = await this.api.userMsg.getUsersListMsg(channelId);
+        const deleteUserMsg = await this.api.userMsg.getUsersListMsg(new MsgBuilder(), channelId);
         respond(replaceMsg(deleteUserMsg));
     }
 

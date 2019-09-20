@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import {postMessage} from './helpers';
 import BaseRouter from "./BaseRouter";
+import MsgBuilder from "../templates/builders/MsgBuilder";
 
 
 export default class SubscribeRouter extends BaseRouter {
@@ -8,7 +9,7 @@ export default class SubscribeRouter extends BaseRouter {
         this.router.post('/subscribe', async (req: Request, res: Response) => {
             const {channel_id: channelId} = req.body;
             const button = {btnText: 'Select', btnValue: 'select'};
-            const msg = await this.api.repoMsg.getReposListMsg(channelId, button);
+            const msg = await this.api.repoMsg.getReposListMsg(new MsgBuilder(), channelId, button);
             postMessage(res, msg, channelId);
         });
     }
