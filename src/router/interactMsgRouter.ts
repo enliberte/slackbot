@@ -4,10 +4,22 @@ const {SIGNING_SECRET} = require('../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 import BaseRouter from "./BaseRouter";
 import {ISubscribeRequired} from "../db/models/subscribeModel";
+import API from "../api/API";
 
 const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});
 
 export default class InteractiveMsgRouter extends BaseRouter {
+
+    constructor(api: API) {
+        super(api);
+        this.closeButtonHandler.bind(this);
+        this.returnButtonHandler.bind(this);
+        this.selectRepoButtonHandler.bind(this);
+        this.followButtonHandler.bind(this);
+        this.unfollowButtonHandler.bind(this);
+        this.deleteRepoButtonHandler.bind(this);
+        this.deleteUserButtonHandler.bind(this);
+    }
 
     private async closeButtonHandler(respond: any): Promise<void> {
         respond({delete_original: true});
@@ -54,35 +66,23 @@ export default class InteractiveMsgRouter extends BaseRouter {
         const args = value.split('_');
         switch (args[0]) {
             case 'close':
-
-                console.log('----------------------------------------------------');
-                console.log(this.closeButtonHandler);
-                console.log('----------------------------------------------------');
-
-                this.closeButtonHandler(respond);
-                break;
+                return this.closeButtonHandler(respond);
             case 'return':
-                await this.returnButtonHandler(respond, payload.channel.id);
-                break;
+                return this.returnButtonHandler(respond, payload.channel.id);
             case 'select':
-                await this.selectRepoButtonHandler(respond, payload.channel.id, args[1]);
-                break;
+                return this.selectRepoButtonHandler(respond, payload.channel.id, args[1]);
             case 'follow':
-                await this.followButtonHandler(respond, {
+                return this.followButtonHandler(respond, {
                     channelId: payload.channel.id, followed: args[1], follower: payload.user.username, reponame: args[2]
                 });
-                break;
             case 'unfollow':
-                await this.unfollowButtonHandler(respond, {
+                return this.unfollowButtonHandler(respond, {
                     channelId: payload.channel.id, followed: args[1], follower: payload.user.username, reponame: args[2]
                 });
-                break;
             case 'deleteRepo':
-                await this.deleteRepoButtonHandler(respond, payload.channel.id, args[1]);
-                break;
+                return this.deleteRepoButtonHandler(respond, payload.channel.id, args[1]);
             case 'deleteUser':
-                await this.deleteUserButtonHandler(respond, payload.channel.id, args[1]);
-                break;
+                return this.deleteUserButtonHandler(respond, payload.channel.id, args[1]);
         }
     }
 
