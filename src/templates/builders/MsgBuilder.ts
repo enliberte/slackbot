@@ -2,12 +2,20 @@ import IMsgBuilder, {IButtonProps} from "./IBuilder";
 import {IButton, ISectionWithButton, IActions, ISection, IDivider, IBlockMessage} from "./elements";
 
 class MsgBuilder implements IMsgBuilder {
+    private static builderInstance: MsgBuilder;
     private msg: IBlockMessage;
 
-    constructor() {
+    private constructor() {
         this.msg = {
             blocks: []
         };
+    }
+
+    static getInstance(): MsgBuilder {
+        if (!MsgBuilder.builderInstance) {
+            MsgBuilder.builderInstance = new MsgBuilder();
+        }
+        return MsgBuilder.builderInstance;
     }
 
     reset(): void {
