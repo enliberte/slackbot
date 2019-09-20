@@ -12,13 +12,7 @@ export default class InteractiveMsgRouter extends BaseRouter {
 
     constructor(api: API) {
         super(api);
-        this.closeButtonHandler.bind(this);
-        this.returnButtonHandler.bind(this);
-        this.selectRepoButtonHandler.bind(this);
-        this.followButtonHandler.bind(this);
-        this.unfollowButtonHandler.bind(this);
-        this.deleteRepoButtonHandler.bind(this);
-        this.deleteUserButtonHandler.bind(this);
+        this.processMessages.bind(this);
     }
 
     private async closeButtonHandler(respond: any): Promise<void> {
