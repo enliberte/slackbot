@@ -4,18 +4,12 @@ const {SIGNING_SECRET} = require('../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 import BaseRouter from "./BaseRouter";
 import {ISubscribeRequired} from "../db/models/subscribeModel";
-import API from "../api/API";
 
 const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});
 
 export default class InteractiveMsgRouter extends BaseRouter {
 
-    constructor(api: API) {
-        super(api);
-        this.processMessages.bind(this);
-    }
-
-    private async closeButtonHandler(respond: any): Promise<void> {
+     private async closeButtonHandler(respond: any): Promise<void> {
         respond({delete_original: true});
     }
 
@@ -60,6 +54,9 @@ export default class InteractiveMsgRouter extends BaseRouter {
         const args = value.split('_');
         switch (args[0]) {
             case 'close':
+                console.log('-------------------------------------------------------');
+                console.log(this.closeButtonHandler);
+                console.log('-------------------------------------------------------');
                 return this.closeButtonHandler(respond);
             case 'return':
                 return this.returnButtonHandler(respond, payload.channel.id);
@@ -82,6 +79,6 @@ export default class InteractiveMsgRouter extends BaseRouter {
 
     addListeners(): void {
         this.router.use('/interactive-messages', slackInteractions.requestListener());
-        slackInteractions.action({type: 'button'}, this.processMessages);
+        slackInteractions.action({type: 'button'}, this.processMessages.bind(this));
     }
 }
