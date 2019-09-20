@@ -10,8 +10,16 @@ class MsgBuilder implements IMsgBuilder {
         };
     }
 
+    reset(): void {
+        this.msg = {
+            blocks: []
+        };
+    }
+
     getMsg(): IBlockMessage {
-        return this.msg;
+        const msg = this.msg;
+        this.reset();
+        return msg;
     }
 
     private getSection(text: string): ISection {
