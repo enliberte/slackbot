@@ -14,5 +14,5 @@ module.exports = {
         ]),
         secretOrKey: process.env.JWT_SECRET
     },
-    JWT_EXPIRES_IN: '15m'
+    JWT_EXPIRES_IN: '1h'
 };
