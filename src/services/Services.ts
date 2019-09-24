@@ -5,12 +5,10 @@ import {INotifyService} from "./slackbot/NotifyService";
 import {IUserToMessageAdapter} from "./slackbot/adapters/UserToMsgAdapter";
 import {IRepositoryToMessageAdapter} from "./slackbot/adapters/RepositoryToMsgAdapter";
 import IServicesFactory from "./factories/IServicesFactory";
-import {ISessionService} from "./admin/SessionService";
 import {IAuthService} from "./slackbot/AuthService";
 import {IAuthToMessageAdapter} from "./slackbot/adapters/AuthToMsgAdapter";
 
 export default class Services {
-    sessionService: ISessionService;
     authService: IAuthService;
     userService: IUserService;
     repositoryService: IRepositoryService;
@@ -21,7 +19,6 @@ export default class Services {
     authToMessageAdapter: IAuthToMessageAdapter;
 
     constructor(factory: IServicesFactory) {
-        this.sessionService = factory.getSessionService();
         this.authService = factory.getAuthService();
         this.userService = factory.getUserService();
         this.repositoryService = factory.getRepositoryService();
@@ -29,6 +26,6 @@ export default class Services {
         this.notifyService = factory.getNotifyService();
         this.userMessageAdapter = factory.getUserToMsgAdapter();
         this.repositoryMessageAdapter = factory.getRepositoryToMsgAdapter();
-        this.authToMessageAdapter = factory.getAuthToMsgAdapter();
+        this.authToMessageAdapter = factory.getAuthToMessageAdapter();
     }
 }
