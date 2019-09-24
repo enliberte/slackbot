@@ -5,7 +5,7 @@ const {SIGN_IN_URL} = require('../../../../config');
 
 
 export interface IAuthToMessageAdapter {
-    getCreateAuthLinkMsg(builder: IMessageBuilder, channelId: string): Promise<IBlockMessage>;
+    getCreateAuthLinkMsg(builder: IMessageBuilder, channelId: string): IBlockMessage;
 }
 
 export default class AuthToMessageAdapter implements IAuthToMessageAdapter {
@@ -15,7 +15,7 @@ export default class AuthToMessageAdapter implements IAuthToMessageAdapter {
         this.authService = authService;
     }
 
-    async getCreateAuthLinkMsg(builder: IMessageBuilder, channelId: string): Promise<IBlockMessage> {
+    getCreateAuthLinkMsg(builder: IMessageBuilder, channelId: string): IBlockMessage {
         const jwt = this.authService.createJWT(channelId);
         const text = `To sign in to admin site please follow ${SIGN_IN_URL}?token=${jwt}`;
         return builder.buildSection(text).getMessage()

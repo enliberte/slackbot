@@ -8,7 +8,7 @@ export default class AuthRouter extends BaseRouter {
 
         this.router.post('/signup', async (req: Request, res: Response) => {
             const {channel_id: channelId} = req.body;
-            const msg = await this.services.authToMessageAdapter.getCreateAuthLinkMsg(new MessageBuilder(), channelId);
+            const msg = this.services.authToMessageAdapter.getCreateAuthLinkMsg(new MessageBuilder(), channelId);
             this.postMessage(res, msg, channelId);
         });
 
