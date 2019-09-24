@@ -1,16 +1,16 @@
-import {Request, Response} from "express";
-import {postMessage} from './helpers';
+import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
-import MsgBuilder from "../templates/builders/MsgBuilder";
+import MessageBuilder from "../templates/builders/MessageBuilder";
 
 
 export default class SubscribeRouter extends BaseRouter {
-    addListeners(): void {
+    makeRouter(): Router {
         this.router.post('/subscribe', async (req: Request, res: Response) => {
             const {channel_id: channelId} = req.body;
             const button = {btnText: 'Select', btnValue: 'select'};
-            const msg = await this.api.repoMsg.getReposListMsg(new MsgBuilder(), channelId, button);
-            postMessage(res, msg, channelId);
+            const msg = await this.services.repositoryMessageAdapter.getReposListMsg(new MessageBuilder(), channelId, button);
+            this.postMessage(res, msg, channelId);
         });
+        return this.router;
     }
 }

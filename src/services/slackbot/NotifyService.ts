@@ -1,5 +1,5 @@
 import {IWebChatAdapter} from "./adapters/WebChatAdapter";
-import {ISubscribeController} from "../../db/controllers/subscribeController";
+import {ISubscribeController} from "../../db/storageServices/SubscribeStorageService";
 
 
 export interface IStashPullRequestAttachment {
@@ -11,11 +11,11 @@ export interface IStashPullRequestBody {
     attachments: IStashPullRequestAttachment[];
 }
 
-export interface INotifyAPI {
+export interface INotifyService {
     notifyAboutPR(data: IStashPullRequestBody): Promise<void>;
 }
 
-class NotifyAPI implements INotifyAPI {
+class NotifyService implements INotifyService {
     protected webChatAdapter: IWebChatAdapter;
     protected subscribeDB: ISubscribeController;
 
@@ -48,4 +48,4 @@ class NotifyAPI implements INotifyAPI {
     };
 }
 
-export default NotifyAPI;
+export default NotifyService;

@@ -3,29 +3,27 @@ const {MONGO_URI} = require('../../../config');
 connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
 
 
-export interface IDBController<T, U extends T> {
-    add(obj: U): Promise<boolean>;
-    get(filter: T): Promise<U[]>;
-    remove(filter: T): Promise<boolean>;
+export interface IStorageService<T> {
+    add(obj: T): Promise<boolean>;
+    get(filter: Partial<T>): Promise<T[]>;
+    remove(filter: Partial<T>): Promise<boolean>;
 }
 
-abstract class BaseController<T extends Document, U, V extends U> implements IDBController<U, V> {
+export default abstract class BaseStorageService<T extends Document, U> implements IStorageService<U> {
     protected model: Model<T>;
 
     protected constructor(model: Model<T>) {
         this.model = model;
     }
 
-    abstract get(filter: U): Promise<V[]>
+    abstract get(filter: Partial<U>): Promise<U[]>
 
-    add(obj: V): Promise<boolean> {
+    add(obj: U): Promise<boolean> {
         return this.model.update(obj, {}, {upsert: true}).exec();
     }
 
-    async remove(filter: U): Promise<boolean> {
+    async remove(filter: Partial<U>): Promise<boolean> {
         const operationResult = await this.model.deleteMany(filter).exec();
         return operationResult.ok === 1;
     }
 }
-
-export default BaseController;

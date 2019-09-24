@@ -1,4 +1,4 @@
-import {IUserWithFollowSign} from "../../db/models/userModel";
+import {IUserWithFollowSign} from "../../db/models/UserModel";
 import IMsgBuilder from "../builders/IBuilder";
 import {IBlockMessage} from "../builders/elements";
 

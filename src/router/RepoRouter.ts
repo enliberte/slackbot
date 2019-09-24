@@ -1,24 +1,23 @@
-import {Request, Response} from "express";
-import {postMessage} from './helpers';
+import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
-import MsgBuilder from "../templates/builders/MsgBuilder";
+import MessageBuilder from "../templates/builders/MessageBuilder";
 
 
 export default class RepoRouter extends BaseRouter {
-    addListeners(): void {
+    makeRouter(): Router {
 
         this.router.post('/add-repo', async (req: Request, res: Response) => {
             const {channel_id: channelId, text: reponame, user_name: addedByName} = req.body;
-            const msg = await this.api.repoMsg.getAddResultMsg(new MsgBuilder(), {channelId, reponame, addedByName});
-            postMessage(res, msg, channelId);
+            const msg = await this.services.repositoryMessageAdapter.getAddResultMsg(new MessageBuilder(), {channelId, reponame, addedByName});
+            this.postMessage(res, msg, channelId);
         });
 
         this.router.post('/repos', async (req: Request, res: Response) => {
             const {channel_id: channelId} = req.body;
             const button = {btnText: 'Delete', btnValue: 'deleteRepo'};
-            const msg = await this.api.repoMsg.getReposListMsg(new MsgBuilder(), channelId, button);
-            postMessage(res, msg, channelId);
+            const msg = await this.services.repositoryMessageAdapter.getReposListMsg(new MessageBuilder(), channelId, button);
+            this.postMessage(res, msg, channelId);
         });
-
+        return this.router;
     }
 }

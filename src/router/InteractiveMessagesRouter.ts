@@ -3,12 +3,13 @@ import {createMessageAdapter} from '@slack/interactive-messages';
 const {SIGNING_SECRET} = require('../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 import BaseRouter from "./BaseRouter";
-import {ISubscribeRequired} from "../db/models/subscribeModel";
-import MsgBuilder from "../templates/builders/MsgBuilder";
+import {ISubscribe} from "../db/models/SubscribeModel";
+import MessageBuilder from "../templates/builders/MessageBuilder";
+import {Router} from "express";
 
 const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});
 
-export default class InteractiveMsgRouter extends BaseRouter {
+export default class InteractiveMessagesRouter extends BaseRouter {
 
      private async closeButtonHandler(respond: any): Promise<void> {
         respond({delete_original: true});
@@ -16,37 +17,37 @@ export default class InteractiveMsgRouter extends BaseRouter {
 
     private async returnButtonHandler(respond: any, channelId: string): Promise<void> {
         const selectButton = {btnText: 'Select', btnValue: 'select'};
-        const msg = await this.api.repoMsg.getReposListMsg(new MsgBuilder(), channelId, selectButton);
+        const msg = await this.services.repositoryMessageAdapter.getReposListMsg(new MessageBuilder(), channelId, selectButton);
         respond(replaceMsg(msg));
     }
 
     private async selectRepoButtonHandler(respond: any, channelId: string, reponame: string): Promise<void> {
-        const msg = await this.api.userMsg.getUsersListMsg(new MsgBuilder(), channelId, reponame);
+        const msg = await this.services.userMessageAdapter.getUsersListMsg(new MessageBuilder(), channelId, reponame);
         respond(replaceMsg(msg));
     }
 
-    private async followButtonHandler(respond: any, subscribe: ISubscribeRequired): Promise<void> {
-        await this.api.subscribe.subscribe(subscribe);
-        const msg = await this.api.userMsg.getUsersListMsg(new MsgBuilder(), subscribe.channelId, subscribe.reponame);
+    private async followButtonHandler(respond: any, subscribe: ISubscribe): Promise<void> {
+        await this.services.subscribeService.subscribe(subscribe);
+        const msg = await this.services.userMessageAdapter.getUsersListMsg(new MessageBuilder(), subscribe.channelId, subscribe.reponame);
         respond(replaceMsg(msg));
     }
 
-    private async unfollowButtonHandler(respond: any, subscribe: ISubscribeRequired): Promise<void> {
-        await this.api.subscribe.unsubscribe(subscribe);
-        const msg = await this.api.userMsg.getUsersListMsg(new MsgBuilder(), subscribe.channelId, subscribe.reponame);
+    private async unfollowButtonHandler(respond: any, subscribe: ISubscribe): Promise<void> {
+        await this.services.subscribeService.unsubscribe(subscribe);
+        const msg = await this.services.userMessageAdapter.getUsersListMsg(new MessageBuilder(), subscribe.channelId, subscribe.reponame);
         respond(replaceMsg(msg));
     }
 
     private async deleteRepoButtonHandler(respond: any, channelId: string, reponame: string): Promise<void> {
-        await this.api.repo.delete({channelId, reponame});
+        await this.services.repositoryService.delete({channelId, reponame});
         const deleteRepoButton = {btnText: 'Delete', btnValue: 'deleteRepo'};
-        const msg = await this.api.repoMsg.getReposListMsg(new MsgBuilder(), channelId, deleteRepoButton);
+        const msg = await this.services.repositoryMessageAdapter.getReposListMsg(new MessageBuilder(), channelId, deleteRepoButton);
         respond(replaceMsg(msg));
     }
 
     private async deleteUserButtonHandler(respond: any, channelId: string, username: string): Promise<void> {
-        await this.api.user.delete({channelId, username});
-        const deleteUserMsg = await this.api.userMsg.getUsersListMsg(new MsgBuilder(), channelId);
+        await this.services.userService.delete({channelId, username});
+        const deleteUserMsg = await this.services.userMessageAdapter.getUsersListMsg(new MessageBuilder(), channelId);
         respond(replaceMsg(deleteUserMsg));
     }
 
@@ -75,8 +76,9 @@ export default class InteractiveMsgRouter extends BaseRouter {
         }
     }
 
-    addListeners(): void {
+    makeRouter(): Router {
         this.router.use('/interactive-messages', slackInteractions.requestListener());
         slackInteractions.action({type: 'button'}, this.processMessages.bind(this));
+        return this.router;
     }
 }

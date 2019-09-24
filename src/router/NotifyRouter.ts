@@ -1,10 +1,11 @@
-import {Request, Response} from "express";
+import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
 
 export default class NotifyRouter extends BaseRouter {
-    addListeners(): void {
+    makeRouter(): Router {
         this.router.post('/push', async (req: Request, res: Response) => {
-            await this.api.notify.notifyAboutPR(req.body);
+            await this.services.notifyService.notifyAboutPR(req.body);
         });
+        return this.router;
     }
 }

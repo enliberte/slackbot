@@ -1,12 +1,12 @@
-import {IRepoRequired} from "../../db/models/repoModel";
+import {IRepository} from "../../db/models/RepositoryModel";
 import {IBlockMessage} from "../builders/elements";
 import IMsgBuilder, {IButtonProps} from "../builders/IBuilder";
 
 interface IBuildReposList {
-    (builder: IMsgBuilder, repos: IRepoRequired[], button: IButtonProps): IBlockMessage;
+    (builder: IMsgBuilder, repos: IRepository[], button: IButtonProps): IBlockMessage;
 }
 
-const buildReposList: IBuildReposList = (builder, repos, button) => {
+const buildRepositoriesList: IBuildReposList = (builder, repos, button) => {
     builder.buildDivider().buildSection('Select repository');
     repos.forEach(repo => {
         const commandButton = {btnText: button.btnText, btnValue: `${button.btnValue}_${repo.reponame}`};
@@ -16,4 +16,4 @@ const buildReposList: IBuildReposList = (builder, repos, button) => {
     return builder.getMsg();
 };
 
-export default buildReposList;
+export default buildRepositoriesList;

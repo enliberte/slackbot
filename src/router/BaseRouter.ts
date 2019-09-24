@@ -1,19 +1,27 @@
-import API from "../api/API";
+import Services from "../services/Services";
 import {Router} from "express";
+import {IBlockMessage} from "../templates/builders/elements";
+import {Response} from "express";
+import WebChatAdapter from "../services/slackbot/adapters/WebChatAdapter";
 
-export default abstract class BaseRouter {
-    protected api: API;
+
+export interface IRouter {
+    makeRouter(): Router;
+}
+
+export default abstract class BaseRouter implements IRouter {
+    protected services: Services;
     protected router: Router;
 
-    constructor(api: API) {
-        this.api = api;
+    constructor(services: Services) {
+        this.services = services;
         this.router = Router();
-        this.addListeners();
     }
 
-    abstract addListeners(): void;
-
-    getRouter(): Router {
-        return this.router;
+    async postMessage(res: Response, msg: IBlockMessage, channelId: string): Promise<void> {
+        await new WebChatAdapter().post({text: '', msg, channelId});
+        res.status(200).send();
     }
+
+    abstract makeRouter(): Router;
 }

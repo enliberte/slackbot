@@ -5,13 +5,13 @@ export interface IButtonProps {
     btnValue: string;
 }
 
-interface IMsgBuilder {
-    buildChannelId(channelId: string): IMsgBuilder;
-    buildSection(text: string): IMsgBuilder;
-    buildDivider(): IMsgBuilder;
-    buildSectionWithButton(text: string, button: IButtonProps): IMsgBuilder;
-    buildActions(buttons: IButtonProps[]): IMsgBuilder;
-    getMsg(): IBlockMessage;
+interface IMessageBuilder {
+    buildChannelId(channelId: string): IMessageBuilder;
+    buildSection(text: string): IMessageBuilder;
+    buildDivider(): IMessageBuilder;
+    buildSectionWithButton(text: string, button: IButtonProps): IMessageBuilder;
+    buildActions(buttons: IButtonProps[]): IMessageBuilder;
+    getMessage(): IBlockMessage;
 }
 
-export default IMsgBuilder;
+export default IMessageBuilder;

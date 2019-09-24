@@ -1,17 +1,17 @@
-import IMsgBuilder, {IButtonProps} from "./IBuilder";
+import IMessageBuilder, {IButtonProps} from "./IBuilder";
 import {IButton, ISectionWithButton, IActions, ISection, IDivider, IBlockMessage} from "./elements";
 
-class MsgBuilder implements IMsgBuilder {
-    private msg: IBlockMessage;
+class MessageBuilder implements IMessageBuilder {
+    private message: IBlockMessage;
 
     constructor() {
-        this.msg = {
+        this.message = {
             blocks: []
         };
     }
 
-    getMsg(): IBlockMessage {
-        return this.msg;
+    getMessage(): IBlockMessage {
+        return this.message;
     }
 
     private getSection(text: string): ISection {
@@ -50,33 +50,33 @@ class MsgBuilder implements IMsgBuilder {
         }
     }
 
-    buildChannelId(channelId: string): IMsgBuilder {
-        this.msg.channel = channelId;
+    buildChannelId(channelId: string): IMessageBuilder {
+        this.message.channel = channelId;
         return this;
     }
 
-    buildSection(text: string): IMsgBuilder {
-        this.msg.blocks.push(this.getSection(text));
+    buildSection(text: string): IMessageBuilder {
+        this.message.blocks.push(this.getSection(text));
         return this;
     }
 
-    buildDivider(): IMsgBuilder {
+    buildDivider(): IMessageBuilder {
         const msgPart: IDivider = {
             "type": "divider"
         };
-        this.msg.blocks.push(msgPart);
+        this.message.blocks.push(msgPart);
         return this;
     }
 
-    buildSectionWithButton(text: string, button: IButtonProps): IMsgBuilder {
-        this.msg.blocks.push(this.getSectionWithButton(text, button));
+    buildSectionWithButton(text: string, button: IButtonProps): IMessageBuilder {
+        this.message.blocks.push(this.getSectionWithButton(text, button));
         return this;
     }
 
-    buildActions(buttons: {btnText: string; btnValue: string }[]): IMsgBuilder {
-        this.msg.blocks.push(this.getActions(buttons));
+    buildActions(buttons: {btnText: string; btnValue: string }[]): IMessageBuilder {
+        this.message.blocks.push(this.getActions(buttons));
         return this;
     }
 }
 
-export default MsgBuilder;
+export default MessageBuilder;
