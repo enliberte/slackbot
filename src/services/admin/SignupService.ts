@@ -1,4 +1,4 @@
-import {IOnetimeCredentialStorageService} from "../../db/storageServices/OnetimeCredentialStorageService";
+import {ICredentialStorageService} from "../../db/storageServices/CredentialStorageService";
 import {ILinkGeneratorService} from "./LinkGeneratorService";
 const uuid4 = require('uuid4');
 
@@ -9,10 +9,10 @@ export interface ISignupService {
 
 
 export default class SignupService implements ISignupService {
-    private onetimeCredentialStorageService: IOnetimeCredentialStorageService;
+    private onetimeCredentialStorageService: ICredentialStorageService;
     private linkGenService: ILinkGeneratorService;
 
-    constructor(onetimeCredentialStorageService: IOnetimeCredentialStorageService, linkGenService: ILinkGeneratorService) {
+    constructor(onetimeCredentialStorageService: ICredentialStorageService, linkGenService: ILinkGeneratorService) {
         this.onetimeCredentialStorageService = onetimeCredentialStorageService;
         this.linkGenService = linkGenService;
     }

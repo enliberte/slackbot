@@ -13,7 +13,7 @@ import SessionService from "../admin/SessionService";
 import SessionStorageService from "../../db/storageServices/SessionStorageService";
 import SIDGenerator from "../admin/SIDGenerator";
 import SignupService from "../admin/SignupService";
-import OnetimeCredentialStorageService from "../../db/storageServices/OnetimeCredentialStorageService";
+import CredentialStorageService from "../../db/storageServices/CredentialStorageService";
 import LinkGeneratorService from "../admin/LinkGeneratorService";
 
 export default class ServicesFactory implements IServicesFactory {
@@ -22,7 +22,7 @@ export default class ServicesFactory implements IServicesFactory {
     }
 
     getSignupService(): SignupService {
-        return new SignupService(new OnetimeCredentialStorageService(), new LinkGeneratorService());
+        return new SignupService(new CredentialStorageService(), new LinkGeneratorService());
     }
 
     getNotifyService(): NotifyService {

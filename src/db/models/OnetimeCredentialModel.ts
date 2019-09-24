@@ -1,18 +1,18 @@
 import {Schema, Document, model, Model} from 'mongoose';
 
 
-interface IOnetimeCredential {
+interface ICredential {
     channelId: string;
     password: string;
 }
 
-interface IOnetimeCredentialModel extends Document, IOnetimeCredential {}
+interface ICredentialModel extends Document, ICredential {}
 
-const onetimeCredentialSchema: Schema = new Schema({
+const credentialSchema: Schema = new Schema({
     channelId: String,
     password: String
 });
 
-const OnetimeCredentialModel: Model<IOnetimeCredentialModel> = model('OnetimeCredential', onetimeCredentialSchema);
+const CredentialModel: Model<ICredentialModel> = model('Credential', credentialSchema);
 
-export {IOnetimeCredential, IOnetimeCredentialModel, OnetimeCredentialModel}
+export {ICredential, ICredentialModel, CredentialModel}
