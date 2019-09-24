@@ -8,6 +8,6 @@ export interface IAuthService {
 
 export default class AuthService implements IAuthService {
     createJWT(channelId: string): string {
-        return jwt.sign(channelId, JWT_OPTIONS.secretOrKey, {expiresIn: JWT_EXPIRES_IN});
+        return jwt.sign('base64', channelId, JWT_OPTIONS.secretOrKey);
     }
 }
