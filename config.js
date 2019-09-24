@@ -12,7 +12,7 @@ module.exports = {
             ExtractJwt.fromUrlQueryParameter('jwt'),
             ExtractJwt.fromAuthHeaderAsBearerToken()
         ]),
-        secretOrKey: SIGNING_SECRET
+        secretOrKey: process.env.JWT_SECRET
     },
     JWT_EXPIRES_IN: '15m'
 };
