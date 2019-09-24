@@ -7,6 +7,7 @@ import RepoRouter from './router/RepoRouter';
 import ServicesFactory from "./services/factories/ServicesFactory";
 import NotifyRouter from "./router/NotifyRouter";
 import Services from "./services/Services";
+import SignupRouter from "./router/SignupRouter";
 require('dotenv').config();
 
 const port = process.env.PORT || 8080;
@@ -20,4 +21,5 @@ app.use(new UserRouter(services).makeRouter());
 app.use(new SubscribeRouter(services).makeRouter());
 app.use(new RepoRouter(services).makeRouter());
 app.use(new NotifyRouter(services).makeRouter());
+app.use(new SignupRouter(services).makeRouter());
 app.listen(port);
