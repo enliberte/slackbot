@@ -23,7 +23,7 @@ const buildUsersList: IBuildUsersList = (builder, users, reponame?) => {
         builder.buildDivider().buildSectionWithButton(user.username, commandButton);
     });
     builder.buildDivider().buildActions(actionBtns).buildDivider();
-    return builder.getMsg();
+    return builder.getMessage();
 };
 
 export default buildUsersList;

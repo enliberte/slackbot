@@ -13,7 +13,7 @@ const buildRepositoriesList: IBuildReposList = (builder, repos, button) => {
         builder.buildDivider().buildSectionWithButton(repo.reponame, commandButton);
     });
     builder.buildDivider().buildActions([{btnText: 'Close', btnValue: 'close'}]).buildDivider();
-    return builder.getMsg();
+    return builder.getMessage();
 };
 
 export default buildRepositoriesList;
