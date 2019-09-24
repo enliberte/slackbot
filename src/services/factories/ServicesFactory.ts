@@ -12,17 +12,18 @@ import UserToMsgAdapter from "../slackbot/adapters/UserToMsgAdapter";
 import SessionService from "../admin/SessionService";
 import SessionStorageService from "../../db/storageServices/SessionStorageService";
 import SIDGenerator from "../admin/SIDGenerator";
-import SignupService from "../admin/SignupService";
 import CredentialStorageService from "../../db/storageServices/CredentialStorageService";
-import LinkGeneratorService from "../admin/LinkGeneratorService";
+import AuthService from "../slackbot/AuthService";
+import CryptoService from "../admin/CryptoService";
+import AuthToMsgAdapter from "../slackbot/adapters/AuthToMsgAdapter";
 
 export default class ServicesFactory implements IServicesFactory {
     getSessionService(): SessionService {
         return new SessionService(new SessionStorageService(), new SIDGenerator());
     }
 
-    getSignupService(): SignupService {
-        return new SignupService(new CredentialStorageService(), new LinkGeneratorService());
+    getAuthService(): AuthService {
+        return new AuthService(new CredentialStorageService(), new CryptoService());
     }
 
     getNotifyService(): NotifyService {
@@ -47,5 +48,9 @@ export default class ServicesFactory implements IServicesFactory {
 
     getUserToMsgAdapter(): UserToMsgAdapter {
         return new UserToMsgAdapter(this.getUserService());
+    }
+
+    getAuthToMsgAdapter(): AuthToMsgAdapter {
+        return new AuthToMsgAdapter(this.getAuthService());
     }
 }
