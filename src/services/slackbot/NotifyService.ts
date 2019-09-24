@@ -1,5 +1,5 @@
-import {IWebChatAdapter} from "./adapters/WebChatAdapter";
-import {ISubscribeController} from "../../db/storageServices/SubscribeStorageService";
+import {IChat} from "./adapters/WebChatAdapter";
+import {ISubscribeStorageService} from "../../db/storageServices/SubscribeStorageService";
 
 
 export interface IStashPullRequestAttachment {
@@ -16,16 +16,16 @@ export interface INotifyService {
 }
 
 class NotifyService implements INotifyService {
-    protected webChatAdapter: IWebChatAdapter;
-    protected subscribeDB: ISubscribeController;
+    protected webChatAdapter: IChat;
+    protected subscribeStorageService: ISubscribeStorageService;
 
-    constructor(webChatAdapter: IWebChatAdapter, subscribeDB: ISubscribeController) {
+    constructor(webChatAdapter: IChat, subscribeStorageService: ISubscribeStorageService) {
         this.webChatAdapter = webChatAdapter;
-        this.subscribeDB = subscribeDB;
+        this.subscribeStorageService = subscribeStorageService;
     }
 
     private async getSubscribersChannelId(followed: string, reponame: string): Promise<string[]> {
-        const subscribes = await this.subscribeDB.get({followed, reponame});
+        const subscribes = await this.subscribeStorageService.get({followed, reponame});
         return subscribes.map(subscribe => subscribe.channelId);
     }
 
