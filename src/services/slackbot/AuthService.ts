@@ -3,11 +3,11 @@ const {JWT_OPTIONS, JWT_EXPIRES_IN} = require('../../../config');
 
 
 export interface IAuthService {
-    createJWT(channelId: string): string;
+    createJWT(payload: {channelId: string}): string;
 }
 
 export default class AuthService implements IAuthService {
-    createJWT(channelId: string): string {
-        return sign(channelId, JWT_OPTIONS.secretOrKey, {expiresIn: '15000'});
+    createJWT(payload: {channelId: string}): string {
+        return sign(payload, JWT_OPTIONS.secretOrKey, {expiresIn: '15m'});
     }
 }
