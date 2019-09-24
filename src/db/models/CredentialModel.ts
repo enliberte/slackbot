@@ -3,14 +3,14 @@ import {Schema, Document, model, Model} from 'mongoose';
 
 interface ICredential {
     channelId: string;
-    password: string;
+    token: string;
 }
 
 interface ICredentialModel extends Document, ICredential {}
 
 const credentialSchema: Schema = new Schema({
     channelId: String,
-    password: String
+    token: String
 });
 
 const CredentialModel: Model<ICredentialModel> = model('Credential', credentialSchema);

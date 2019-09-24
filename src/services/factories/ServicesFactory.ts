@@ -14,7 +14,6 @@ import SessionStorageService from "../../db/storageServices/SessionStorageServic
 import SIDGenerator from "../admin/SIDGenerator";
 import CredentialStorageService from "../../db/storageServices/CredentialStorageService";
 import AuthService from "../slackbot/AuthService";
-import CryptoService from "../admin/CryptoService";
 import AuthToMsgAdapter from "../slackbot/adapters/AuthToMsgAdapter";
 
 export default class ServicesFactory implements IServicesFactory {
@@ -23,7 +22,7 @@ export default class ServicesFactory implements IServicesFactory {
     }
 
     getAuthService(): AuthService {
-        return new AuthService(new CredentialStorageService(), new CryptoService());
+        return new AuthService(new CredentialStorageService());
     }
 
     getNotifyService(): NotifyService {
