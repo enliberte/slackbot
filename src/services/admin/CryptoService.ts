@@ -7,7 +7,8 @@ export interface ICryptService {
 
 export default class CryptoService implements ICryptService {
     async hash(text: string): Promise<string> {
-        return bcrypt.hash(text, 10);
+        const hash = await bcrypt.hash(text, 10);
+        return hash.replace('/', '');
     }
 
     async compare(text: string, hash: string): Promise<boolean> {
