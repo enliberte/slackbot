@@ -1,12 +1,12 @@
-import {IOnetimeCredential} from "../../db/models/OnetimeCredentialModel";
+import {ICredential} from "../../db/models/OnetimeCredentialModel";
 import sha256 from 'sha256';
 
 export interface ILinkGeneratorService {
-    generate(onetimeCredentials: IOnetimeCredential): string;
+    generate(onetimeCredentials: ICredential): string;
 }
 
 export default class LinkGeneratorService implements ILinkGeneratorService {
-    generate(onetimeCredentials: IOnetimeCredential): string {
+    generate(onetimeCredentials: ICredential): string {
         return sha256(JSON.stringify(onetimeCredentials));
     }
 }
