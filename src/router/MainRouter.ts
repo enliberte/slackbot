@@ -9,7 +9,7 @@ export default class MainRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.get('/add-user', userAuth, this.showMain.bind(this));
+        this.router.get('/', userAuth, this.showMain.bind(this));
         return this.router;
     }
 }
