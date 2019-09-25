@@ -18,8 +18,8 @@ export default class UserRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/add-user', botAuth, userAuth, this.postMsgWithUserAdditionResult);
-        this.router.post('/users', botAuth, userAuth, this.postMsgWithUsersList);
+        this.router.post('/add-user', botAuth, userAuth, this.postMsgWithUserAdditionResult.bind(this));
+        this.router.post('/users', botAuth, userAuth, this.postMsgWithUsersList.bind(this));
         return this.router;
     }
 }

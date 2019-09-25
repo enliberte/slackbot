@@ -17,8 +17,8 @@ export default class AuthRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/signup', botAuth, this.postMsgWithAuthLink);
-        this.router.get('/login/:token', this.setJWT);
+        this.router.post('/signup', botAuth, this.postMsgWithAuthLink.bind(this));
+        this.router.get('/login/:token', this.setJWT.bind(this));
         return this.router;
     }
 }

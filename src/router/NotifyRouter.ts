@@ -7,7 +7,7 @@ export default class NotifyRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/push', this.notifyAboutPR);
+        this.router.post('/push', this.notifyAboutPR.bind(this));
         return this.router;
     }
 }

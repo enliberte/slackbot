@@ -16,7 +16,7 @@ export default class SubscribeRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/subscribe', botAuth, userAuth, this.postMsgWithRepositoryList);
+        this.router.post('/subscribe', botAuth, userAuth, this.postMsgWithRepositoryList.bind(this));
         return this.router;
     }
 }

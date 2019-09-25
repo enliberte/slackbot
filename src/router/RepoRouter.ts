@@ -20,8 +20,8 @@ export default class RepoRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/add-repo', botAuth, userAuth, this.postMsgWithRepositoryAdditionResult);
-        this.router.post('/repos', botAuth, userAuth, this.postMsgWithRepositoryList);
+        this.router.post('/add-repo', botAuth, userAuth, this.postMsgWithRepositoryAdditionResult.bind(this));
+        this.router.post('/repos', botAuth, userAuth, this.postMsgWithRepositoryList.bind(this));
         return this.router;
     }
 }
