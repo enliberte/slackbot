@@ -24,7 +24,7 @@ export default class SubscribeToMessageAdapter implements ISubscribeToMessageAda
                 builder.buildSection(`DB Error has been occurred`);
             }
         } else {
-            builder.buildSection(`Incorrect username ${obj.followed}`);
+            builder.buildSection('Incorrect username');
         }
         return builder.getMessage();
     }
