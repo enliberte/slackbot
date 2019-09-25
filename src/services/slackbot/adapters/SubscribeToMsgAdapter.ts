@@ -16,7 +16,7 @@ export default class SubscribeToMessageAdapter implements ISubscribeToMessageAda
     }
 
     async getAddResultMsg(builder: IMessageBuilder, obj: ISubscribe): Promise<IBlockMessage> {
-        if (obj.followed.length !== 0) {
+        if (obj.followed) {
             const addOperationSuccess = await this.subscribeService.subscribeCMD(obj);
             if (addOperationSuccess) {
                 builder.buildSection(`You have subscribed for ${obj.followed}'s PR into ${obj.reponame}`);
