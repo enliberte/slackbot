@@ -1,6 +1,6 @@
 import {IBlockMessage} from "../templates/builders/elements";
 import {createMessageAdapter} from '@slack/interactive-messages';
-const {SIGNING_SECRET} = require('../../config');
+const {SIGNING_SECRET, VERIFICATION_TOKEN} = require('../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 import BaseRouter from "./BaseRouter";
 import {ISubscribe} from "../db/models/SubscribeModel";
@@ -52,31 +52,30 @@ export default class InteractiveMessagesRouter extends BaseRouter {
     }
 
     private async processMessages(payload: any, respond: any): Promise<void> {
-         console.log('------------------------------------------------------');
-         console.log(JSON.stringify(payload));
-         console.log('------------------------------------------------------');
-         const value = payload.actions[0].value;
-         const args = value.split('_');
-         switch (args[0]) {
-             case 'close':
-                 return this.closeButtonHandler(respond);
-             case 'return':
-                 return this.returnButtonHandler(respond, payload.channel.id);
-             case 'select':
-                 return this.selectRepoButtonHandler(respond, payload.channel.id, args[1]);
-             case 'follow':
-                 return this.followButtonHandler(respond, {
-                    channelId: payload.channel.id, followed: args[1], follower: payload.user.username, reponame: args[2]
-                 });
-             case 'unfollow':
-                 return this.unfollowButtonHandler(respond, {
-                     channelId: payload.channel.id, followed: args[1], follower: payload.user.username, reponame: args[2]
-                 });
-             case 'deleteRepo':
-                 return this.deleteRepoButtonHandler(respond, payload.channel.id, args[1]);
-             case 'deleteUser':
-                 return this.deleteUserButtonHandler(respond, payload.channel.id, args[1]);
-        }
+         if (payload.token === VERIFICATION_TOKEN) {
+              const value = payload.actions[0].value;
+              const args = value.split('_');
+              switch (args[0]) {
+                  case 'close':
+                      return this.closeButtonHandler(respond);
+                  case 'return':
+                      return this.returnButtonHandler(respond, payload.channel.id);
+                  case 'select':
+                      return this.selectRepoButtonHandler(respond, payload.channel.id, args[1]);
+                  case 'follow':
+                      return this.followButtonHandler(respond, {
+                          channelId: payload.channel.id, followed: args[1], follower: payload.user.username, reponame: args[2]
+                      });
+                  case 'unfollow':
+                      return this.unfollowButtonHandler(respond, {
+                          channelId: payload.channel.id, followed: args[1], follower: payload.user.username, reponame: args[2]
+                      });
+                  case 'deleteRepo':
+                      return this.deleteRepoButtonHandler(respond, payload.channel.id, args[1]);
+                  case 'deleteUser':
+                      return this.deleteUserButtonHandler(respond, payload.channel.id, args[1]);
+             }
+         }
     }
 
     makeRouter(): Router {
