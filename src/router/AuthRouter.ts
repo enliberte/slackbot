@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
 import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
 import {botAuth} from "../middlewares/auth";
+import {IJWTPayload} from "../services/slackbot/AuthService";
 
 
 export default class AuthRouter extends BaseRouter {
@@ -12,7 +13,7 @@ export default class AuthRouter extends BaseRouter {
     }
 
     async setJWT(req: Request, res: Response): Promise<void> {
-        const decodedJWT = await this.services.authService.verifyJWT(req.params.token) as {channelId: string} | false;
+        const decodedJWT = await this.services.authService.verifyJWT(req.params.token) as IJWTPayload | false;
         if (decodedJWT) {
             const token = await this.services.authService.createJWT({channelId: decodedJWT.channelId}, {expiresIn: '20m'});
             res.cookie('token', token, {httpOnly: true});
