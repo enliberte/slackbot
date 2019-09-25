@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import passport from 'passport';
 import {Strategy} from 'passport-jwt';
-const {JWT_SECRET} = require('../../config');
+const {JWT_SECRET, VERIFICATION_TOKEN} = require('../../config');
 
 const jwtFromRequest = (req: Request) => req.cookies && req.cookies.token ? req.cookies.token : null;
 
@@ -13,14 +13,19 @@ passport.use(new Strategy({jwtFromRequest, secretOrKey: JWT_SECRET}, async (jwtP
     }
 }));
 
+
 const auth = (req: Request, res: Response, next: Function): void => {
-    passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
-        if (err || jwtError) {
-            res.redirect(401, '/');
-        } else {
-            next();
-        }
-    })(req, res, next);
+    if (req.body && req.body.token && req.body.token === VERIFICATION_TOKEN) {
+        next();
+    } else {
+        passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
+            if (err || jwtError) {
+                res.redirect(401, '/');
+            } else {
+                next();
+            }
+        })(req, res, next);
+    }
 };
 
 export default auth;

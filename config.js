@@ -1,5 +1,4 @@
 require('dotenv').config();
-const {ExtractJwt} = require('passport-jwt');
 
 
 module.exports = {
@@ -7,5 +6,6 @@ module.exports = {
     MONGO_URI: process.env.MONGO_URI,
     SIGNING_SECRET: process.env.SIGNING_SECRET,
     SIGN_IN_URL: 'https://bitbucket-subscriber-slackbot.herokuapp.com/login',
-    JWT_SECRET: process.env.JWT_SECRET
+    JWT_SECRET: process.env.JWT_SECRET,
+    VERIFICATION_TOKEN: process.env.VERIFICATION_TOKEN
 };
