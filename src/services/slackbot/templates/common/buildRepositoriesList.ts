@@ -1,4 +1,4 @@
-import {IRepository} from "../../db/models/RepositoryModel";
+import {IRepository} from "../../../../db/models/RepositoryModel";
 import {IBlockMessage} from "../builders/elements";
 import IMsgBuilder, {IButtonProps} from "../builders/IBuilder";
 

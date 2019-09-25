@@ -1,7 +1,7 @@
-import {IBlockMessage} from '../../../templates/builders/elements';
-import IMessageBuilder from "../../../templates/builders/IBuilder";
+import {IBlockMessage} from '../templates/builders/elements';
+import IMessageBuilder from "../templates/builders/IBuilder";
 import {IUserService} from "../../admin/UserService";
-import buildUsersList from "../../../templates/common/buildUsersList";
+import buildUsersList from "../templates/common/buildUsersList";
 import {IUser} from "../../../db/models/UserModel";
 
 

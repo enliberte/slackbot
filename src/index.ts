@@ -10,6 +10,7 @@ import NotifyRouter from "./router/NotifyRouter";
 import Services from "./services/Services";
 import AuthRouter from "./router/AuthRouter";
 import MainRouter from "./router/MainRouter";
+import HelpRouter from "./router/HelpRouter";
 require('dotenv').config();
 
 const port = process.env.PORT || 8080;
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(new AuthRouter(services).makeRouter());
+app.use(new HelpRouter(services).makeRouter());
 app.use(new MainRouter(services).makeRouter());
 app.use(new UserRouter(services).makeRouter());
 app.use(new SubscribeRouter(services).makeRouter());

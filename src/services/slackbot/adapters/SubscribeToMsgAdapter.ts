@@ -1,5 +1,5 @@
-import {IBlockMessage} from "../../../templates/builders/elements";
-import IMessageBuilder, {IButtonProps} from "../../../templates/builders/IBuilder";
+import {IBlockMessage} from "../templates/builders/elements";
+import IMessageBuilder, {IButtonProps} from "../templates/builders/IBuilder";
 import {ISubscribe} from "../../../db/models/SubscribeModel";
 import {ISubscribeService} from "../../admin/SubscribeService";
 

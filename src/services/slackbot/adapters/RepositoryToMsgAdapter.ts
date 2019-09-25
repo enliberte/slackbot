@@ -1,7 +1,7 @@
-import {IBlockMessage} from "../../../templates/builders/elements";
+import {IBlockMessage} from "../templates/builders/elements";
 import {IRepositoryService} from "../../admin/RepositoryService";
-import IMessageBuilder, {IButtonProps} from "../../../templates/builders/IBuilder";
-import buildReposList from "../../../templates/common/buildRepositoriesList";
+import IMessageBuilder, {IButtonProps} from "../templates/builders/IBuilder";
+import buildReposList from "../templates/common/buildRepositoriesList";
 import {IRepository} from "../../../db/models/RepositoryModel";
 
 

@@ -1,10 +1,10 @@
-import {IBlockMessage} from "../templates/builders/elements";
+import {IBlockMessage} from "../services/slackbot/templates/builders/elements";
 import {createMessageAdapter} from '@slack/interactive-messages';
 const {SIGNING_SECRET, VERIFICATION_TOKEN} = require('../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 import BaseRouter from "./BaseRouter";
 import {ISubscribe} from "../db/models/SubscribeModel";
-import MessageBuilder from "../templates/builders/MessageBuilder";
+import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
 import {Router} from "express";
 
 const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});

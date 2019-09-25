@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
-import MessageBuilder from "../templates/builders/MessageBuilder";
+import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
 import {botAuth} from "../middlewares/auth";
 
 

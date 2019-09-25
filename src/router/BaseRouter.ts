@@ -1,6 +1,6 @@
 import Services from "../services/Services";
 import {Router} from "express";
-import {IBlockMessage} from "../templates/builders/elements";
+import {IBlockMessage} from "../services/slackbot/templates/builders/elements";
 import {Response} from "express";
 import WebChatAdapter from "../services/slackbot/adapters/WebChatAdapter";
 

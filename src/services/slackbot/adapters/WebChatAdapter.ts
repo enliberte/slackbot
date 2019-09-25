@@ -1,6 +1,6 @@
 import {WebClient} from "@slack/web-api";
 import {IStashPullRequestBody} from "../NotifyService";
-import {IBlockMessage} from "../../../templates/builders/elements";
+import {IBlockMessage} from "../templates/builders/elements";
 const {BOT_TOKEN} = require('../../../../config');
 
 export interface IChatMessage {
