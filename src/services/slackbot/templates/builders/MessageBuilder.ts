@@ -1,5 +1,14 @@
 import IMessageBuilder, {IButtonProps} from "./IBuilder";
-import {IButton, ISectionWithButton, IActions, ISection, IDivider, IBlockMessage} from "./elements";
+import {
+    IButton,
+    ISectionWithButton,
+    IActions,
+    ISection,
+    IDivider,
+    IBlockMessage,
+    IMrkdwnText,
+    ISectionWithFields
+} from "./elements";
 
 class MessageBuilder implements IMessageBuilder {
     private message: IBlockMessage;
@@ -36,18 +45,29 @@ class MessageBuilder implements IMessageBuilder {
         };
     }
 
+    private getField(text: string): IMrkdwnText {
+        return {type: "mrkdwn", text};
+    }
+
     private getSectionWithButton(text: string, button: IButtonProps): ISectionWithButton {
         return {
             ...this.getSection(text),
             accessory: this.getButton(button)
-        }
+        };
+    }
+
+    private getSectionWithFields(fields: string[]): ISectionWithFields {
+        return {
+            type: "section",
+            fields: fields.map(field => this.getField(field))
+        };
     }
 
     private getActions(buttons: IButtonProps[]): IActions {
         return {
             type: "actions",
             elements: buttons.map(button => this.getButton(button))
-        }
+        };
     }
 
     buildChannelId(channelId: string): IMessageBuilder {
@@ -75,6 +95,11 @@ class MessageBuilder implements IMessageBuilder {
 
     buildActions(buttons: {btnText: string; btnValue: string }[]): IMessageBuilder {
         this.message.blocks.push(this.getActions(buttons));
+        return this;
+    }
+
+    buildSectionWithFields(fields: string[]): IMessageBuilder {
+        this.message.blocks.push(this.getSectionWithFields(fields));
         return this;
     }
 }

@@ -10,6 +10,7 @@ interface IMessageBuilder {
     buildSection(text: string): IMessageBuilder;
     buildDivider(): IMessageBuilder;
     buildSectionWithButton(text: string, button: IButtonProps): IMessageBuilder;
+    buildSectionWithFields(fields: string[]): IMessageBuilder;
     buildActions(buttons: IButtonProps[]): IMessageBuilder;
     getMessage(): IBlockMessage;
 }

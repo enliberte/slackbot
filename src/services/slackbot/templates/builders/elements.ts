@@ -29,16 +29,21 @@ interface ISectionWithButton extends ISection {
     accessory: IButton
 }
 
+interface ISectionWithFields {
+    type: "section";
+    fields: IMrkdwnText[];
+}
+
 interface IActions {
     type: "actions",
     elements: IButton[]
 }
 
-type Blocks = ISection | IButton | ISectionWithButton | IActions | IDivider
+type Blocks = ISection | IButton | ISectionWithButton | ISectionWithFields | IActions | IDivider
 
 interface IBlockMessage {
     channel?: string;
     blocks: Blocks[];
 }
 
-export {IButton, ISection, IActions, ISectionWithButton, IText, IDivider, IBlockMessage}
+export {IMrkdwnText, IButton, ISection, IActions, ISectionWithButton, ISectionWithFields, IText, IDivider, IBlockMessage}

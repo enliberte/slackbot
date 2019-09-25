@@ -10,8 +10,7 @@ const buildSlashCommandsList: IBuildSlashCommandsList = (builder) => {
     builder.buildDivider().buildSection('*I support the following commands:*').buildDivider();
     slashCommands.forEach((slashCommand, idx) => {
         builder
-            .buildSection(`${idx + 1}${slashCommand.name}`)
-            .buildSection(slashCommand.description)
+            .buildSectionWithFields([`*${idx + 1}) ${slashCommand.name}*`, slashCommand.description])
             .buildSection(slashCommand.hint)
             .buildDivider();
     });
