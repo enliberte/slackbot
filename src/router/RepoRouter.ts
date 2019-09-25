@@ -7,6 +7,9 @@ export default class RepoRouter extends BaseRouter {
     makeRouter(): Router {
 
         this.router.post('/add-repo', async (req: Request, res: Response) => {
+            console.log('-----------------------------------------------------------');
+            console.log(JSON.stringify(req.body));
+            console.log('-----------------------------------------------------------');
             const {channel_id: channelId, text: reponame, user_name: addedByName} = req.body;
             const msg = await this.services.repositoryMessageAdapter.getAddResultMsg(new MessageBuilder(), {channelId, reponame, addedByName});
             this.postMessage(res, msg, channelId);
