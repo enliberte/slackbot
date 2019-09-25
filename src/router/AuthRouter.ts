@@ -21,7 +21,7 @@ export default class AuthRouter extends BaseRouter {
         } catch (e) {
             res.status(401).send();
         }
-        res.redirect(200, '/');
+        res.redirect('/');
     }
 
     makeRouter(): Router {
