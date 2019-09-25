@@ -12,6 +12,11 @@ export default class AuthRouter extends BaseRouter {
             this.postMessage(res, msg, channelId);
         });
 
+        this.router.get('/login/:token', (req: Request, res: Response) => {
+            res.cookie('token', req.params.token, {httpOnly: true});
+            res.redirect(200, '/');
+        });
+
         return this.router;
     }
 }

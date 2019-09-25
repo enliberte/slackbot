@@ -17,7 +17,7 @@ export default class AuthToMessageAdapter implements IAuthToMessageAdapter {
 
     getCreateAuthLinkMsg(builder: IMessageBuilder, payload: {channelId: string}): IBlockMessage {
         const jwt = this.authService.createJWT(payload);
-        const text = `To sign in to admin site please follow ${SIGN_IN_URL}?token=${jwt}`;
+        const text = `To sign in to admin site please follow ${SIGN_IN_URL}/${jwt}`;
         return builder.buildSection(text).getMessage()
     }
 }

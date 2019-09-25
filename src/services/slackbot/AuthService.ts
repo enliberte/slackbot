@@ -1,5 +1,5 @@
 import {sign} from 'jsonwebtoken';
-const {JWT_OPTIONS, JWT_EXPIRES_IN} = require('../../../config');
+const {JWT_SECRET} = require('../../../config');
 
 
 export interface IAuthService {
@@ -8,6 +8,6 @@ export interface IAuthService {
 
 export default class AuthService implements IAuthService {
     createJWT(payload: {channelId: string}): string {
-        return sign(payload, JWT_OPTIONS.secretOrKey, {expiresIn: '15m'});
+        return sign(payload, JWT_SECRET, {expiresIn: '15m'});
     }
 }
