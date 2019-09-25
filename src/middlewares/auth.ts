@@ -26,7 +26,7 @@ const botAuth = (req: RequestWithAthorizationFlag, res: Response, next: Function
             res.status(401).send({error: 'Unauthorized'});
         }
     } else {
-        res.status(401).send({error: 'Unauthorized'});
+        next();
     }
 
 };
@@ -42,7 +42,7 @@ const userAuth = (req: RequestWithAthorizationFlag, res: Response, next: Functio
             }
         })(req, res, next);
     } else {
-        res.status(401).send({error: 'Unauthorized'});
+        next();
     }
 };
 
