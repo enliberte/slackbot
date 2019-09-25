@@ -15,12 +15,6 @@ passport.use(new Strategy({jwtFromRequest, secretOrKey: JWT_SECRET}, async (jwtP
 
 
 const auth = (req: Request, res: Response, next: Function): void => {
-    console.log('-------------------------------------------------------');
-    console.log('BOT');
-    console.log(JSON.stringify(req.body));
-    console.log(req.body.token);
-    console.log('-------------------------------------------------------');
-
     if (req.body && req.body.token && req.body.token === VERIFICATION_TOKEN) {
         next();
     } else {
