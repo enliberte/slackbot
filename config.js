@@ -7,5 +7,5 @@ module.exports = {
     MONGO_URI: process.env.MONGO_URI,
     SIGNING_SECRET: process.env.SIGNING_SECRET,
     SIGN_IN_URL: 'https://bitbucket-subscriber-slackbot.herokuapp.com/login',
-    JWR_SECRET: process.env.JWT_SECRET
+    JWT_SECRET: process.env.JWT_SECRET
 };
