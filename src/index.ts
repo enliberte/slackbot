@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import InteractiveMessagesRouter from './router/InteractiveMessagesRouter';
 import UserRouter from './router/UserRouter';
 import SubscribeRouter from './router/SubscribeRouter';
@@ -14,6 +15,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 const services = new Services(new ServicesFactory());
 
+app.use(cookieParser());
 app.use(new InteractiveMessagesRouter(services).makeRouter());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
