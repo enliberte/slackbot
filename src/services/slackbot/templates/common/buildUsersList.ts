@@ -7,7 +7,7 @@ interface IBuildUsersList {
 }
 
 const buildUsersList: IBuildUsersList = (builder, users, reponame?) => {
-    const headerSectionMsg = reponame ? "Your subscribes:" : "Added users:";
+    const headerSectionMsg = reponame ? "*Your subscribes:*" : "*Added users:*";
     const actionBtns = reponame ?
         [{btnText: 'Return', btnValue: 'return'}, {btnText: 'Close', btnValue: 'close'}] :
         [{btnText: 'Close', btnValue: 'close'}];

@@ -7,7 +7,7 @@ interface IBuildReposList {
 }
 
 const buildRepositoriesList: IBuildReposList = (builder, repos, button) => {
-    builder.buildDivider().buildSection('Select repository');
+    builder.buildDivider().buildSection('*Added repositories:*');
     repos.forEach(repo => {
         const commandButton = {btnText: button.btnText, btnValue: `${button.btnValue}_${repo.reponame}`};
         builder.buildDivider().buildSectionWithButton(repo.reponame, commandButton);
