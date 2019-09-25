@@ -15,10 +15,22 @@ passport.use(new Strategy({jwtFromRequest, secretOrKey: JWT_SECRET}, async (jwtP
 
 
 const auth = (req: Request, res: Response, next: Function): void => {
+    console.log('-------------------------------------------------------');
+    console.log('BOT');
+    console.log(JSON.stringify(req.body));
+    console.log(req.body.token);
+    console.log('-------------------------------------------------------');
+
     if (req.body && req.body.token && req.body.token === VERIFICATION_TOKEN) {
         next();
     } else {
         passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
+            console.log('--------------------------------------------------');
+            console.log('USER');
+            console.log('err', err);
+            console.log('decryptToken', decryptToken);
+            console.log('jwtError', jwtError);
+            console.log('--------------------------------------------------');
             if (err || jwtError) {
                 res.redirect(401, '/');
             } else {
