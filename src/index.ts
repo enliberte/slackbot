@@ -15,8 +15,8 @@ const port = process.env.PORT || 8080;
 const app = express();
 const services = new Services(new ServicesFactory());
 
-app.use(cookieParser());
 app.use(new InteractiveMessagesRouter(services).makeRouter());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(new AuthRouter(services).makeRouter());
