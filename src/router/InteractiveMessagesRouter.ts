@@ -6,6 +6,7 @@ import BaseRouter from "./BaseRouter";
 import {ISubscribe} from "../db/models/SubscribeModel";
 import MessageBuilder from "../templates/builders/MessageBuilder";
 import {Router} from "express";
+import auth from "../middlewares/auth";
 
 const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});
 
@@ -77,7 +78,7 @@ export default class InteractiveMessagesRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.use('/interactive-messages', slackInteractions.requestListener());
+        this.router.use('/interactive-messages', auth, slackInteractions.requestListener());
         slackInteractions.action({type: 'button'}, this.processMessages.bind(this));
         return this.router;
     }
