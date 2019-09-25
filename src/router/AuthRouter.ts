@@ -5,19 +5,20 @@ import {botAuth} from "../middlewares/auth";
 
 
 export default class AuthRouter extends BaseRouter {
+    async postMsgWithAuthLink(req: Request, res: Response): Promise<void> {
+        const {channel_id: channelId} = req.body;
+        const msg = this.services.authToMessageAdapter.getCreateAuthLinkMsg(new MessageBuilder(), {channelId});
+        this.postMessage(res, msg, channelId);
+    }
+
+    setJWT(req: Request, res: Response): void {
+        res.cookie('token', req.params.token, {httpOnly: true});
+        res.redirect(200, '/');
+    }
+
     makeRouter(): Router {
-
-        this.router.post('/signup', botAuth, async (req: Request, res: Response) => {
-            const {channel_id: channelId} = req.body;
-            const msg = this.services.authToMessageAdapter.getCreateAuthLinkMsg(new MessageBuilder(), {channelId});
-            this.postMessage(res, msg, channelId);
-        });
-
-        this.router.get('/login/:token', (req: Request, res: Response) => {
-            res.cookie('token', req.params.token, {httpOnly: true});
-            res.redirect(200, '/');
-        });
-
+        this.router.post('/signup', botAuth, this.postMsgWithAuthLink);
+        this.router.get('/login/:token', this.setJWT);
         return this.router;
     }
 }
