@@ -13,22 +13,37 @@ passport.use(new Strategy({jwtFromRequest, secretOrKey: JWT_SECRET}, async (jwtP
     }
 }));
 
-const botAuth = (req: Request, res: Response, next: Function): void => {
-    if (req.body && req.body.token && req.body.token === VERIFICATION_TOKEN) {
-        next();
+interface RequestWithAthorizationFlag extends Request {
+    isAuthorized?: boolean;
+}
+
+const botAuth = (req: RequestWithAthorizationFlag, res: Response, next: Function): void => {
+    if (!req.isAuthorized) {
+        if (req.body && req.body.token && req.body.token === VERIFICATION_TOKEN) {
+            req.isAuthorized = true;
+            next();
+        } else {
+            res.status(401).send({error: 'Unauthorized'});
+        }
     } else {
         res.status(401).send({error: 'Unauthorized'});
     }
+
 };
 
-const userAuth = (req: Request, res: Response, next: Function): void => {
-    passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
-        if (err || jwtError) {
-            res.status(401).send({error: 'Unauthorized'});
-        } else {
-            next();
-        }
-    })(req, res, next);
+const userAuth = (req: RequestWithAthorizationFlag, res: Response, next: Function): void => {
+    if (!req.isAuthorized) {
+        passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
+            if (err || jwtError) {
+                res.status(401).send({error: 'Unauthorized'});
+            } else {
+                req.isAuthorized = true;
+                next();
+            }
+        })(req, res, next);
+    } else {
+        res.status(401).send({error: 'Unauthorized'});
+    }
 };
 
 export {botAuth, userAuth};
