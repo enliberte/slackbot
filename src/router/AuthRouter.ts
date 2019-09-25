@@ -18,10 +18,10 @@ export default class AuthRouter extends BaseRouter {
             const decodedJWT = verify(req.params.token, JWT_SECRET) as {channelId: string};
             const token = sign({channelId: decodedJWT.channelId}, JWT_SECRET, {expiresIn: '20m'});
             res.cookie('token', token, {httpOnly: true});
+            res.redirect('/');
         } catch (e) {
             res.status(401).send();
         }
-        res.redirect('/');
     }
 
     makeRouter(): Router {
