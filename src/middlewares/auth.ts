@@ -13,19 +13,22 @@ passport.use(new Strategy({jwtFromRequest, secretOrKey: JWT_SECRET}, async (jwtP
     }
 }));
 
-
-const auth = (req: Request, res: Response, next: Function): void => {
+const botAuth = (req: Request, res: Response, next: Function): void => {
     if (req.body && req.body.token && req.body.token === VERIFICATION_TOKEN) {
         next();
     } else {
-        passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
-            if (err || jwtError) {
-                res.status(401).send({error: 'Unauthorized'});
-            } else {
-                next();
-            }
-        })(req, res, next);
+        res.status(401).send({error: 'Unauthorized'});
     }
 };
 
-export default auth;
+const userAuth = (req: Request, res: Response, next: Function): void => {
+    passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
+        if (err || jwtError) {
+            res.status(401).send({error: 'Unauthorized'});
+        } else {
+            next();
+        }
+    })(req, res, next);
+};
+
+export {botAuth, userAuth};
