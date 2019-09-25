@@ -6,6 +6,7 @@ import {INotifyService} from "../slackbot/NotifyService";
 import {IUserToMessageAdapter} from "../slackbot/adapters/UserToMsgAdapter";
 import {IAuthService} from "../slackbot/AuthService";
 import {IAuthToMessageAdapter} from "../slackbot/adapters/AuthToMsgAdapter";
+import {ISubscribeToMessageAdapter} from "../slackbot/adapters/SubscribeToMsgAdapter";
 
 export default interface IServicesFactory {
     getAuthService(): IAuthService;
@@ -16,4 +17,5 @@ export default interface IServicesFactory {
     getRepositoryToMsgAdapter(): IRepositoryToMessageAdapter;
     getUserToMsgAdapter(): IUserToMessageAdapter;
     getAuthToMessageAdapter(): IAuthToMessageAdapter;
+    getSubscribeToMessageAdapter(): ISubscribeToMessageAdapter;
 }

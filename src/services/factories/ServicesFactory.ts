@@ -11,6 +11,7 @@ import UserStorageService from "../../db/storageServices/UserStorageService";
 import UserToMsgAdapter from "../slackbot/adapters/UserToMsgAdapter";
 import AuthService from "../slackbot/AuthService";
 import AuthToMessageAdapter from "../slackbot/adapters/AuthToMsgAdapter";
+import SubscribeToMessageAdapter from "../slackbot/adapters/SubscribeToMsgAdapter";
 
 export default class ServicesFactory implements IServicesFactory {
     getAuthService(): AuthService {
@@ -26,7 +27,7 @@ export default class ServicesFactory implements IServicesFactory {
     }
 
     getSubscribeService(): SubscribeService {
-        return new SubscribeService(new SubscribeStorageService());
+        return new SubscribeService(new SubscribeStorageService(), new RepositoryStorageService(), new UserStorageService());
     }
 
     getUserService(): UserService {
@@ -43,5 +44,9 @@ export default class ServicesFactory implements IServicesFactory {
 
     getAuthToMessageAdapter(): AuthToMessageAdapter {
         return new AuthToMessageAdapter(this.getAuthService());
+    }
+
+    getSubscribeToMessageAdapter(): SubscribeToMessageAdapter {
+        return new SubscribeToMessageAdapter(this.getSubscribeService());
     }
 }
