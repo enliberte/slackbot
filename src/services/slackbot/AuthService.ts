@@ -1,14 +1,17 @@
 import {sign, SignOptions, verify} from 'jsonwebtoken';
 const {JWT_SECRET} = require('../../../config');
 
+export interface IJWTPayload {
+    channelId: string;
+}
 
 export interface IAuthService {
-    createJWT(payload: {channelId: string}, options: SignOptions): string;
+    createJWT(payload: IJWTPayload, options: SignOptions): string;
     verifyJWT(jwt: string): Promise<object | string | boolean>
 }
 
 export default class AuthService implements IAuthService {
-    createJWT(payload: {channelId: string}, options: SignOptions): string {
+    createJWT(payload: IJWTPayload, options: SignOptions): string {
         return sign(payload, JWT_SECRET, options);
     }
     async verifyJWT(jwt: string): Promise<object | string | boolean> {
