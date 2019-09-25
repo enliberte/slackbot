@@ -16,16 +16,15 @@ passport.use(new Strategy({jwtFromRequest, secretOrKey: JWT_SECRET}, async (jwtP
 
 const auth = (req: Request, res: Response, next: Function): void => {
     if (req.body && req.body.token && req.body.token === VERIFICATION_TOKEN) {
-        next();
+        return next();
     } else {
         passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
-            if (err || jwtError) {
-                res.redirect(401, '/');
-            } else {
-                next();
+            if (!err && !jwtError) {
+                return next();
             }
         })(req, res, next);
     }
+    res.status(401).send({error: 'Unauthorized'});
 };
 
 export default auth;
