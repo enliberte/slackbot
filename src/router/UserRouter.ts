@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
 import MessageBuilder from "../templates/builders/MessageBuilder";
-import {botAuth, userAuth} from "../middlewares/auth";
+import {botAuth} from "../middlewares/auth";
 
 
 export default class UserRouter extends BaseRouter {
@@ -18,8 +18,8 @@ export default class UserRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/add-user', botAuth, userAuth, this.postMsgWithUserAdditionResult.bind(this));
-        this.router.post('/users', botAuth, userAuth, this.postMsgWithUsersList.bind(this));
+        this.router.post('/add-user', botAuth, this.postMsgWithUserAdditionResult.bind(this));
+        this.router.post('/users', botAuth, this.postMsgWithUsersList.bind(this));
         return this.router;
     }
 }

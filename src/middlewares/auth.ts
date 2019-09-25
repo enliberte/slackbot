@@ -19,7 +19,7 @@ interface RequestWithAthorizationFlag extends Request {
 
 const botAuth = (req: RequestWithAthorizationFlag, res: Response, next: Function): void => {
     if (!req.isAuthorized) {
-        if (req.body && req.body.token && req.body.token === VERIFICATION_TOKEN) {
+        if (req.body && req.body.token === VERIFICATION_TOKEN) {
             req.isAuthorized = true;
             next();
         } else {
@@ -28,7 +28,6 @@ const botAuth = (req: RequestWithAthorizationFlag, res: Response, next: Function
     } else {
         next();
     }
-
 };
 
 const userAuth = (req: RequestWithAthorizationFlag, res: Response, next: Function): void => {

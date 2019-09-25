@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
 import MessageBuilder from "../templates/builders/MessageBuilder";
-import {botAuth, userAuth} from "../middlewares/auth";
+import {botAuth} from "../middlewares/auth";
 
 
 export default class RepoRouter extends BaseRouter {
@@ -20,8 +20,8 @@ export default class RepoRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/add-repo', botAuth, userAuth, this.postMsgWithRepositoryAdditionResult.bind(this));
-        this.router.post('/repos', botAuth, userAuth, this.postMsgWithRepositoryList.bind(this));
+        this.router.post('/add-repo', botAuth, this.postMsgWithRepositoryAdditionResult.bind(this));
+        this.router.post('/repos', botAuth, this.postMsgWithRepositoryList.bind(this));
         return this.router;
     }
 }

@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
-import {botAuth, userAuth} from "../middlewares/auth";
+import {userAuth} from "../middlewares/auth";
 
 
 export default class MainRouter extends BaseRouter {

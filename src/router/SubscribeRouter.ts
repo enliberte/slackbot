@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
 import MessageBuilder from "../templates/builders/MessageBuilder";
-import {botAuth, userAuth} from "../middlewares/auth";
+import {botAuth} from "../middlewares/auth";
 
 
 export default class SubscribeRouter extends BaseRouter {
@@ -29,7 +29,7 @@ export default class SubscribeRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/subscribe', botAuth, userAuth, this.handleSubscribe.bind(this));
+        this.router.post('/subscribe', botAuth, this.handleSubscribe.bind(this));
         return this.router;
     }
 }

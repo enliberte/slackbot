@@ -2,8 +2,6 @@ import {Request, Response, Router} from "express";
 import BaseRouter from "./BaseRouter";
 import MessageBuilder from "../templates/builders/MessageBuilder";
 import {botAuth} from "../middlewares/auth";
-import {sign, verify} from 'jsonwebtoken';
-const {JWT_SECRET} = require('../../config');
 
 
 export default class AuthRouter extends BaseRouter {
@@ -14,12 +12,12 @@ export default class AuthRouter extends BaseRouter {
     }
 
     async setJWT(req: Request, res: Response): Promise<void> {
-        try {
-            const decodedJWT = verify(req.params.token, JWT_SECRET) as {channelId: string};
-            const token = sign({channelId: decodedJWT.channelId}, JWT_SECRET, {expiresIn: '20m'});
+        const decodedJWT = await this.services.authService.verifyJWT(req.params.token) as {channelId: string} | false;
+        if (decodedJWT) {
+            const token = await this.services.authService.createJWT({channelId: decodedJWT.channelId}, {expiresIn: '20m'});
             res.cookie('token', token, {httpOnly: true});
             res.redirect('/');
-        } catch (e) {
+        } else {
             res.status(401).send();
         }
     }
