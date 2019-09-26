@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
 import BaseController from "./BaseController";
-import {userAuth} from "../middlewares/auth";
+import {userAuth, slackAuth} from "../middlewares/auth";
 
 
 export default class MainController extends BaseController {
@@ -10,6 +10,7 @@ export default class MainController extends BaseController {
 
     makeRouter(): Router {
         this.router.get('/', userAuth, this.showMain.bind(this));
+        this.router.get('/slack', slackAuth);
         return this.router;
     }
 }
