@@ -1,7 +1,6 @@
 import {Request, Response, Router} from "express";
 import BaseController from "./BaseController";
 import {userAuth} from "../middlewares/auth";
-import passport from "passport";
 
 
 export default class MainController extends BaseController {
@@ -10,10 +9,7 @@ export default class MainController extends BaseController {
     }
 
     makeRouter(): Router {
-        // this.router.get('/', userAuth, this.showMain.bind(this));
-        this.router.get('/', (req, res) => res.status(200).send('HI'));
-        this.router.get('/slack', passport.authenticate('Slack', { failureRedirect: '/login' }),
-            (req, res) => res.redirect('/'));
+        this.router.get('/', userAuth, this.showMain.bind(this));
         return this.router;
     }
 }
