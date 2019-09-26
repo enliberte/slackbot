@@ -9,7 +9,8 @@ export default class MainController extends BaseController {
     }
 
     makeRouter(): Router {
-        this.router.get('/', userAuth, this.showMain.bind(this));
+        // this.router.get('/', userAuth, this.showMain.bind(this));
+        this.router.get('/', (req, res) => res.status(200).send('HI'));
         this.router.get('/slack', slackAuth);
         return this.router;
     }
