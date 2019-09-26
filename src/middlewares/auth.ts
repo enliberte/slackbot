@@ -10,7 +10,7 @@ passport.use(new SlackStrategy({
         clientID: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         skipUserProfile: false,
-        scope: ['identity.basic', 'identity.email', 'identity.avatar', 'identity.team'] // default
+        scope: ['identity.basic'] // default
     },
     (accessToken: any, refreshToken: any, profile: any, done: Function) => {
         console.log('--------------------------------------------------------');
@@ -69,8 +69,5 @@ const userAuth = (req: RequestWithAthorizationFlag, res: Response, next: Functio
     }
 };
 
-const slackAuth = (req: Request, res: Response, next: Function): void => {
-    passport.authorize('Slack')(req, res, next);
-};
 
-export {botAuth, userAuth, slackAuth};
+export {botAuth, userAuth};
