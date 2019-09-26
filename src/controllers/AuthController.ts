@@ -1,11 +1,11 @@
 import {Request, Response, Router} from "express";
-import BaseRouter from "./BaseRouter";
+import BaseController from "./BaseController";
 import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
 import {botAuth} from "../middlewares/auth";
 import {IJWTPayload} from "../services/slackbot/AuthService";
 
 
-export default class AuthRouter extends BaseRouter {
+export default class AuthController extends BaseController {
     async postMsgWithAuthLink(req: Request, res: Response): Promise<void> {
         const {channel_id: channelId} = req.body;
         const msg = this.services.authToMessageAdapter.getCreateAuthLinkMsg(new MessageBuilder(), {channelId});

@@ -1,10 +1,10 @@
 import {Request, Response, Router} from "express";
-import BaseRouter from "./BaseRouter";
+import BaseController from "./BaseController";
 import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
 import {botAuth} from "../middlewares/auth";
 
 
-export default class RepoRouter extends BaseRouter {
+export default class RepositoryController extends BaseController {
     async postMsgWithRepositoryAdditionResult(req: Request, res: Response): Promise<void> {
         const {channel_id: channelId, text: reponame, user_name: addedByName} = req.body;
         const msg = await this.services.repositoryMessageAdapter
@@ -20,8 +20,8 @@ export default class RepoRouter extends BaseRouter {
     }
 
     makeRouter(): Router {
-        this.router.post('/add-repo', botAuth, this.postMsgWithRepositoryAdditionResult.bind(this));
-        this.router.post('/repos', botAuth, this.postMsgWithRepositoryList.bind(this));
+        this.router.post('/add-repository', botAuth, this.postMsgWithRepositoryAdditionResult.bind(this));
+        this.router.post('/repositories', botAuth, this.postMsgWithRepositoryList.bind(this));
         return this.router;
     }
 }

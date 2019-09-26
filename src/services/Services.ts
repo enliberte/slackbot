@@ -1,8 +1,8 @@
-import {IUserService} from "./admin/UserService";
+import {IDeveloperService} from "./admin/DeveloperService";
 import {IRepositoryService} from "./admin/RepositoryService";
 import {ISubscribeService} from "./admin/SubscribeService";
 import {INotifyService} from "./slackbot/NotifyService";
-import {IUserToMessageAdapter} from "./slackbot/adapters/UserToMsgAdapter";
+import {IDeveloperToMessageAdapter} from "./slackbot/adapters/DeveloperToMsgAdapter";
 import {IRepositoryToMessageAdapter} from "./slackbot/adapters/RepositoryToMsgAdapter";
 import IServicesFactory from "./factories/IServicesFactory";
 import {IAuthService} from "./slackbot/AuthService";
@@ -11,22 +11,22 @@ import {ISubscribeToMessageAdapter} from "./slackbot/adapters/SubscribeToMsgAdap
 
 export default class Services {
     authService: IAuthService;
-    userService: IUserService;
+    developerService: IDeveloperService;
     repositoryService: IRepositoryService;
     subscribeService: ISubscribeService;
     notifyService: INotifyService;
-    userMessageAdapter: IUserToMessageAdapter;
+    developerMessageAdapter: IDeveloperToMessageAdapter;
     repositoryMessageAdapter: IRepositoryToMessageAdapter;
     authToMessageAdapter: IAuthToMessageAdapter;
     subscribeToMessageAdapter: ISubscribeToMessageAdapter;
 
     constructor(factory: IServicesFactory) {
         this.authService = factory.getAuthService();
-        this.userService = factory.getUserService();
+        this.developerService = factory.getDeveloperService();
         this.repositoryService = factory.getRepositoryService();
         this.subscribeService = factory.getSubscribeService();
         this.notifyService = factory.getNotifyService();
-        this.userMessageAdapter = factory.getUserToMsgAdapter();
+        this.developerMessageAdapter = factory.getDeveloperToMsgAdapter();
         this.repositoryMessageAdapter = factory.getRepositoryToMsgAdapter();
         this.authToMessageAdapter = factory.getAuthToMessageAdapter();
         this.subscribeToMessageAdapter = factory.getSubscribeToMessageAdapter();

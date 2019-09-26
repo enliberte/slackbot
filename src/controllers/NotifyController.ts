@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
-import BaseRouter from "./BaseRouter";
+import BaseController from "./BaseController";
 
-export default class NotifyRouter extends BaseRouter {
+export default class NotifyController extends BaseController {
     async notifyAboutPR(req: Request, res: Response) {
         await this.services.notifyService.notifyAboutPR(req.body);
     }

@@ -1,9 +1,9 @@
 import {Request, Response, Router} from "express";
-import BaseRouter from "./BaseRouter";
+import BaseController from "./BaseController";
 import {userAuth} from "../middlewares/auth";
 
 
-export default class MainRouter extends BaseRouter {
+export default class MainController extends BaseController {
     showMain(req: Request, res: Response): void {
         res.status(200).send('Authorized');
     }

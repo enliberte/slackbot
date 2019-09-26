@@ -9,7 +9,7 @@ export interface IRouter {
     makeRouter(): Router;
 }
 
-export default abstract class BaseRouter implements IRouter {
+export default abstract class BaseController implements IRouter {
     protected services: Services;
     protected router: Router;
 

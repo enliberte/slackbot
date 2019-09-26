@@ -1,10 +1,10 @@
 import {Request, Response, Router} from "express";
-import BaseRouter from "./BaseRouter";
+import BaseController from "./BaseController";
 import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
 import {botAuth} from "../middlewares/auth";
 
 
-export default class SubscribeRouter extends BaseRouter {
+export default class SubscribeController extends BaseController {
     async postMsgWithSubscribeAdditionResult(req: Request, res: Response): Promise<void> {
         const [reponame, followed] = req.body.text.split(' ');
         const {channel_id: channelId, user_name: follower} = req.body;

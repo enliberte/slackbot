@@ -20,7 +20,7 @@ export default class RepositoryToMsgAdapter implements IRepositoryToMessageAdapt
     async getReposListMsg(builder: IMessageBuilder, channelId: string, button: IButtonProps): Promise<IBlockMessage> {
         const repos = await this.repositoryService.list(channelId);
         if (repos.length === 0) {
-            const emptyReposMsg = "You don't have added repositories yet. To add them please use command /add_repo";
+            const emptyReposMsg = "You don't have added repositories yet. To add them please use command /add_repository";
             return builder.buildSection(emptyReposMsg).getMessage();
         } else {
             return buildReposList(builder, repos, button);

@@ -2,14 +2,14 @@ import {IBlockMessage} from "../services/slackbot/templates/builders/elements";
 import {createMessageAdapter} from '@slack/interactive-messages';
 const {SIGNING_SECRET, VERIFICATION_TOKEN} = require('../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
-import BaseRouter from "./BaseRouter";
+import BaseController from "./BaseController";
 import {ISubscribe} from "../db/models/SubscribeModel";
 import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
 import {Router} from "express";
 
 const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});
 
-export default class InteractiveMessagesRouter extends BaseRouter {
+export default class InteractiveMessagesController extends BaseController {
 
      private async closeButtonHandler(respond: any): Promise<void> {
         respond({delete_original: true});
@@ -22,19 +22,19 @@ export default class InteractiveMessagesRouter extends BaseRouter {
     }
 
     private async selectRepoButtonHandler(respond: any, channelId: string, reponame: string): Promise<void> {
-        const msg = await this.services.userMessageAdapter.getUsersListMsg(new MessageBuilder(), channelId, reponame);
+        const msg = await this.services.developerMessageAdapter.getDevelopersListMsg(new MessageBuilder(), channelId, reponame);
         respond(replaceMsg(msg));
     }
 
     private async followButtonHandler(respond: any, subscribe: ISubscribe): Promise<void> {
         await this.services.subscribeService.subscribe(subscribe);
-        const msg = await this.services.userMessageAdapter.getUsersListMsg(new MessageBuilder(), subscribe.channelId, subscribe.reponame);
+        const msg = await this.services.developerMessageAdapter.getDevelopersListMsg(new MessageBuilder(), subscribe.channelId, subscribe.reponame);
         respond(replaceMsg(msg));
     }
 
     private async unfollowButtonHandler(respond: any, subscribe: ISubscribe): Promise<void> {
         await this.services.subscribeService.unsubscribe(subscribe);
-        const msg = await this.services.userMessageAdapter.getUsersListMsg(new MessageBuilder(), subscribe.channelId, subscribe.reponame);
+        const msg = await this.services.developerMessageAdapter.getDevelopersListMsg(new MessageBuilder(), subscribe.channelId, subscribe.reponame);
         respond(replaceMsg(msg));
     }
 
@@ -45,10 +45,10 @@ export default class InteractiveMessagesRouter extends BaseRouter {
         respond(replaceMsg(msg));
     }
 
-    private async deleteUserButtonHandler(respond: any, channelId: string, username: string): Promise<void> {
-        await this.services.userService.delete({channelId, username});
-        const deleteUserMsg = await this.services.userMessageAdapter.getUsersListMsg(new MessageBuilder(), channelId);
-        respond(replaceMsg(deleteUserMsg));
+    private async deleteDeveloperButtonHandler(respond: any, channelId: string, username: string): Promise<void> {
+        await this.services.developerService.delete({channelId, username});
+        const deleteDeveloperMsg = await this.services.developerMessageAdapter.getDevelopersListMsg(new MessageBuilder(), channelId);
+        respond(replaceMsg(deleteDeveloperMsg));
     }
 
     private async processMessages(payload: any, respond: any): Promise<void> {
@@ -72,8 +72,8 @@ export default class InteractiveMessagesRouter extends BaseRouter {
                       });
                   case 'deleteRepo':
                       return this.deleteRepoButtonHandler(respond, payload.channel.id, args[1]);
-                  case 'deleteUser':
-                      return this.deleteUserButtonHandler(respond, payload.channel.id, args[1]);
+                  case 'deleteDeveloper':
+                      return this.deleteDeveloperButtonHandler(respond, payload.channel.id, args[1]);
              }
          }
     }

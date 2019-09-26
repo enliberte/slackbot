@@ -1,7 +1,7 @@
 import {ISubscribe} from "../../db/models/SubscribeModel";
 import {ISubscribeStorageService} from "../../db/storageServices/SubscribeStorageService";
 import {IRepositoryStorageService} from "../../db/storageServices/RepositoryStorageService";
-import {IUserStorageService} from "../../db/storageServices/UserStorageService";
+import {IDeveloperStorageService} from "../../db/storageServices/DeveloperStorageService";
 
 
 export interface ISubscribeService {
@@ -14,16 +14,16 @@ export interface ISubscribeService {
 export default class SubscribeService implements ISubscribeService {
     private subscribeStorageService: ISubscribeStorageService;
     private repositoryStorageService: IRepositoryStorageService;
-    private userStorageService: IUserStorageService;
+    private developerStorageService: IDeveloperStorageService;
 
     constructor(
         subscribeStorageService: ISubscribeStorageService,
         repositoryStorageService: IRepositoryStorageService,
-        userStorageService: IUserStorageService
+        developerStorageService: IDeveloperStorageService
     ) {
         this.subscribeStorageService = subscribeStorageService;
         this.repositoryStorageService = repositoryStorageService;
-        this.userStorageService = userStorageService;
+        this.developerStorageService = developerStorageService;
     }
 
     async subscribe(obj: ISubscribe): Promise<boolean> {
@@ -31,12 +31,12 @@ export default class SubscribeService implements ISubscribeService {
     };
 
     async subscribeCMD(obj: ISubscribe): Promise<boolean> {
-        const user = {channelId: obj.channelId, username: obj.followed, addedByName: obj.follower};
+        const developer = {channelId: obj.channelId, username: obj.followed, addedByName: obj.follower};
         const repository = {channelId: obj.channelId, reponame: obj.reponame, addedByName: obj.follower};
-        const addUserOperationSuccess = await this.userStorageService.add(user);
+        const addDeveloperOperationSuccess = await this.developerStorageService.add(developer);
         const addRepositoryOperationSuccess = await this.repositoryStorageService.add(repository);
         const addSubscribeOperationSuccess = await this.subscribe(obj);
-        return addUserOperationSuccess && addRepositoryOperationSuccess && addSubscribeOperationSuccess;
+        return addDeveloperOperationSuccess && addRepositoryOperationSuccess && addSubscribeOperationSuccess;
     }
 
     async unsubscribe(obj: ISubscribe): Promise<boolean> {

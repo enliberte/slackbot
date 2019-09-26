@@ -6,9 +6,9 @@ import RepositoryService from "../admin/RepositoryService";
 import RepositoryStorageService from "../../db/storageServices/RepositoryStorageService";
 import RepoAPIToMsgAdapter from "../slackbot/adapters/RepositoryToMsgAdapter";
 import SubscribeService from "../admin/SubscribeService";
-import UserService from "../admin/UserService";
-import UserStorageService from "../../db/storageServices/UserStorageService";
-import UserToMsgAdapter from "../slackbot/adapters/UserToMsgAdapter";
+import DeveloperService from "../admin/DeveloperService";
+import DeveloperStorageService from "../../db/storageServices/DeveloperStorageService";
+import DeveloperToMsgAdapter from "../slackbot/adapters/DeveloperToMsgAdapter";
 import AuthService from "../slackbot/AuthService";
 import AuthToMessageAdapter from "../slackbot/adapters/AuthToMsgAdapter";
 import SubscribeToMessageAdapter from "../slackbot/adapters/SubscribeToMsgAdapter";
@@ -27,19 +27,19 @@ export default class ServicesFactory implements IServicesFactory {
     }
 
     getSubscribeService(): SubscribeService {
-        return new SubscribeService(new SubscribeStorageService(), new RepositoryStorageService(), new UserStorageService());
+        return new SubscribeService(new SubscribeStorageService(), new RepositoryStorageService(), new DeveloperStorageService());
     }
 
-    getUserService(): UserService {
-        return new UserService(new UserStorageService(), new SubscribeStorageService());
+    getDeveloperService(): DeveloperService {
+        return new DeveloperService(new DeveloperStorageService(), new SubscribeStorageService());
     }
 
     getRepositoryToMsgAdapter(): RepoAPIToMsgAdapter {
         return new RepoAPIToMsgAdapter(this.getRepositoryService());
     }
 
-    getUserToMsgAdapter(): UserToMsgAdapter {
-        return new UserToMsgAdapter(this.getUserService());
+    getDeveloperToMsgAdapter(): DeveloperToMsgAdapter {
+        return new DeveloperToMsgAdapter(this.getDeveloperService());
     }
 
     getAuthToMessageAdapter(): AuthToMessageAdapter {

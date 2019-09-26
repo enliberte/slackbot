@@ -1,5 +1,5 @@
 import {IBlockMessage} from "../templates/builders/elements";
-import IMessageBuilder, {IButtonProps} from "../templates/builders/IBuilder";
+import IMessageBuilder from "../templates/builders/IBuilder";
 import {ISubscribe} from "../../../db/models/SubscribeModel";
 import {ISubscribeService} from "../../admin/SubscribeService";
 
@@ -24,7 +24,7 @@ export default class SubscribeToMessageAdapter implements ISubscribeToMessageAda
                 builder.buildSection(`DB Error has been occurred`);
             }
         } else {
-            builder.buildSection('Incorrect username');
+            builder.buildSection('Incorrect developer name');
         }
         return builder.getMessage();
     }
