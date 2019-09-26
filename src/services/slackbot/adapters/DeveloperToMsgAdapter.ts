@@ -20,7 +20,7 @@ export default class DeveloperToMsgAdapter implements IDeveloperToMessageAdapter
 
     async getDevelopersListMsg(builder: IMessageBuilder, channelId: string, reponame?: string) {
         const emptyDevelopersMsg = "You don't have added developers yet. To add them please use command /add_developer";
-        const users = await this.userService.list(channelId, reponame);
+        const users = await this.developerService.list(channelId, reponame);
         if (users.length === 0) {
             return builder.buildSection(emptyDevelopersMsg).getMessage();
         } else {
@@ -30,14 +30,14 @@ export default class DeveloperToMsgAdapter implements IDeveloperToMessageAdapter
 
     async getAddResultMsg(builder: IMessageBuilder, obj: IDeveloper) {
         if (obj.username.length !== 0) {
-            const addOperationSuccess = await this.userService.add(obj);
+            const addOperationSuccess = await this.developerService.add(obj);
             if (addOperationSuccess) {
-                builder.buildSection(`You have added new user ${obj.username}`);
+                builder.buildSection(`You have added new developer ${obj.username}`);
             } else {
                 builder.buildSection(`DB Error has been occurred`);
             }
         } else {
-            builder.buildSection(`Incorrect username ${obj.username}`);
+            builder.buildSection(`Incorrect developer name ${obj.username}`);
         }
         return builder.getMessage();
     }
