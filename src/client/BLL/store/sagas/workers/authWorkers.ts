@@ -7,6 +7,9 @@ import {ISetAuthDataAction} from "../../action_creators/auth/IAuthActions";
 export function *getAuth(action: ISetAuthDataAction) {
     try {
         const response = yield call(fetchGetAuth);
+        console.log('--------------------------------------------------');
+        console.log(JSON.stringify(response));
+        console.log('--------------------------------------------------');
         yield put(setAuthData(response.data));
     } catch (err) {
         console.log(err);
