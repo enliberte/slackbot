@@ -4,6 +4,7 @@ import {reducer as formReducer} from 'redux-form';
 import createSagaMiddleware from 'redux-saga';
 import auth from './reducers/auth/auth';
 import developers from './reducers/developers/developers';
+import repositories from './reducers/repositories/repositories';
 import rootSaga from './sagas/rootSaga';
 
 
@@ -12,6 +13,7 @@ const store = createStore(
     combineReducers({
         auth,
         developers,
+        repositories,
         form: formReducer
     }),
     composeWithDevTools(applyMiddleware(sagaMiddleware))

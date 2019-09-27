@@ -5,4 +5,4 @@ import {IDevelopersFilters} from "./IDevelopersFilters";
 
 export const setDevelopersData = (developersData: IDeveloper[]): ISetDevelopersDataAction => ({type: authActions.SET_DEVELOPERS, payload: developersData});
 
-export const runGetDevelopersSaga = (getDevelopersFilters: IDevelopersFilters): IRunGetDevelopersSagaAction => ({type: authActions.GET_DEVELOPERS_SAGA, payload: getDevelopersFilters});
+export const runGetDevelopersSaga = (filters: IDevelopersFilters): IRunGetDevelopersSagaAction => ({type: authActions.GET_DEVELOPERS_SAGA, payload: filters});
