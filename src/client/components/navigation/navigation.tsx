@@ -119,8 +119,8 @@ const Navigation = () => {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const sections = [
-        {name: 'Теория', link: '/theory', icon: BookIcon},
-        {name: 'Тестирование', link: '/practice', icon: AssessmentIcon}
+        {name: 'Developers', link: '/developers', icon: BookIcon},
+        {name: 'Repositories', link: '/repositories', icon: AssessmentIcon}
     ];
     const [currentSection, setCurrentSection] = React.useState(sections[0]);
 
