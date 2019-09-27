@@ -6,6 +6,7 @@ import BaseController from "./BaseController";
 import {ISubscribe} from "../db/models/SubscribeModel";
 import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
 import {Router} from "express";
+import {IJWTPayload} from "../services/slackbot/AuthService";
 
 const replaceMsg = (msg: IBlockMessage) => ({...msg, replace_original: true});
 
@@ -51,6 +52,11 @@ export default class InteractiveMessagesController extends BaseController {
         respond(replaceMsg(deleteDeveloperMsg));
     }
 
+    private async refreshJWTButtonHandler(respond: any, payload: IJWTPayload): Promise<void> {
+        const refreshJWTMsg = await this.services.authToMessageAdapter.getCreateAuthLinkMsg(new MessageBuilder(), payload);
+        respond(replaceMsg(refreshJWTMsg));
+    }
+
     private async processMessages(payload: any, respond: any): Promise<void> {
          if (payload.token === VERIFICATION_TOKEN) {
               const value = payload.actions[0].value;
@@ -74,6 +80,10 @@ export default class InteractiveMessagesController extends BaseController {
                       return this.deleteRepoButtonHandler(respond, payload.channel.id, args[1]);
                   case 'deleteDeveloper':
                       return this.deleteDeveloperButtonHandler(respond, payload.channel.id, args[1]);
+                  case 'refreshJWT':
+                      return this.refreshJWTButtonHandler(respond, {
+                          channelId: payload.channel.id, username: payload.user.username
+                      });
              }
          }
     }
