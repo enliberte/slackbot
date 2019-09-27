@@ -1,9 +1,9 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import {connect} from "react-redux";
-import {getChannelId} from "../../../BLL/store/selectors/auth";
-import {runGetDevelopersSaga} from "../../../BLL/store/action_creators/developers/developersActionCreators";
-import {IDevelopersFilters} from "../../../BLL/store/action_creators/developers/IDevelopersFilters";
+import {getChannelId} from "../../../../BLL/store/selectors/auth";
+import {runGetDevelopersSaga} from "../../../../BLL/store/action_creators/developers/developersActionCreators";
+import {IDevelopersFilters} from "../../../../BLL/store/action_creators/developers/IDevelopersFilters";
 
 
 type DevelopersProps = ReturnType<typeof mapDispatchToProps> & ReturnType<typeof mapStateToProps>;

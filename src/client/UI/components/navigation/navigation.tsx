@@ -14,8 +14,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import BookIcon from '@material-ui/icons/Book';
-import AssessmentIcon from '@material-ui/icons/Assessment';
+import PersonIcon from '@material-ui/icons/Person';
+import BuildIcon from '@material-ui/icons/Build';
 import {Link} from 'react-router-dom';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
@@ -114,16 +114,15 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+const sections = [
+    {name: 'Developers', link: '/developers', icon: PersonIcon},
+    {name: 'Repositories', link: '/repositories', icon: BuildIcon}
+];
+
 const Navigation = () => {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const sections = [
-        {name: 'Developers', link: '/developers', icon: BookIcon},
-        {name: 'Repositories', link: '/repositories', icon: AssessmentIcon}
-    ];
-    const [currentSection, setCurrentSection] = React.useState(sections[0]);
-
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -194,7 +193,7 @@ const Navigation = () => {
                         const Icon = section.icon;
                         return (
                             <Link to={section.link} key={section.name} style={{textDecoration: 'none', color: 'black'}}>
-                                <ListItem button onClick={() => setCurrentSection(section)}>
+                                <ListItem button>
                                     <ListItemIcon><Icon/></ListItemIcon>
                                     <ListItemText primary={section.name}/>
                                 </ListItem>

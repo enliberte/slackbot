@@ -1,4 +1,5 @@
 import React from 'react';
+import ItemTabs from "./tabs/tabs";
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 
@@ -11,10 +12,10 @@ const useStyles = makeStyles(theme => ({
 
 const Content = (props: any) => {
     const classes = useStyles();
-    const theme = useTheme();
 
     return (
         <main className={classes.content}>
+            <ItemTabs />
             {props.children}
         </main>
     );
