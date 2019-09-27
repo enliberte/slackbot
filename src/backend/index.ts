@@ -17,7 +17,6 @@ const port = process.env.PORT || 8080;
 const app = express();
 const services = new Services(new ServicesFactory());
 
-app.use(express.static(__dirname + '/dist'));
 app.use(new InteractiveMessagesController(services).makeRouter());
 app.use(cookieParser());
 app.use(bodyParser.json());

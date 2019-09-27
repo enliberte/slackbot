@@ -3,6 +3,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ListIcon from '@material-ui/icons/List';
+import {Paper} from "@material-ui/core";
+import {makeStyles} from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles({
