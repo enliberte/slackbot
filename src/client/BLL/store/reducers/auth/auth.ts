@@ -2,7 +2,7 @@ import authActions from "../../action_creators/auth/authActions";
 import IAuthState from "./IAuthState";
 
 
-const initialState: IAuthState = {username: '', channelId: ''};
+const initialState: IAuthState = {isAuth: false, username: '', channelId: ''};
 
 
 export default (state: IAuthState = initialState, action: any) => {

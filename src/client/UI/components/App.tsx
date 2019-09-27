@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router, Route} from 'react-router-dom';
+import {Router, Route, Redirect} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import Navigation from "./navigation/navigation";
 import {makeStyles} from "@material-ui/core";
@@ -8,6 +8,8 @@ import Developers from "./content/developers/developers";
 import Repositories from "./content/repositories/repositories";
 import {connect} from "react-redux";
 import {runGetAuthSaga} from "../../BLL/store/action_creators/auth/authActionCreators";
+import {getIsAuth} from "../../BLL/store/selectors/auth";
+import Unauthorized from "./pages/unauthorized";
 
 const history = createBrowserHistory();
 const useStyles = makeStyles(theme => ({
@@ -16,10 +18,10 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-type AppProps = ReturnType<typeof mapDispatchToProps>
+type AppProps = ReturnType<typeof mapDispatchToProps> & ReturnType<typeof mapStateToProps>;
 
 
-const App = ({getAuthData}: AppProps) => {
+const App = ({isAuth, getAuthData}: AppProps) => {
     const classes = useStyles();
     React.useEffect(() => {
         getAuthData();
@@ -28,6 +30,8 @@ const App = ({getAuthData}: AppProps) => {
     return (
         <Router history={history}>
             <div className={classes.root}>
+                <Route path="/unauthorized" component={Unauthorized}/>
+                {!isAuth && <Redirect to={{pathname: '/unauthorized'}} />}
                 <Navigation/>
                 <Content>
                     <Route path="/developers" component={Developers}/>
@@ -38,10 +42,14 @@ const App = ({getAuthData}: AppProps) => {
     )
 };
 
+const mapStateToProps = (state: any) => ({
+    isAuth: getIsAuth(state)
+});
+
 const mapDispatchToProps = (dispatch: any) => ({
     getAuthData() {
         dispatch(runGetAuthSaga())
     }
 });
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
