@@ -31,4 +31,4 @@ const mapDispatchToProps = (dispatch: any) => ({
     }
 });
 
-export default connect()(Developers);
+export default connect(mapStateToProps, mapDispatchToProps)(Developers);
