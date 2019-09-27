@@ -3,6 +3,7 @@ const {JWT_SECRET} = require('../../../../config');
 
 export interface IJWTPayload {
     channelId: string;
+    username: string;
 }
 
 export interface IAuthService {
