@@ -1,8 +1,8 @@
 import {takeEvery} from 'redux-saga/effects';
-import actions from "../../reducers/actions";
+import authActions from "../../action_creators/auth/authActions";
 import {getAuth} from "../workers/authWorkers";
 
 
 export function *watchGetAuth() {
-    yield takeEvery(actions.GET_AUTH_SAGA, getAuth);
+    yield takeEvery(authActions.GET_AUTH_SAGA, getAuth);
 }
