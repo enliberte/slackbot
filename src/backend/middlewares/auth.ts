@@ -25,7 +25,7 @@ const botAuth = (req: Request, res: Response, next: Function): void => {
 const userAuth = (req: Request, res: Response, next: Function): void => {
     passport.authenticate('jwt', {session: false}, (err, decryptToken, jwtError) => {
         if (err || jwtError) {
-            res.redirect('/unauthorized');
+            res.status(401).send({error: 'Unauthorized'});
         } else {
             next();
         }
