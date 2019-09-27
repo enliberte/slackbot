@@ -159,7 +159,7 @@ const Navigation = () => {
                             <SearchIcon />
                         </div>
                         <InputBase
-                            placeholder="Поиск…"
+                            placeholder="Search…"
                             classes={{
                                 root: classes.inputRoot,
                                 input: classes.inputInput,

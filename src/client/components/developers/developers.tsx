@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 const Developers = () => {
     return (
         <Typography paragraph>
-            Раздел разработчиков
+            Developers
         </Typography>
     );
 };

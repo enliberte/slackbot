@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 const Repositories = () => {
     return (
         <Typography paragraph>
-            Раздел репозиториев
+            Repositories
         </Typography>
     );
 };
