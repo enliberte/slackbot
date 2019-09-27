@@ -10,4 +10,5 @@ module.exports = {
     VERIFICATION_TOKEN: process.env.VERIFICATION_TOKEN,
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
+    DIST: __dirname + '/src/backend/dist'
 };
