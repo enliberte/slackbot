@@ -6,6 +6,8 @@ import {makeStyles} from "@material-ui/core";
 import Content from "./content/content";
 import Developers from "./developers/developers";
 import Repositories from "./repositories/repositories";
+import {connect} from "react-redux";
+import {runGetAuthSaga} from "../../BLL/store/action_creators/auth/authActionCreators";
 
 const history = createBrowserHistory();
 const useStyles = makeStyles(theme => ({
@@ -14,9 +16,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+type AppProps = ReturnType<typeof mapDispatchToProps>
 
-const App = () => {
+
+const App = ({getAuthData}: AppProps) => {
     const classes = useStyles();
+    React.useEffect(() => {
+        getAuthData();
+    });
 
     return (
         <Router history={history}>
@@ -31,4 +38,10 @@ const App = () => {
     )
 };
 
-export default App;
+const mapDispatchToProps = (dispatch: any) => ({
+    getAuthData() {
+        dispatch(runGetAuthSaga())
+    }
+});
+
+export default connect(null, mapDispatchToProps)(App);
