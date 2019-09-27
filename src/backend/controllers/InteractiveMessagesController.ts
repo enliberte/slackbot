@@ -1,6 +1,6 @@
 import {IBlockMessage} from "../services/slackbot/templates/builders/elements";
 import {createMessageAdapter} from '@slack/interactive-messages';
-const {SIGNING_SECRET, VERIFICATION_TOKEN} = require('../../config');
+const {SIGNING_SECRET, VERIFICATION_TOKEN} = require('../../../config');
 const slackInteractions = createMessageAdapter(SIGNING_SECRET);
 import BaseController from "./BaseController";
 import {ISubscribe} from "../db/models/SubscribeModel";

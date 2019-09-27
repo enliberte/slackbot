@@ -1,5 +1,5 @@
 import {Document, Model, connect} from 'mongoose';
-const {MONGO_URI} = require('../../../config');
+const {MONGO_URI} = require('../../../../config');
 connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
 
 

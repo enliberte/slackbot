@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import passport from 'passport';
 import {Strategy} from 'passport-jwt';
-const {JWT_SECRET, VERIFICATION_TOKEN} = require('../../config');
+const {JWT_SECRET, VERIFICATION_TOKEN} = require('../../../config');
 
 
 const jwtFromRequest = (req: Request) => req.cookies && req.cookies.token ? req.cookies.token : null;

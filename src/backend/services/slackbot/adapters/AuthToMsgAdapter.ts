@@ -1,7 +1,7 @@
 import {IBlockMessage} from "../templates/builders/elements";
 import IMessageBuilder from "../templates/builders/IBuilder";
 import {IAuthService} from "../AuthService";
-const {SIGN_IN_URL} = require('../../../../config');
+const {SIGN_IN_URL} = require('../../../../../config');
 
 
 export interface IAuthToMessageAdapter {

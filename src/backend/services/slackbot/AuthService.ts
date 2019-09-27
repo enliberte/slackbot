@@ -1,5 +1,5 @@
 import {sign, SignOptions, verify} from 'jsonwebtoken';
-const {JWT_SECRET} = require('../../../config');
+const {JWT_SECRET} = require('../../../../config');
 
 export interface IJWTPayload {
     channelId: string;
