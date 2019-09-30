@@ -1,7 +1,7 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import {connect} from "react-redux";
-import {getDevelopers} from "../../../../BLL/store/selectors/developers";
+import {selectDevelopers} from "../../../../BLL/store/selectors/developers";
 import {Grid, makeStyles} from "@material-ui/core";
 import Developer from "./developer";
 
@@ -30,7 +30,7 @@ const Developers = ({developers}: DevelopersProps) => {
 };
 
 const mapStateToProps = (state: any) => ({
-    developers: getDevelopers(state)
+    developers: selectDevelopers(state)
 });
 
 export default connect(mapStateToProps)(Developers);

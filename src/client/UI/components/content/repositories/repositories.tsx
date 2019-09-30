@@ -1,36 +1,35 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
+import {Grid, makeStyles} from "@material-ui/core";
+import Paper from '@material-ui/core/Paper';
 import {connect} from "react-redux";
-import {getChannelId} from "../../../../BLL/store/selectors/auth";
-import {IDevelopersFilters} from "../../../../BLL/store/action_creators/developers/IDevelopersFilters";
-import {runGetDevelopersSaga} from "../../../../BLL/store/action_creators/developers/developersActionCreators";
-import {IRepositoriesFilters} from "../../../../BLL/store/action_creators/repositories/IRepositoriesFilters";
-import {runGetRepositoriesSaga} from "../../../../BLL/store/action_creators/repositories/repositoriesActionCreators";
+import {selectRepositories} from "../../../../BLL/store/selectors/repositories";
+import Repository from "./repository";
 
 
-type RepositoriesProps = ReturnType<typeof mapDispatchToProps> & ReturnType<typeof mapStateToProps>;
+type RepositoriesProps = ReturnType<typeof mapStateToProps>;
 
+const useStyles = makeStyles(theme => ({
+    paper: {
+        maxWidth: 400,
+        margin: `${theme.spacing(1)}px 0px`,
+        padding: theme.spacing(2),
+    },
+}));
 
-const Repositories = ({channelId, getRepositories}: RepositoriesProps) => {
-    React.useEffect(() => {
-        getRepositories({channelId});
-    });
+const Repositories = ({repositories}: RepositoriesProps) => {
+    const classes = useStyles();
 
     return (
-        <Typography paragraph>
-            Repositories
-        </Typography>
+        <Paper className={classes.paper}>
+            <Grid container spacing={2}>
+                {repositories.map(repository => <Repository key={repository.reponame} repository={repository} />)}
+            </Grid>
+        </Paper>
     );
 };
 
 const mapStateToProps = (state: any) => ({
-    channelId: getChannelId(state)
+    repositories: selectRepositories(state)
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
-    getRepositories(filters: IRepositoriesFilters) {
-        dispatch(runGetRepositoriesSaga(filters));
-    }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Repositories);
+export default connect(mapStateToProps)(Repositories);

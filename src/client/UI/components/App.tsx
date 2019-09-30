@@ -5,7 +5,7 @@ import Navigation from "./navigation/navigation";
 import {makeStyles} from "@material-ui/core";
 import Content from "./content/content";
 import Developers from "./content/developers/developersContainer";
-import Repositories from "./content/repositories/repositories";
+import Repositories from "./content/repositories/repositoryContainer";
 import {connect} from "react-redux";
 import {runGetAuthSaga} from "../../BLL/store/action_creators/auth/authActionCreators";
 import {getIsAuth} from "../../BLL/store/selectors/auth";

@@ -1,14 +1,14 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import {Grid, makeStyles} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import {IDeveloper} from "../../../../../backend/db/models/DeveloperModel";
 
 
-interface DeveloperProps {
+interface IDeveloperProps {
     developer: IDeveloper
 }
 
-const Developer = ({developer}: DeveloperProps) => (
+const Developer = ({developer}: IDeveloperProps) => (
     <Grid item xs={12} zeroMinWidth>
         <Typography noWrap>{developer.username}</Typography>
     </Grid>
