@@ -30,7 +30,7 @@ const Developers = ({developers}: DevelopersProps) => {
     const classes = useStyles();
 
     return (
-        <Grid item xs={4}>
+        <Grid item xs={3}>
             <Paper className={classes.paper}>
                 <List className={classes.root}>
                     {developers.map(developer => <Developer key={developer.username} developer={developer} />)}

@@ -5,6 +5,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ListIcon from '@material-ui/icons/List';
 import {Paper} from "@material-ui/core";
 import {makeStyles} from '@material-ui/core/styles';
+import Grid from "@material-ui/core/Grid";
 
 
 const useStyles = makeStyles({
@@ -30,21 +31,23 @@ const ItemTabs = () => {
     };
 
     return (
-        <Paper square className={classes.root}>
-            <Tabs
-                value={value}
-                onChange={handleChange}
-                variant="fullWidth"
-                indicatorColor="secondary"
-                textColor="secondary"
-                aria-label="icon label tabs example"
-            >
-                {tabs.map(tab => {
-                    const Icon = tab.icon;
-                    return <Tab icon={<Icon/>} label={tab.label} />
-                })}
-            </Tabs>
-        </Paper>
+        <Grid item xs={12}>
+            <Paper square className={classes.root}>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    variant="fullWidth"
+                    indicatorColor="secondary"
+                    textColor="secondary"
+                    aria-label="icon label tabs example"
+                >
+                    {tabs.map(tab => {
+                        const Icon = tab.icon;
+                        return <Tab icon={<Icon/>} label={tab.label} />
+                    })}
+                </Tabs>
+            </Paper>
+        </Grid>
     )
 };
 
