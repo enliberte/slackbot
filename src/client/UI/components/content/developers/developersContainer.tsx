@@ -19,4 +19,4 @@ const mapDispatchToProps = (dispatch: any) => ({
     }
 });
 
-export default connect(mapDispatchToProps)(DevelopersContainer);
+export default connect(null, mapDispatchToProps)(DevelopersContainer);
