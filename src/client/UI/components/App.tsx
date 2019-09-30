@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router, Route, Switch, Redirect} from 'react-router-dom';
+import {Router, Route, Redirect} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import Navigation from "./navigation/navigation";
 import {makeStyles} from "@material-ui/core";
