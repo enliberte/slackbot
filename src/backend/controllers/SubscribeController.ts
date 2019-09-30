@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import BaseController from "./BaseController";
 import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
-import {botAuth} from "../middlewares/auth";
+import {botAuth, userAuth} from "../middlewares/auth";
 
 
 export default class SubscribeController extends BaseController {
@@ -20,6 +20,11 @@ export default class SubscribeController extends BaseController {
         this.postMessage(res, msg, channelId);
     }
 
+    async postSubscribesList(req: Request, res: Response): Promise<void> {
+        const subscribesList = await this.services.subscribeService.list(req.body.filters);
+        res.send(subscribesList);
+    }
+
     async handleSubscribe(req: Request, res: Response): Promise<void> {
         if (req.body.text.length === 0) {
             await this.postMsgWithRepositoryList(req, res);
@@ -30,6 +35,7 @@ export default class SubscribeController extends BaseController {
 
     makeRouter(): Router {
         this.router.post('/subscribe', botAuth, this.handleSubscribe.bind(this));
+        this.router.post('/api/subscribes/get', userAuth, this.postSubscribesList.bind(this));
         return this.router;
     }
 }

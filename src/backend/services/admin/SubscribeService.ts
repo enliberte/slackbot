@@ -5,6 +5,7 @@ import {IDeveloperStorageService} from "../../db/storageServices/DeveloperStorag
 
 
 export interface ISubscribeService {
+    list(filter: Partial<ISubscribe>): Promise<ISubscribe[]>
     subscribe(obj: ISubscribe): Promise<boolean>;
     subscribeCMD(obj: ISubscribe): Promise<boolean>;
     unsubscribe(obj: ISubscribe): Promise<boolean>;
@@ -24,6 +25,10 @@ export default class SubscribeService implements ISubscribeService {
         this.subscribeStorageService = subscribeStorageService;
         this.repositoryStorageService = repositoryStorageService;
         this.developerStorageService = developerStorageService;
+    }
+
+    async list(filter: Partial<ISubscribe>): Promise<ISubscribe[]> {
+        return this.subscribeStorageService.get(filter);
     }
 
     async subscribe(obj: ISubscribe): Promise<boolean> {

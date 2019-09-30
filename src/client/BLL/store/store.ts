@@ -5,6 +5,7 @@ import createSagaMiddleware from 'redux-saga';
 import auth from './reducers/auth/auth';
 import developers from './reducers/developers/developers';
 import repositories from './reducers/repositories/repositories';
+import subscribes from "./reducers/subscribes/subscribes";
 import rootSaga from './sagas/rootSaga';
 
 
@@ -14,6 +15,7 @@ const store = createStore(
         auth,
         developers,
         repositories,
+        subscribes,
         form: formReducer
     }),
     composeWithDevTools(applyMiddleware(sagaMiddleware))
