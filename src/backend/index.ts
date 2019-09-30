@@ -9,8 +9,8 @@ import ServicesFactory from "./services/factories/ServicesFactory";
 import NotifyController from "./controllers/NotifyController";
 import Services from "./services/Services";
 import AuthController from "./controllers/AuthController";
-// import MainController from "./controllers/MainController";
 import HelpController from "./controllers/HelpController";
+import MainController from "./controllers/MainController";
 require('dotenv').config();
 
 const port = process.env.PORT || 8080;
@@ -28,5 +28,5 @@ app.use(new DeveloperController(services).makeRouter());
 app.use(new SubscribeController(services).makeRouter());
 app.use(new RepositoryController(services).makeRouter());
 app.use(new NotifyController(services).makeRouter());
-// app.use(new MainController(services).makeRouter());
+app.use(new MainController(services).makeRouter());
 app.listen(port);

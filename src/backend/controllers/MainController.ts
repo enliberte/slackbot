@@ -6,12 +6,9 @@ const {DIST} = require('../../../config');
 
 
 export default class MainController extends BaseController {
-    showMain(req: Request, res: Response): void {
-        res.sendFile(path.resolve(DIST, 'index.html'));
-    }
 
     makeRouter(): Router {
-        this.router.get('/', userAuth, express.static(DIST), this.showMain.bind(this));
+        this.router.get('/', userAuth);
         return this.router;
     }
 }
