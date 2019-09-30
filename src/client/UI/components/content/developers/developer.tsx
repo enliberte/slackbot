@@ -8,6 +8,8 @@ import {selectChannelId} from "../../../../BLL/store/selectors/auth";
 import {ISubscribe} from "../../../../../backend/db/models/SubscribeModel";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 interface IDeveloperProps extends ReturnType<typeof mapDispatchToProps> {
@@ -19,11 +21,14 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         inline: {
             display: 'inline',
-        }
+        },
+        button: {
+            margin: theme.spacing(1),
+        },
     }),
 );
 
-const Developer = ({channelId, developer, getSubscribes}: IDeveloperProps) => {
+const Developer = ({channelId, developer, getSubscribes, deleteDeveloper}: IDeveloperProps) => {
     const classes = useStyles();
 
     return (
@@ -42,6 +47,9 @@ const Developer = ({channelId, developer, getSubscribes}: IDeveloperProps) => {
                     </React.Fragment>
                 }
             />
+            <IconButton className={classes.button} aria-label="delete">
+                <DeleteIcon />
+            </IconButton>
         </ListItem>
     )
 };
@@ -53,6 +61,9 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = (dispatch: any) => ({
     getSubscribes(filters: Partial<ISubscribe>) {
         dispatch(runGetSubscribesSaga(filters));
+    },
+    deleteDeveloper() {
+
     }
 });
 

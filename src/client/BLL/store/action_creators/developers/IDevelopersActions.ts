@@ -1,6 +1,6 @@
 import developersActions from './developersActions';
-import {IDevelopersFilters} from "./IDevelopersFilters";
 import {IDeveloper} from "../../../../../backend/db/models/DeveloperModel";
+import {IDeleteDeveloperFilters} from "./IDevelopersFilters";
 
 
 export interface ISetDevelopersDataAction {
@@ -10,5 +10,9 @@ export interface ISetDevelopersDataAction {
 
 export interface IRunGetDevelopersSagaAction {
     type: typeof developersActions.GET_DEVELOPERS_SAGA;
-    payload: IDevelopersFilters;
+}
+
+export interface IRunDeleteDeveloperSagaAction {
+    type: typeof developersActions.DELETE_DEVELOPER;
+    payload: IDeleteDeveloperFilters;
 }

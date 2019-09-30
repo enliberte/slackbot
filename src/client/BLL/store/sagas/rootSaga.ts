@@ -1,6 +1,6 @@
 import {all} from 'redux-saga/effects';
 import {watchGetAuth} from "./watchers/authWatchers";
-import {watchGetDevelopers} from "./watchers/developersWatchers";
+import {watchDeleteDeveloper, watchGetDevelopers} from "./watchers/developersWatchers";
 import {watchGetRepositories} from "./watchers/repositoriesWatchers";
 import {watchGetSubscribes} from "./watchers/subscribesWatchers";
 
@@ -9,6 +9,7 @@ export default function *rootSaga() {
         watchGetAuth(),
         watchGetDevelopers(),
         watchGetRepositories(),
-        watchGetSubscribes()
+        watchGetSubscribes(),
+        watchDeleteDeveloper()
     ]);
 }
