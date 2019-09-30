@@ -11,4 +11,4 @@ export const setDevelopersData = (developersData: IDeveloper[]): ISetDevelopersD
 
 export const runGetDevelopersSaga = (): IRunGetDevelopersSagaAction => ({type: authActions.GET_DEVELOPERS_SAGA});
 
-export const runDeleteDeveloperSaga = (filters: IDeleteDeveloperFilters): IRunDeleteDeveloperSagaAction => ({type: authActions.DELETE_DEVELOPER, payload: filters});
+export const runDeleteDeveloperSaga = (filters: IDeleteDeveloperFilters): IRunDeleteDeveloperSagaAction => ({type: authActions.DELETE_DEVELOPER_SAGA, payload: filters});

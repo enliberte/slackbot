@@ -13,6 +13,6 @@ export interface IRunGetDevelopersSagaAction {
 }
 
 export interface IRunDeleteDeveloperSagaAction {
-    type: typeof developersActions.DELETE_DEVELOPER;
+    type: typeof developersActions.DELETE_DEVELOPER_SAGA;
     payload: {username: string};
 }
