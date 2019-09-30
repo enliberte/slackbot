@@ -11,8 +11,7 @@ import Grid from "@material-ui/core/Grid";
 const useStyles = makeStyles({
     root: {
         margin: '40px 0px 0px 0px',
-        flexGrow: 1,
-        maxWidth: 400,
+        flexGrow: 1
     },
 });
 
@@ -39,7 +38,6 @@ const ItemTabs = () => {
                     variant="fullWidth"
                     indicatorColor="secondary"
                     textColor="secondary"
-                    aria-label="icon label tabs example"
                 >
                     {tabs.map(tab => {
                         const Icon = tab.icon;
