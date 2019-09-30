@@ -1,12 +1,12 @@
 import React from 'react';
 import ItemTabs from "./tabs/tabs";
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
-        padding: theme.spacing(10),
+        padding: theme.spacing(3),
     },
 }));
 

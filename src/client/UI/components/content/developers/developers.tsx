@@ -9,14 +9,9 @@ import Developer from "./developer";
 type DevelopersProps = ReturnType<typeof mapStateToProps>;
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-        overflow: 'hidden',
-        padding: theme.spacing(0, 3),
-    },
     paper: {
         maxWidth: 400,
-        margin: `${theme.spacing(1)}px auto`,
+        margin: `${theme.spacing(1)}px 0px`,
         padding: theme.spacing(2),
     },
 }));
