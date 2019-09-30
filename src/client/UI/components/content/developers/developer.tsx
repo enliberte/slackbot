@@ -27,16 +27,12 @@ const Developer = ({channelId, developer, getSubscribes}: IDeveloperProps) => {
     const classes = useStyles();
 
     return (
-        <ListItem alignItems="flex-start">
+        <ListItem>
             <ListItemText
                 primary="Brunch this weekend?"
                 secondary={
                     <React.Fragment>
                         <Typography
-                            component="span"
-                            variant="body2"
-                            className={classes.inline}
-                            color="textPrimary"
                             onClick={() => getSubscribes({followed: developer.username, channelId})}
                         >
                             {developer.username}
