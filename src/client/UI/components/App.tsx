@@ -6,6 +6,7 @@ import {makeStyles} from "@material-ui/core";
 import Content from "./content/content";
 import Developers from "./content/developers/developersContainer";
 import Repositories from "./content/repositories/repositoryContainer";
+import Subscribes from "./content/subscribes/subscribesContainer";
 import {connect} from "react-redux";
 import {runGetAuthSaga} from "../../BLL/store/action_creators/auth/authActionCreators";
 import {selectIsAuth} from "../../BLL/store/selectors/auth";
@@ -38,6 +39,7 @@ const App = ({isAuth, getAuthData}: AppProps) => {
                                 <ItemTabs />
                                 <Route path="/developers" component={Developers}/>
                                 <Route path="/repositories" component={Repositories}/>
+                                <Subscribes />
                                 <Redirect to="/"/>
                             </Content>
                     </>
