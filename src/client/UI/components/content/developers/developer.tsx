@@ -9,7 +9,7 @@ interface DeveloperProps {
 }
 
 const Developer = ({developer}: DeveloperProps) => (
-    <Grid item xs zeroMinWidth>
+    <Grid item xs={12} zeroMinWidth>
         <Typography noWrap>{developer.username}</Typography>
     </Grid>
 );
