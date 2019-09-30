@@ -2,19 +2,27 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import {connect} from "react-redux";
 import {selectDevelopers} from "../../../../BLL/store/selectors/developers";
-import {Grid, makeStyles} from "@material-ui/core";
+import {makeStyles, createStyles, Theme} from "@material-ui/core";
 import Developer from "./developer";
+import {List} from "@material-ui/icons";
 
 
 type DevelopersProps = ReturnType<typeof mapStateToProps>;
 
-const useStyles = makeStyles(theme => ({
-    paper: {
-        maxWidth: 400,
-        margin: `${theme.spacing(1)}px 0px`,
-        padding: theme.spacing(2),
-    },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            width: '100%',
+            maxWidth: 360,
+            backgroundColor: theme.palette.background.paper,
+        },
+        paper: {
+            maxWidth: 400,
+            margin: `${theme.spacing(1)}px 0px`,
+            padding: theme.spacing(2),
+        }
+    }),
+);
 
 
 const Developers = ({developers}: DevelopersProps) => {
@@ -22,9 +30,9 @@ const Developers = ({developers}: DevelopersProps) => {
 
     return (
         <Paper className={classes.paper}>
-            <Grid container spacing={2}>
+            <List className={classes.root}>
                 {developers.map(developer => <Developer key={developer.username} developer={developer} />)}
-            </Grid>
+            </List>
         </Paper>
     );
 };

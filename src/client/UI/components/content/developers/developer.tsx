@@ -1,11 +1,13 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import {Grid} from "@material-ui/core";
+import {createStyles, makeStyles, Theme} from "@material-ui/core";
 import {IDeveloper} from "../../../../../backend/db/models/DeveloperModel";
 import {runGetSubscribesSaga} from "../../../../BLL/store/action_creators/subscribes/subscribesActionCreators";
 import {connect} from "react-redux";
 import {selectChannelId} from "../../../../BLL/store/selectors/auth";
 import {ISubscribe} from "../../../../../backend/db/models/SubscribeModel";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItem from "@material-ui/core/ListItem";
 
 
 interface IDeveloperProps extends ReturnType<typeof mapDispatchToProps> {
@@ -13,16 +15,38 @@ interface IDeveloperProps extends ReturnType<typeof mapDispatchToProps> {
     developer: IDeveloper;
 }
 
-const Developer = ({channelId, developer, getSubscribes}: IDeveloperProps) => (
-    <Grid item xs={12} zeroMinWidth>
-        <Typography
-            noWrap
-            onClick={() => getSubscribes({followed: developer.username, channelId})}
-        >
-            {developer.username}
-        </Typography>
-    </Grid>
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        inline: {
+            display: 'inline',
+        }
+    }),
 );
+
+const Developer = ({channelId, developer, getSubscribes}: IDeveloperProps) => {
+    const classes = useStyles();
+
+    return (
+        <ListItem alignItems="flex-start">
+            <ListItemText
+                primary="Brunch this weekend?"
+                secondary={
+                    <React.Fragment>
+                        <Typography
+                            component="span"
+                            variant="body2"
+                            className={classes.inline}
+                            color="textPrimary"
+                            onClick={() => getSubscribes({followed: developer.username, channelId})}
+                        >
+                            {developer.username}
+                        </Typography>
+                    </React.Fragment>
+                }
+            />
+        </ListItem>
+    )
+};
 
 const mapStateToProps = (state: any) => ({
     channelId: selectChannelId(state)
