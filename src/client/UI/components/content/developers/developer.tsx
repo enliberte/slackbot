@@ -10,6 +10,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
+import {runDeleteDeveloperSaga} from "../../../../BLL/store/action_creators/developers/developersActionCreators";
+import {IDeleteDeveloperFilters} from "../../../../BLL/store/action_creators/developers/IDevelopersFilters";
 
 
 interface IDeveloperProps extends ReturnType<typeof mapDispatchToProps> {
@@ -47,7 +49,9 @@ const Developer = ({channelId, developer, getSubscribes, deleteDeveloper}: IDeve
                     </React.Fragment>
                 }
             />
-            <IconButton className={classes.button} aria-label="delete">
+            <IconButton
+                className={classes.button} aria-label="delete"
+                onClick={() => deleteDeveloper({username: developer.username})}>
                 <DeleteIcon />
             </IconButton>
         </ListItem>
@@ -62,8 +66,8 @@ const mapDispatchToProps = (dispatch: any) => ({
     getSubscribes(filters: Partial<ISubscribe>) {
         dispatch(runGetSubscribesSaga(filters));
     },
-    deleteDeveloper() {
-
+    deleteDeveloper(filters: IDeleteDeveloperFilters) {
+        dispatch(runDeleteDeveloperSaga(filters))
     }
 });
 

@@ -11,3 +11,8 @@ export interface IRunGetSubscribesSagaAction {
     type: typeof subscribesActions.GET_SUBSCRIBES_SAGA;
     payload: Partial<ISubscribe>;
 }
+
+export interface IRunDeleteSubscribeSagaAction {
+    type: typeof subscribesActions.DELETE_SUBSCRIBE_SAGA;
+    payload: Partial<ISubscribe>;
+}

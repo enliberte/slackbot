@@ -4,4 +4,5 @@ export interface IDevelopersFilters {
 
 export interface IDeleteDeveloperFilters {
     username: string;
+    channelId?: string;
 }

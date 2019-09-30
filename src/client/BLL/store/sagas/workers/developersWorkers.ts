@@ -18,13 +18,14 @@ export function *getDevelopers(action: IRunGetDevelopersSagaAction) {
     }
 }
 
-// export function *deleteDeveloper(action: IRunDeleteDeveloperSagaAction) {
-//     try {
-//         yield call(fetchDeleteDeveloper, action.payload);
-//         const getDevelopersResponse = yield call(fetchGetDevelopers, action.payload);
-//         const getSubscribesResponse = yield call(fetchGetSubscribes, )
-//         yield put(setDevelopersData(getDevelopersResponse.data));
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
+export function *deleteDeveloper(action: IRunDeleteDeveloperSagaAction) {
+    try {
+        const {username} = action.payload;
+        const channelId = yield select(selectChannelId);
+        yield call(fetchDeleteDeveloper, {username, channelId});
+        const getDevelopersResponse = yield call(fetchGetDevelopers, {channelId});
+        yield put(setDevelopersData(getDevelopersResponse.data));
+    } catch (err) {
+        console.log(err);
+    }
+}

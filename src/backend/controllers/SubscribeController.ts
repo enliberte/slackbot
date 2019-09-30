@@ -25,6 +25,12 @@ export default class SubscribeController extends BaseController {
         res.send(subscribesList);
     }
 
+    async postSubscribeDeleteResult(req: Request, res: Response): Promise<void> {
+        const subscribeDeleteResult = await this.services.subscribeService.unsubscribe(req.body.filters);
+        const code = subscribeDeleteResult ? 200 : 404;
+        res.status(code).send();
+    }
+
     async handleSubscribe(req: Request, res: Response): Promise<void> {
         if (req.body.text.length === 0) {
             await this.postMsgWithRepositoryList(req, res);
@@ -36,6 +42,7 @@ export default class SubscribeController extends BaseController {
     makeRouter(): Router {
         this.router.post('/subscribe', botAuth, this.handleSubscribe.bind(this));
         this.router.post('/api/subscribes/get', userAuth, this.postSubscribesList.bind(this));
+        this.router.post('/api/subscribes/delete', userAuth, this.postSubscribeDeleteResult.bind(this));
         return this.router;
     }
 }
