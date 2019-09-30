@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import {runGetAuthSaga} from "../../BLL/store/action_creators/auth/authActionCreators";
 import {getIsAuth} from "../../BLL/store/selectors/auth";
 import Unauthorized from "./pages/unauthorized";
+import ItemTabs from "./content/tabs/tabs";
 
 const history = createBrowserHistory();
 const useStyles = makeStyles(theme => ({
@@ -34,10 +35,11 @@ const App = ({isAuth, getAuthData}: AppProps) => {
                     <>
                         <Navigation/>
                             <Content>
-                            <Route path="/developers" component={Developers}/>
-                            <Route path="/repositories" component={Repositories}/>
-                            <Redirect to="/"/>
-                        </Content>
+                                <ItemTabs />
+                                <Route path="/developers" component={Developers}/>
+                                <Route path="/repositories" component={Repositories}/>
+                                <Redirect to="/"/>
+                            </Content>
                     </>
                 ) : (
                     <>

@@ -15,7 +15,6 @@ const Content = (props: any) => {
 
     return (
         <main className={classes.content}>
-            <ItemTabs />
             {props.children}
         </main>
     );
