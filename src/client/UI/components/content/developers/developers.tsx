@@ -53,4 +53,4 @@ const mapDispatchToProps = (dispatch: any) => ({
     }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Developers);
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Developers));
