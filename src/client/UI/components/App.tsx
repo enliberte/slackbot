@@ -36,12 +36,13 @@ const App = ({isAuth, getAuthData}: AppProps) => {
                             <Content>
                             <Route path="/developers" component={Developers}/>
                             <Route path="/repositories" component={Repositories}/>
+                            <Redirect to="/"/>
                         </Content>
                     </>
                 ) : (
                     <>
-                        <Route path="/undefined" component={Unauthorized} />
-                        <Redirect to="/undefined"/>
+                        <Route path="/unauthorized" component={Unauthorized} />
+                        <Redirect to="/unauthorized"/>
                     </>
                 )}
             </div>
