@@ -9,7 +9,6 @@ export function *getAuth(action: ISetAuthDataAction) {
         const response = yield call(fetchGetAuth);
         yield put(setAuthData({...response.data, isAuth: true}));
     } catch (err) {
-        yield put(setAuthData({username: '', channelId: '', isAuth: false}));
         console.log(err);
     }
 }

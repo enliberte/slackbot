@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router, Route, Redirect} from 'react-router-dom';
+import {Router, Route, Switch} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import Navigation from "./navigation/navigation";
 import {makeStyles} from "@material-ui/core";
@@ -30,13 +30,20 @@ const App = ({isAuth, getAuthData}: AppProps) => {
     return (
         <Router history={history}>
             <div className={classes.root}>
-                <Route path="/unauthorized" component={Unauthorized}/>
-                {!isAuth && <Redirect to={{pathname: '/unauthorized'}} />}
-                <Navigation/>
-                <Content>
-                    <Route path="/developers" component={Developers}/>
-                    <Route path="/repositories" component={Repositories}/>
-                </Content>
+                <Switch>
+                    {isAuth ? (
+                        <>
+                            <Navigation/>
+                                <Content>
+                                <Route path="/developers" component={Developers}/>
+                                <Route path="/repositories" component={Repositories}/>
+                            </Content>
+                        </>
+                    ) : (
+                        <Route path="/undefined" component={Unauthorized} />
+                    )}
+                </Switch>
+
             </div>
         </Router>
     )
