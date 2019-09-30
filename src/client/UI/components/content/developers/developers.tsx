@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {selectDevelopers} from "../../../../BLL/store/selectors/developers";
 import {makeStyles, createStyles, Theme} from "@material-ui/core";
 import Developer from "./developer";
-import {List} from "@material-ui/icons";
+import List from "@material-ui/core/List";
 
 
 type DevelopersProps = ReturnType<typeof mapStateToProps>;
@@ -24,9 +24,11 @@ const Developers = ({developers}: DevelopersProps) => {
     const classes = useStyles();
 
     return (
-        <List className={classes.root}>
-            {developers.map(developer => <Developer key={developer.username} developer={developer} />)}
-        </List>
+        <div className={classes.root}>
+            <List className={classes.root}>
+                {developers.map(developer => <Developer key={developer.username} developer={developer} />)}
+            </List>
+        </div>
     );
 };
 

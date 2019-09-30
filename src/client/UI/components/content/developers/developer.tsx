@@ -27,7 +27,7 @@ const Developer = ({channelId, developer, getSubscribes}: IDeveloperProps) => {
     const classes = useStyles();
 
     return (
-        <ListItem alignItems="flex-start">
+        <ListItem button>
             <ListItemText
                 primary={
                     <React.Fragment>

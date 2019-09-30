@@ -1,5 +1,4 @@
 import React from 'react';
-import ItemTabs from "./tabs/tabs";
 import {makeStyles} from '@material-ui/core/styles';
 
 
