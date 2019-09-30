@@ -1,5 +1,6 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
+import {Grid} from "@material-ui/core";
 
 
 const useStyles = makeStyles(theme => ({
@@ -14,7 +15,9 @@ const Content = (props: any) => {
 
     return (
         <main className={classes.content}>
-            {props.children}
+            <Grid container spacing={3}>
+                {props.children}
+            </Grid>
         </main>
     );
 };

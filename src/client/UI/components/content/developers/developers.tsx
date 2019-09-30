@@ -5,6 +5,7 @@ import {selectDevelopers} from "../../../../BLL/store/selectors/developers";
 import {makeStyles, createStyles, Theme} from "@material-ui/core";
 import Developer from "./developer";
 import List from "@material-ui/core/List";
+import Grid from "@material-ui/core/Grid";
 
 
 type DevelopersProps = ReturnType<typeof mapStateToProps>;
@@ -29,11 +30,13 @@ const Developers = ({developers}: DevelopersProps) => {
     const classes = useStyles();
 
     return (
-        <Paper className={classes.paper}>
-            <List className={classes.root}>
-                {developers.map(developer => <Developer key={developer.username} developer={developer} />)}
-            </List>
-        </Paper>
+        <Grid item xs={4}>
+            <Paper className={classes.paper}>
+                <List className={classes.root}>
+                    {developers.map(developer => <Developer key={developer.username} developer={developer} />)}
+                </List>
+            </Paper>
+        </Grid>
     );
 };
 
