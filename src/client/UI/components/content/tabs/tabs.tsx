@@ -9,7 +9,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
     root: {
-        margin: '40px 0px',
+        margin: '40px 0px 0px 0px',
         flexGrow: 1,
         maxWidth: 400,
     },
