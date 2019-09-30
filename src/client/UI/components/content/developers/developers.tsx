@@ -13,8 +13,13 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
-            maxWidth: 360,
+            maxWidth: 400,
             backgroundColor: theme.palette.background.paper,
+        },
+        paper: {
+            maxWidth: 400,
+            margin: `${theme.spacing(1)}px 0px`,
+            padding: theme.spacing(2),
         }
     }),
 );
@@ -24,11 +29,11 @@ const Developers = ({developers}: DevelopersProps) => {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
+        <Paper className={classes.paper}>
             <List className={classes.root}>
                 {developers.map(developer => <Developer key={developer.username} developer={developer} />)}
             </List>
-        </div>
+        </Paper>
     );
 };
 
