@@ -30,23 +30,20 @@ const App = ({isAuth, getAuthData}: AppProps) => {
     return (
         <Router history={history}>
             <div className={classes.root}>
-                <Switch>
-                    {isAuth ? (
-                        <>
-                            <Navigation/>
-                                <Content>
-                                <Route path="/developers" component={Developers}/>
-                                <Route path="/repositories" component={Repositories}/>
-                            </Content>
-                        </>
-                    ) : (
-                        <>
-                            <Route path="/undefined" component={Unauthorized} />
-                            <Redirect to="/undefined"/>
-                        </>
-                    )}
-                </Switch>
-
+                {isAuth ? (
+                    <>
+                        <Navigation/>
+                            <Content>
+                            <Route path="/developers" component={Developers}/>
+                            <Route path="/repositories" component={Repositories}/>
+                        </Content>
+                    </>
+                ) : (
+                    <>
+                        <Route path="/undefined" component={Unauthorized} />
+                        <Redirect to="/undefined"/>
+                    </>
+                )}
             </div>
         </Router>
     )
