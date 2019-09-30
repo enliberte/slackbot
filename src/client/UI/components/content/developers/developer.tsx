@@ -50,6 +50,7 @@ const Developer = ({channelId, developer, getSubscribes, deleteDeveloper}: IDeve
                 }
             />
             <IconButton
+                size="small"
                 className={classes.button} aria-label="delete"
                 onClick={() => deleteDeveloper({username: developer.username})}>
                 <DeleteIcon />

@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {ISubscribe} from "../../../../../backend/db/models/SubscribeModel";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
-import DeleteIcon from "@material-ui/core/SvgIcon/SvgIcon";
+import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from "@material-ui/core/IconButton";
 
 
@@ -44,6 +44,7 @@ const Subscribe = ({subscribe, deleteSubscribe}: ISubscribeProps) => {
                 }
             />
             <IconButton
+                size="small"
                 className={classes.button} aria-label="delete"
                 onClick={() => deleteSubscribe({reponame: subscribe.reponame})}>
                 <DeleteIcon />
