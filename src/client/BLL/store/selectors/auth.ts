@@ -1,7 +1,7 @@
 import IState from "../IState";
 
-export const getUsername = (state: IState) => state.auth.username;
+export const selectUsername = (state: IState) => state.auth.username;
 
-export const getChannelId = (state: IState) => state.auth.channelId;
+export const selectChannelId = (state: IState) => state.auth.channelId;
 
-export const getIsAuth = (state: IState) => state.auth.isAuth;
+export const selectIsAuth = (state: IState) => state.auth.isAuth;

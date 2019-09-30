@@ -8,7 +8,7 @@ import Developers from "./content/developers/developersContainer";
 import Repositories from "./content/repositories/repositoryContainer";
 import {connect} from "react-redux";
 import {runGetAuthSaga} from "../../BLL/store/action_creators/auth/authActionCreators";
-import {getIsAuth} from "../../BLL/store/selectors/auth";
+import {selectIsAuth} from "../../BLL/store/selectors/auth";
 import Unauthorized from "./pages/unauthorized";
 import ItemTabs from "./content/tabs/tabs";
 
@@ -53,7 +53,7 @@ const App = ({isAuth, getAuthData}: AppProps) => {
 };
 
 const mapStateToProps = (state: any) => ({
-    isAuth: getIsAuth(state)
+    isAuth: selectIsAuth(state)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

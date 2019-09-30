@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {getChannelId} from "../../../../BLL/store/selectors/auth";
+import {selectChannelId} from "../../../../BLL/store/selectors/auth";
 import {IRepositoriesFilters} from "../../../../BLL/store/action_creators/repositories/IRepositoriesFilters";
 import {runGetRepositoriesSaga} from "../../../../BLL/store/action_creators/repositories/repositoriesActionCreators";
 import Repositories from "./repositories";
@@ -16,7 +16,7 @@ const RepositoriesContainer = ({channelId, getRepositories}: RepositoriesContain
 };
 
 const mapStateToProps = (state: any) => ({
-    channelId: getChannelId(state)
+    channelId: selectChannelId(state)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

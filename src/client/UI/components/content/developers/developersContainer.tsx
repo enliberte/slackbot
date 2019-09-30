@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {getChannelId} from "../../../../BLL/store/selectors/auth";
+import {selectChannelId} from "../../../../BLL/store/selectors/auth";
 import {runGetDevelopersSaga} from "../../../../BLL/store/action_creators/developers/developersActionCreators";
 import {IDevelopersFilters} from "../../../../BLL/store/action_creators/developers/IDevelopersFilters";
 import Developers from "./developers";
@@ -16,7 +16,7 @@ const DevelopersContainer = ({channelId, getDevelopers}: DevelopersContainerProp
 };
 
 const mapStateToProps = (state: any) => ({
-    channelId: getChannelId(state)
+    channelId: selectChannelId(state)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
