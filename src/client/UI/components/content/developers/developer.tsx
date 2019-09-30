@@ -29,8 +29,7 @@ const Developer = ({channelId, developer, getSubscribes}: IDeveloperProps) => {
     return (
         <ListItem>
             <ListItemText
-                primary="Brunch this weekend?"
-                secondary={
+                primary={
                     <React.Fragment>
                         <Typography
                             onClick={() => getSubscribes({followed: developer.username, channelId})}
