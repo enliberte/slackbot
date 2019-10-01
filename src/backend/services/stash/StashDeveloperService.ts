@@ -18,7 +18,7 @@ export interface IStashDeveloperService {
 export default class StashDeveloperService implements IStashDeveloperService {
 
     async list(query: IGetStashDevelopersQuery): Promise<IStashDeveloper[] | false> {
-        const url = `https://stash.firmglobal.com/rest/api/1.0/users?${queryString.stringify(query)}`;
+        const url = `/users?${queryString.stringify(query)}`;
         try {
             const response = await StashClient.get(url);
             return response.data;
