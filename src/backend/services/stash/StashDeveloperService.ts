@@ -24,9 +24,11 @@ export default class StashDeveloperService implements IStashDeveloperService {
         console.log('-----------------------------------------');
         try {
             const response = await StashClient.get(url);
+            console.log('-------------------------------------');
+            console.log(response.statusText);
+            console.log('-------------------------------------');
             return response.data;
         } catch (e) {
-            console.log(e);
             return false;
         }
     }
