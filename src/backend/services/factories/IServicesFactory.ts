@@ -7,12 +7,14 @@ import {IDeveloperToMessageAdapter} from "../slackbot/adapters/DeveloperToMsgAda
 import {IAuthService} from "../slackbot/AuthService";
 import {IAuthToMessageAdapter} from "../slackbot/adapters/AuthToMsgAdapter";
 import {ISubscribeToMessageAdapter} from "../slackbot/adapters/SubscribeToMsgAdapter";
+import {IStashDeveloperService} from "../stash/StashDeveloperService";
 
 export default interface IServicesFactory {
     getAuthService(): IAuthService;
     getRepositoryService(): IRepositoryService;
     getSubscribeService(): ISubscribeService;
     getDeveloperService(): IDeveloperService;
+    getStashDeveloperService(): IStashDeveloperService;
     getNotifyService(): INotifyService;
     getRepositoryToMsgAdapter(): IRepositoryToMessageAdapter;
     getDeveloperToMsgAdapter(): IDeveloperToMessageAdapter;

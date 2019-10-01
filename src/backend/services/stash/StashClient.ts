@@ -1,0 +1,12 @@
+import Axios from 'axios';
+const BITBUCKETSESSIONID = require('../../../../config');
+
+const StashClient = Axios.create({
+    baseURL: 'https://stash.firmglobal.com/rest/api/1.0/',
+    withCredentials: true,
+    headers: {
+        Cookie: `BITBUCKETSESSIONID=${BITBUCKETSESSIONID}`
+    }
+});
+
+export default StashClient;

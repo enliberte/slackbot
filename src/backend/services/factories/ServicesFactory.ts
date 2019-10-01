@@ -12,6 +12,7 @@ import DeveloperToMsgAdapter from "../slackbot/adapters/DeveloperToMsgAdapter";
 import AuthService from "../slackbot/AuthService";
 import AuthToMessageAdapter from "../slackbot/adapters/AuthToMsgAdapter";
 import SubscribeToMessageAdapter from "../slackbot/adapters/SubscribeToMsgAdapter";
+import StashDeveloperService from "../stash/StashDeveloperService";
 
 export default class ServicesFactory implements IServicesFactory {
     getAuthService(): AuthService {
@@ -32,6 +33,10 @@ export default class ServicesFactory implements IServicesFactory {
 
     getDeveloperService(): DeveloperService {
         return new DeveloperService(new DeveloperStorageService(), new SubscribeStorageService());
+    }
+
+    getStashDeveloperService(): StashDeveloperService {
+        return new StashDeveloperService();
     }
 
     getRepositoryToMsgAdapter(): RepoAPIToMsgAdapter {
