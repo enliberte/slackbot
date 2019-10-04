@@ -3,5 +3,5 @@ import subscribesActions from "../../action_creators/subscribes/subscribesAction
 import {getSubscribes} from "../workers/subscribesWorkers";
 
 export function *watchGetSubscribes() {
-    yield takeEvery(subscribesActions.GET_SUBSCRIBES_SAGA, getSubscribes);
+    yield takeEvery([subscribesActions.GET_SUBSCRIBES_SAGA, subscribesActions.SET_SUBSCRIBE_FILTERS], getSubscribes);
 }

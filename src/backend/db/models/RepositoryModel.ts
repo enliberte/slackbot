@@ -7,14 +7,25 @@ interface IRepository {
     reponame: string;
 }
 
+interface IStashRepository {
+    name: string;
+    links: {
+        self: {href: string}[];
+    }
+}
+
+interface IStashRepositoryWithFavoriteSign extends IStashRepository {
+    isFavorite: boolean;
+}
+
 interface IRepositoryModel extends Document, IRepository {}
 
 const repositorySchema: Schema = new Schema({
-    channelId: String,
-    addedByName: String,
-    reponame: String
+    channelId: {type: String, index: true},
+    addedByName: {type: String, index: true},
+    reponame: {type: String, index: true}
 });
 
 const RepositoryModel: Model<IRepositoryModel> = model<IRepositoryModel>('Repo', repositorySchema);
 
-export {IRepository, IRepositoryModel, RepositoryModel}
+export {IRepository, IRepositoryModel, RepositoryModel, IStashRepository, IStashRepositoryWithFavoriteSign}

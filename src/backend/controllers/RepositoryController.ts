@@ -1,34 +1,37 @@
 import {Request, Response, Router} from "express";
 import BaseController from "./BaseController";
-import MessageBuilder from "../services/slackbot/templates/builders/MessageBuilder";
-import {botAuth, userAuth} from "../middlewares/auth";
+import {userAuth} from "../middlewares/auth";
 
 
 export default class RepositoryController extends BaseController {
-    async postMsgWithRepositoryAdditionResult(req: Request, res: Response): Promise<void> {
-        const {channel_id: channelId, text: reponame, user_name: addedByName} = req.body;
-        const msg = await this.services.repositoryMessageAdapter
-            .getAddResultMsg(new MessageBuilder(), {channelId, reponame, addedByName});
-        this.postMessage(res, msg, channelId);
-    }
-
-    async postMsgWithRepositoryList (req: Request, res: Response): Promise<void> {
-        const {channel_id: channelId} = req.body;
-        const button = {btnText: 'Delete', btnValue: 'deleteRepo'};
-        const msg = await this.services.repositoryMessageAdapter.getReposListMsg(new MessageBuilder(), channelId, button);
-        this.postMessage(res, msg, channelId);
-    }
 
     async postRepositoriesList(req: Request, res: Response): Promise<void> {
-        const {channelId} = req.body.filters;
-        const repositoriesList = await this.services.repositoryService.list(channelId);
+        const repositoriesList = await this.services.repositoryService.list(req.body.filters);
         res.send(repositoriesList);
     }
 
+    async postStashRepositoriesList(req: Request, res: Response): Promise<void> {
+        const repositoriesList = await this.services.stashRepositoryService.list(req.body.filters);
+        res.send(repositoriesList);
+    }
+
+    async postRepositoryDeleteResult(req: Request, res: Response): Promise<void> {
+        const repositoryDeleteResult = await this.services.repositoryService.delete(req.body.filters);
+        const code = repositoryDeleteResult ? 200 : 404;
+        res.status(code).send();
+    }
+
+    async postAddStashRepositoryToFavoritesResult(req: Request, res: Response): Promise<void> {
+        const addStashRepositoryToFavoritesResult = await this.services.repositoryService.add(req.body.repository);
+        const code = addStashRepositoryToFavoritesResult ? 200 : 404;
+        res.status(code).send();
+    }
+
     makeRouter(): Router {
-        this.router.post('/add-repository', botAuth, this.postMsgWithRepositoryAdditionResult.bind(this));
-        this.router.post('/repositories', botAuth, this.postMsgWithRepositoryList.bind(this));
         this.router.post('/api/repositories/get', userAuth, this.postRepositoriesList.bind(this));
+        this.router.post('/api/repositories/add', userAuth, this.postAddStashRepositoryToFavoritesResult.bind(this));
+        this.router.post('/api/stash/repositories/get', userAuth, this.postStashRepositoriesList.bind(this));
+        this.router.post('/api/repositories/delete', userAuth, this.postRepositoryDeleteResult.bind(this));
         return this.router;
     }
 }

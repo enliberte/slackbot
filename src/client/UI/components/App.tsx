@@ -4,14 +4,19 @@ import {createBrowserHistory} from 'history';
 import Navigation from "./navigation/navigation";
 import {makeStyles} from "@material-ui/core";
 import Content from "./content/content";
-import Developers from "./content/developers/developersContainer";
-import Repositories from "./content/repositories/repositoryContainer";
-import Subscribes from "./content/subscribes/subscribesContainer";
+import FavoriteDevelopers from "./content/developers/favorites/list/favoriteDevelopersContainer";
+import StashDevelopers from "./content/developers/stash/list/stashDevelopersContainer";
+import FavoriteRepositories from "./content/repositories/favorites/list/favoriteRepositoriesContainer";
+import StashRepositories from "./content/repositories/stash/list/stashRepositoriesContainer";
+import Subscribes from "./content/subscribes/list/subscribesContainer";
 import {connect} from "react-redux";
 import {runGetAuthSaga} from "../../BLL/store/action_creators/auth/authActionCreators";
 import {selectIsAuth} from "../../BLL/store/selectors/auth";
 import Unauthorized from "./pages/unauthorized";
-import ItemTabs from "./content/tabs/tabs";
+import URLS from "../URLS";
+import DevelopersTabs from "./content/developers/tabs/developersTabs";
+import RepositoriesTabs from "./content/repositories/tabs/repositoriesTabs";
+
 
 const history = createBrowserHistory();
 const useStyles = makeStyles(theme => ({
@@ -36,17 +41,21 @@ const App = ({isAuth, getAuthData}: AppProps) => {
                     <>
                         <Navigation/>
                             <Content>
-                                <ItemTabs />
-                                <Route path="/developers" component={Developers}/>
-                                <Route path="/repositories" component={Repositories}/>
-                                <Subscribes />
+                                <Route path={URLS.DEVELOPERS} component={DevelopersTabs}/>
+                                <Route path={URLS.REPOSITORIES} component={RepositoriesTabs}/>
+                                <Route path={URLS.FAVORITE_DEVELOPERS} component={FavoriteDevelopers}/>
+                                <Route path={URLS.FAVORITE_DEVELOPERS} component={Subscribes}/>
+                                <Route path={URLS.STASH_DEVELOPERS} component={StashDevelopers}/>
+                                <Route path={URLS.FAVORITE_REPOSITORIES} component={FavoriteRepositories}/>
+                                <Route path={URLS.FAVORITE_REPOSITORIES} component={Subscribes}/>
+                                <Route path={URLS.STASH_REPOSITORIES} component={StashRepositories}/>
                                 <Redirect to="/"/>
                             </Content>
                     </>
                 ) : (
                     <>
-                        <Route path="/unauthorized" component={Unauthorized} />
-                        <Redirect to="/unauthorized"/>
+                        <Route path={URLS.UNAUTHORIZED} component={Unauthorized} />
+                        <Redirect to={URLS.UNAUTHORIZED}/>
                     </>
                 )}
             </div>

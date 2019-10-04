@@ -1,7 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import InteractiveMessagesController from './controllers/InteractiveMessagesController';
 import DeveloperController from './controllers/DeveloperController';
 import SubscribeController from './controllers/SubscribeController';
 import RepositoryController from './controllers/RepositoryController';
@@ -11,14 +10,15 @@ import Services from "./services/Services";
 import AuthController from "./controllers/AuthController";
 import HelpController from "./controllers/HelpController";
 import MainController from "./controllers/MainController";
-require('dotenv').config();
+import RTMController from "./controllers/RTMController";
+import {connect} from 'mongoose';
+const {PORT, MONGO_URI} = require('./../../config');
 
-const port = process.env.PORT || 8080;
+connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
 const app = express();
 const services = new Services(new ServicesFactory());
 
 app.use(express.static(__dirname + '/dist'));
-app.use(new InteractiveMessagesController(services).makeRouter());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -29,4 +29,5 @@ app.use(new SubscribeController(services).makeRouter());
 app.use(new RepositoryController(services).makeRouter());
 app.use(new NotifyController(services).makeRouter());
 app.use(new MainController(services).makeRouter());
-app.listen(port);
+new RTMController(services).start();
+app.listen(PORT);

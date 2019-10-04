@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/backend/index.ts",
   "scripts": {
-    "start": "node ./src/backend/index.js",
+    "start": "npm run postinstall && npm run build && node ./src/backend/index.js",
     "postinstall": "tsc",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "dev": "webpack-dev-server --mode development --open --hot"
   },
   "repository": {
     "type": "git",
@@ -47,7 +48,8 @@
     "redux-form": "^8.2.6",
     "redux-saga": "^1.1.1",
     "reselect": "^4.0.0",
-    "source-map-loader": "^0.2.4"
+    "source-map-loader": "^0.2.4",
+    "downshift": "latest"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",

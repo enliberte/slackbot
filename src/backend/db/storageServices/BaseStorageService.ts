@@ -1,22 +1,20 @@
-import {Document, Model, connect} from 'mongoose';
-const {MONGO_URI} = require('../../../../config');
-connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
+import {Document, Model} from 'mongoose';
 
 
-export interface IStorageService<T> {
+export interface IStorageService<T, U> {
     add(obj: T): Promise<boolean>;
-    get(filter: Partial<T>): Promise<T[]>;
+    get(filter: U, search?: string, limit?: number): Promise<T[]>;
     remove(filter: Partial<T>): Promise<boolean>;
 }
 
-export default abstract class BaseStorageService<T extends Document, U> implements IStorageService<U> {
+export default abstract class BaseStorageService<T extends Document, U, V> implements IStorageService<U, V> {
     protected model: Model<T>;
 
     protected constructor(model: Model<T>) {
         this.model = model;
     }
 
-    abstract get(filter: Partial<U>): Promise<U[]>
+    abstract get(filter: V, search?: string, limit?: number): Promise<U[]>
 
     add(obj: U): Promise<boolean> {
         return this.model.update(obj, {}, {upsert: true}).exec();

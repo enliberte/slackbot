@@ -1,5 +1,5 @@
 import {ISubscribe} from "../../db/models/SubscribeModel";
-import {ISubscribeStorageService} from "../../db/storageServices/SubscribeStorageService";
+import {IGetSubscribeFilter, ISubscribeStorageService} from "../../db/storageServices/SubscribeStorageService";
 import {IRepositoryStorageService} from "../../db/storageServices/RepositoryStorageService";
 import {IDeveloperStorageService} from "../../db/storageServices/DeveloperStorageService";
 
@@ -27,7 +27,7 @@ export default class SubscribeService implements ISubscribeService {
         this.developerStorageService = developerStorageService;
     }
 
-    async list(filter: Partial<ISubscribe>): Promise<ISubscribe[]> {
+    async list(filter: IGetSubscribeFilter): Promise<ISubscribe[]> {
         return this.subscribeStorageService.get(filter);
     }
 

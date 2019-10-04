@@ -5,15 +5,18 @@ import {
 } from "../../action_creators/subscribes/ISubscribesActions";
 import {setSubscribesData} from "../../action_creators/subscribes/subscribesActionCreators";
 import {fetchGetSubscribes} from "../../../API/subscribesAPI";
-import {IRunDeleteDeveloperSagaAction} from "../../action_creators/developers/IDevelopersActions";
+import {IRunDeleteFavoriteDeveloperSagaAction} from "../../action_creators/developers/IDevelopersActions";
 import {selectChannelId} from "../../selectors/auth";
-import {fetchDeleteDeveloper, fetchGetDevelopers} from "../../../API/developersAPI";
-import {setDevelopersData} from "../../action_creators/developers/developersActionCreators";
+import {fetchDeleteDeveloper, fetchGetFavoriteDevelopers} from "../../../API/developersAPI";
+import {setFavoriteDevelopersData} from "../../action_creators/developers/developersActionCreators";
+import {selectSubscribeFilters} from "../../selectors/subscribes";
 
 
 export function *getSubscribes(action: IRunGetSubscribesSagaAction) {
     try {
-        const response = yield call(fetchGetSubscribes, action.payload);
+        const channelId = yield select(selectChannelId);
+        const subscribeFilters = yield select(selectSubscribeFilters);
+        const response = yield call(fetchGetSubscribes, {...subscribeFilters, channelId});
         yield put(setSubscribesData(response.data));
     } catch (err) {
         console.log(err);

@@ -1,10 +1,17 @@
-import {IDeveloper, IDeveloperWithFollowSign} from "../../db/models/DeveloperModel";
+import {IDeveloper} from "../../db/models/DeveloperModel";
 import {IDeveloperStorageService} from "../../db/storageServices/DeveloperStorageService";
 import {ISubscribeStorageService} from "../../db/storageServices/SubscribeStorageService";
 
 
+export interface IListQuery {
+    search?: string;
+    limit?: number;
+    channelId: string;
+}
+
+
 export interface IDeveloperService {
-    list(channelId: string, reponame?: string): Promise<IDeveloperWithFollowSign[]>;
+    list(query: IListQuery): Promise<IDeveloper[]>;
     add(obj: IDeveloper): Promise<boolean>;
     delete(obj: {channelId: string, username: string}): Promise<boolean>;
 }
@@ -19,18 +26,9 @@ export default class DeveloperService implements IDeveloperService {
         this.subscribeStorageService = subscribeStorageService;
     }
 
-    private async getDevelopersWithFollowSign(developers: IDeveloper[], channelId: string, reponame: string): Promise<IDeveloperWithFollowSign[]> {
-        const followedDevelopers = await this.subscribeStorageService.get({channelId, reponame});
-        const followedDeveloperNames = followedDevelopers.map(developer => developer.followed);
-        return developers.map(developer => ({...developer, isFollowed: followedDeveloperNames.indexOf(developer.username) !== -1}));
-    }
-
-    async list(channelId: string, reponame?: string): Promise<IDeveloperWithFollowSign[]> {
-        let developers = await this.developerStorageService.get({channelId});
-        if (reponame) {
-            developers = await this.getDevelopersWithFollowSign(developers, channelId, reponame);
-        }
-        return developers;
+    async list(query: IListQuery): Promise<IDeveloper[]> {
+        const {channelId, search, limit} = query;
+        return await this.developerStorageService.get({channelId}, search, limit);
     }
 
     async add(obj: IDeveloper): Promise<boolean> {

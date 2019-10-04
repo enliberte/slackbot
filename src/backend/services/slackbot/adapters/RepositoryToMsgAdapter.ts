@@ -1,12 +1,12 @@
 import {IBlockMessage} from "../templates/builders/elements";
 import {IRepositoryService} from "../../admin/RepositoryService";
-import IMessageBuilder, {IButtonProps} from "../templates/builders/IBuilder";
+import IMessageBuilder from "../templates/builders/IBuilder";
 import buildReposList from "../templates/common/buildRepositoriesList";
 import {IRepository} from "../../../db/models/RepositoryModel";
 
 
 export interface IRepositoryToMessageAdapter {
-    getReposListMsg(builder: IMessageBuilder, channelId: string, button: IButtonProps): Promise<IBlockMessage>;
+    getReposListMsg(builder: IMessageBuilder, channelId: string): Promise<IBlockMessage>;
     getAddResultMsg(builder: IMessageBuilder, obj: IRepository): Promise<IBlockMessage>;
 }
 
@@ -17,13 +17,13 @@ export default class RepositoryToMsgAdapter implements IRepositoryToMessageAdapt
         this.repositoryService = repositoryService;
     }
 
-    async getReposListMsg(builder: IMessageBuilder, channelId: string, button: IButtonProps): Promise<IBlockMessage> {
-        const repos = await this.repositoryService.list(channelId);
+    async getReposListMsg(builder: IMessageBuilder, channelId: string): Promise<IBlockMessage> {
+        const repos = await this.repositoryService.list({channelId});
         if (repos.length === 0) {
             const emptyReposMsg = "You don't have added repositories yet. To add them please use command /add_repository";
             return builder.buildSection(emptyReposMsg).getMessage();
         } else {
-            return buildReposList(builder, repos, button);
+            return buildReposList(builder, repos);
         }
     }
 

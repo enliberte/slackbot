@@ -1,29 +1,41 @@
-import {IStashDeveloper} from "../../db/models/DeveloperModel";
+import {IStashDeveloper, IStashDeveloperWithFollowSign} from "../../db/models/DeveloperModel";
 import StashClient from "./StashClient";
 import queryString from 'query-string';
+import {IDeveloperStorageService} from "../../db/storageServices/DeveloperStorageService";
 
 
 export interface IGetStashDevelopersQuery {
-    start?: number;
+    channelId: string;
     limit?: number;
     filter?: string;
 }
 
 
 export interface IStashDeveloperService {
-    list(query: IGetStashDevelopersQuery): Promise<IStashDeveloper[] | false>;
+    list(query: IGetStashDevelopersQuery): Promise<IStashDeveloperWithFollowSign[] | false>;
 }
 
 
 export default class StashDeveloperService implements IStashDeveloperService {
+    private developerStorageService: IDeveloperStorageService;
 
-    async list(query: IGetStashDevelopersQuery): Promise<IStashDeveloper[] | false> {
-        const url = `/users?${queryString.stringify(query)}`;
+    constructor(developerStorageService: IDeveloperStorageService) {
+        this.developerStorageService = developerStorageService;
+    }
+
+    async list(query: IGetStashDevelopersQuery): Promise<IStashDeveloperWithFollowSign[] | false> {
+        const {channelId, limit, filter} = query;
+        const url = `/users?${queryString.stringify({limit, filter})}`;
         try {
             const response = await StashClient.get(url);
-            return response.data;
+            const stashDevelopers: IStashDeveloper[] = response.data.values;
+            const stashDevelopersWithFollowSign = [];
+            for (let stashDeveloper of stashDevelopers) {
+                const favoriteDevelopers = await this.developerStorageService.get({channelId, username: stashDeveloper.displayName});
+                stashDevelopersWithFollowSign.push({...stashDeveloper, isFollow: favoriteDevelopers.length !== 0})
+            }
+            return stashDevelopersWithFollowSign;
         } catch (e) {
-            console.log(JSON.stringify(e));
             return false;
         }
     }

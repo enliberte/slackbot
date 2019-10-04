@@ -1,28 +1,16 @@
-import {IDeveloperWithFollowSign} from "../../../../db/models/DeveloperModel";
 import IMsgBuilder from "../builders/IBuilder";
 import {IBlockMessage} from "../builders/elements";
+import {IDeveloper} from "../../../../db/models/DeveloperModel";
 
 interface IBuildDevelopersList {
-    (builder: IMsgBuilder, developers: IDeveloperWithFollowSign[], reponame?: string): IBlockMessage;
+    (builder: IMsgBuilder, developers: IDeveloper[]): IBlockMessage;
 }
 
-const buildDevelopersList: IBuildDevelopersList = (builder, developers, reponame?) => {
-    const headerSectionMsg = reponame ? "*Your subscribes:*" : "*Added developers:*";
-    const actionBtns = reponame ?
-        [{btnText: 'Return', btnValue: 'return'}, {btnText: 'Close', btnValue: 'close'}] :
-        [{btnText: 'Close', btnValue: 'close'}];
-    builder.buildDivider().buildSection(headerSectionMsg);
+const buildDevelopersList: IBuildDevelopersList = (builder, developers) => {
+    builder.buildDivider().buildSection("*Added developers:*").buildDivider();
     developers.forEach(developer => {
-        let commandButton = {btnText: 'Delete', btnValue: `deleteDeveloper_${developer.username}`};
-        if (reponame) {
-            commandButton = {
-                btnText: developer.isFollowed ? 'Unfollow' : 'Follow',
-                btnValue: developer.isFollowed ? `unfollow_${developer.username}_${reponame}` : `follow_${developer.username}_${reponame}`
-            };
-        }
-        builder.buildDivider().buildSectionWithButton(developer.username, commandButton);
+        builder.buildSection(developer.username).buildDivider();
     });
-    builder.buildDivider().buildActions(actionBtns).buildDivider();
     return builder.getMessage();
 };
 

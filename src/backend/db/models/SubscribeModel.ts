@@ -11,10 +11,10 @@ interface ISubscribe {
 interface ISubscribeModel extends Document, ISubscribe {}
 
 const subscribeSchema: Schema = new Schema({
-    channelId: String,
-    followed: String,
-    follower: String,
-    reponame: String
+    channelId: {type: String, index: true},
+    followed: {type: String, index: true},
+    follower: {type: String, index: true},
+    reponame: {type: String, index: true}
 });
 
 const SubscribeModel: Model<ISubscribeModel> = model('Subscribe', subscribeSchema);

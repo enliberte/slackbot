@@ -1,11 +1,12 @@
 import IAuthState from "./reducers/auth/IAuthState";
-import {IDeveloper} from "../../../backend/db/models/DeveloperModel";
-import {IRepository} from "../../../backend/db/models/RepositoryModel";
-import {ISubscribe} from "../../../backend/db/models/SubscribeModel";
+import {IDeveloperState} from "./reducers/developers/developers";
+import {ISubscribeState} from "./reducers/subscribes/subscribes";
+import {IRepositoryState} from "./reducers/repositories/repositories";
 
 export default interface IState {
     auth: IAuthState;
-    developers: IDeveloper[];
-    repositories: IRepository[];
-    subscribes: ISubscribe[];
+    developers: IDeveloperState;
+    repositories: IRepositoryState;
+    subscribes: ISubscribeState;
+    isFetching: boolean;
 }

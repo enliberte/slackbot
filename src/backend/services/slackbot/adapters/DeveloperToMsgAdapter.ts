@@ -6,7 +6,7 @@ import {IDeveloper} from "../../../db/models/DeveloperModel";
 
 
 export interface IDeveloperToMessageAdapter {
-    getDevelopersListMsg(builder: IMessageBuilder, channelId: string, reponame?: string): Promise<IBlockMessage>;
+    getDevelopersListMsg(builder: IMessageBuilder, channelId: string): Promise<IBlockMessage>;
     getAddResultMsg(builder: IMessageBuilder, obj: IDeveloper): Promise<IBlockMessage>;
 }
 
@@ -18,13 +18,13 @@ export default class DeveloperToMsgAdapter implements IDeveloperToMessageAdapter
         this.developerService = developerService;
     }
 
-    async getDevelopersListMsg(builder: IMessageBuilder, channelId: string, reponame?: string) {
+    async getDevelopersListMsg(builder: IMessageBuilder, channelId: string) {
         const emptyDevelopersMsg = "You don't have added developers yet. To add them please use command /add_developer";
-        const users = await this.developerService.list(channelId, reponame);
+        const users = await this.developerService.list({channelId});
         if (users.length === 0) {
             return builder.buildSection(emptyDevelopersMsg).getMessage();
         } else {
-            return buildDevelopersList(builder, users, reponame);
+            return buildDevelopersList(builder, users);
         }
     }
 

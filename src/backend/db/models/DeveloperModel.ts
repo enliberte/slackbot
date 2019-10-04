@@ -7,9 +7,6 @@ interface IDeveloper {
     username: string;
 }
 
-interface IDeveloperWithFollowSign extends IDeveloper {
-    isFollowed?: boolean;
-}
 
 interface IStashDeveloperLink {
     self: [{href: string}]
@@ -26,14 +23,18 @@ interface IStashDeveloper {
     links: IStashDeveloperLink
 }
 
+interface IStashDeveloperWithFollowSign extends IStashDeveloper {
+    isFollow: boolean;
+}
+
 interface IDeveloperModel extends Document, IDeveloper {}
 
 const developerSchema: Schema = new Schema({
-    channelId: String,
-    addedByName: String,
-    username: String
+    channelId: {type: String, index: true},
+    addedByName: {type: String, index: true},
+    username: {type: String, index: true}
 });
 
 const DeveloperModel: Model<IDeveloperModel> = model('Developer', developerSchema);
 
-export {IDeveloper, IDeveloperModel, DeveloperModel, IDeveloperWithFollowSign, IStashDeveloper}
+export {IDeveloper, IDeveloperModel, DeveloperModel, IStashDeveloper, IStashDeveloperWithFollowSign}
