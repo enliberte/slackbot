@@ -6,6 +6,7 @@ import auth from './reducers/auth/auth';
 import developers from './reducers/developers/developers';
 import repositories from './reducers/repositories/repositories';
 import subscribes from "./reducers/subscribes/subscribes";
+import subscribe from "./reducers/subscribes/newSubscribe";
 import isFetching from "./reducers/fetching/isFetching";
 import rootSaga from './sagas/rootSaga';
 
@@ -18,6 +19,7 @@ const store = createStore(
         repositories,
         subscribes,
         isFetching,
+        subscribe,
         form: formReducer
     }),
     composeWithDevTools(applyMiddleware(sagaMiddleware))

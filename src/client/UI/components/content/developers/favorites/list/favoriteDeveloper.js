@@ -24,20 +24,20 @@ var useStyles = core_1.makeStyles(function (theme) {
     });
 });
 var FavoriteDeveloper = function (_a) {
-    var developer = _a.developer, setFollower = _a.setFollower, deleteDeveloper = _a.deleteDeveloper;
+    var developer = _a.developer, setFollowed = _a.setFollowed, deleteDeveloper = _a.deleteDeveloper;
     var classes = useStyles();
-    return (react_1.default.createElement(ListItem_1.default, { button: true, onClick: function () { return setFollower(developer.username); } },
+    return (react_1.default.createElement(ListItem_1.default, { button: true, onClick: function () { return setFollowed(developer.username); } },
         react_1.default.createElement(ListItemText_1.default, { primary: react_1.default.createElement(react_1.default.Fragment, null,
                 react_1.default.createElement(Typography_1.default, { component: "span", variant: "body2", className: classes.inline, color: "textPrimary" }, developer.username)) }),
         react_1.default.createElement(IconButton_1.default, { size: "small", className: classes.button, "aria-label": "delete", onClick: function () { return deleteDeveloper({ username: developer.username }); } },
             react_1.default.createElement(Delete_1.default, null))));
 };
 var mapDispatchToProps = function (dispatch) { return ({
-    setFollower: function (followed) {
+    setFollowed: function (followed) {
         dispatch(subscribesActionCreators_1.setSubscribeFilters({ followed: followed }));
     },
-    deleteDeveloper: function (filters) {
-        dispatch(developersActionCreators_1.runDeleteFavoriteDeveloperSaga(filters));
+    deleteDeveloper: function (developer) {
+        dispatch(developersActionCreators_1.runDeleteFavoriteDeveloperSaga(developer));
     }
 }); };
 exports.default = react_redux_1.connect(null, mapDispatchToProps)(FavoriteDeveloper);

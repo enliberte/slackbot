@@ -1,10 +1,11 @@
 import repositoriesActions from "./repositoriesActions";
-import {IRepository, IStashRepositoryWithFavoriteSign} from "../../../../../backend/db/models/RepositoryModel";
+import {IFavoriteRepository} from "../../../../../backend/db/models/repository/favorite/FavoriteRepositoryModel";
+import {IStashRepositoryWithFavoriteSign} from "../../../../../backend/db/models/repository/stash/StashRepositoryModel";
 
 
 export interface ISetFavoriteRepositoriesDataAction {
     type: typeof repositoriesActions.SET_FAVORITE_REPOSITORIES;
-    payload: IRepository[];
+    payload: IFavoriteRepository[];
 }
 
 export interface ISetStashRepositoriesDataAction {
@@ -32,7 +33,7 @@ export interface IRunGetStashRepositoriesSagaAction {
 
 export interface IRunDeleteFavoriteRepositorySagaAction {
     type: typeof repositoriesActions.DELETE_FAVORITE_REPOSITORY_SAGA;
-    payload: {reponame: string};
+    payload: Partial<IFavoriteRepository>;
 }
 
 export interface IRunAddStashRepositoryToFavoritesSagaAction {

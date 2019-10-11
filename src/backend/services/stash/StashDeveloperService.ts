@@ -1,7 +1,7 @@
-import {IStashDeveloper, IStashDeveloperWithFollowSign} from "../../db/models/DeveloperModel";
 import StashClient from "./StashClient";
 import queryString from 'query-string';
 import {IDeveloperStorageService} from "../../db/storageServices/DeveloperStorageService";
+import {IStashDeveloper, IStashDeveloperWithFavoriteSign} from "../../db/models/developer/stash/StashDeveloperModel";
 
 
 export interface IGetStashDevelopersQuery {
@@ -12,7 +12,7 @@ export interface IGetStashDevelopersQuery {
 
 
 export interface IStashDeveloperService {
-    list(query: IGetStashDevelopersQuery): Promise<IStashDeveloperWithFollowSign[] | false>;
+    list(query: IGetStashDevelopersQuery): Promise<IStashDeveloperWithFavoriteSign[] | false>;
 }
 
 
@@ -23,18 +23,20 @@ export default class StashDeveloperService implements IStashDeveloperService {
         this.developerStorageService = developerStorageService;
     }
 
-    async list(query: IGetStashDevelopersQuery): Promise<IStashDeveloperWithFollowSign[] | false> {
+    async list(query: IGetStashDevelopersQuery): Promise<IStashDeveloperWithFavoriteSign[] | false> {
         const {channelId, limit, filter} = query;
         const url = `/users?${queryString.stringify({limit, filter})}`;
         try {
             const response = await StashClient.get(url);
             const stashDevelopers: IStashDeveloper[] = response.data.values;
-            const stashDevelopersWithFollowSign = [];
+            const stashDevelopersWithFavoriteSign = [];
             for (let stashDeveloper of stashDevelopers) {
                 const favoriteDevelopers = await this.developerStorageService.get({channelId, username: stashDeveloper.displayName});
-                stashDevelopersWithFollowSign.push({...stashDeveloper, isFollow: favoriteDevelopers.length !== 0})
+                const isFavorite = favoriteDevelopers.length !== 0;
+                const favoriteId = isFavorite ? favoriteDevelopers[0].id : '';
+                stashDevelopersWithFavoriteSign.push({...stashDeveloper, isFavorite, favoriteId})
             }
-            return stashDevelopersWithFollowSign;
+            return stashDevelopersWithFavoriteSign;
         } catch (e) {
             return false;
         }

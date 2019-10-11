@@ -51,7 +51,7 @@ var SubscribeToMessageAdapter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         emptySubscribesMsg = "You don't have subscribes yet. To add them please sign in admin site";
-                        return [4 /*yield*/, this.subscribeService.list({ channelId: channelId })];
+                        return [4 /*yield*/, this.subscribeService.list({ filter: { channelId: channelId } })];
                     case 1:
                         subscribes = _a.sent();
                         if (subscribes.length === 0) {
@@ -72,7 +72,7 @@ var SubscribeToMessageAdapter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!(obj.followed && obj.reponame)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.subscribeService.subscribeCMD(obj)];
+                        return [4 /*yield*/, this.subscribeService.subscribe(obj)];
                     case 1:
                         addOperationSuccess = _a.sent();
                         if (addOperationSuccess) {

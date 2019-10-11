@@ -1,6 +1,6 @@
 import IMsgBuilder from "../builders/IBuilder";
 import {IBlockMessage} from "../builders/elements";
-import {ISubscribe} from "../../../../db/models/SubscribeModel";
+import {ISubscribe} from "../../../../db/models/subscribe/SubscribeModel";
 
 interface IBuildSubscribesList {
     (builder: IMsgBuilder, subscribes: ISubscribe[]): IBlockMessage;

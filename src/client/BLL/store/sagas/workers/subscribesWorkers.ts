@@ -1,15 +1,25 @@
 import {put, call, select} from 'redux-saga/effects';
 import {
-    IRunDeleteSubscribeSagaAction,
-    IRunGetSubscribesSagaAction
+    IRunDeleteSubscribeSagaAction, IRunEditSubscribeSagaAction,
+    IRunGetSubscribesSagaAction, IRunSaveSubscribeSagaAction
 } from "../../action_creators/subscribes/ISubscribesActions";
-import {setSubscribesData} from "../../action_creators/subscribes/subscribesActionCreators";
-import {fetchGetSubscribes} from "../../../API/subscribesAPI";
-import {IRunDeleteFavoriteDeveloperSagaAction} from "../../action_creators/developers/IDevelopersActions";
-import {selectChannelId} from "../../selectors/auth";
-import {fetchDeleteDeveloper, fetchGetFavoriteDevelopers} from "../../../API/developersAPI";
-import {setFavoriteDevelopersData} from "../../action_creators/developers/developersActionCreators";
-import {selectSubscribeFilters} from "../../selectors/subscribes";
+import {
+    runGetSubscribesSaga, setIsSuccess,
+    setSubscribesData,
+    toggleEditingWindow
+} from "../../action_creators/subscribes/subscribesActionCreators";
+import {
+    fetchDeleteSubscribe,
+    fetchEditSubscribe,
+    fetchGetSubscribes,
+    fetchSaveSubscribe
+} from "../../../API/subscribesAPI";
+import {selectChannelId, selectUsername} from "../../selectors/auth";
+import {selectSubscribe, selectSubscribeFilters} from "../../selectors/subscribes";
+import {runGetFavoriteDevelopersSaga} from "../../action_creators/developers/developersActionCreators";
+import {
+    runGetFavoriteRepositoriesSaga,
+} from "../../action_creators/repositories/repositoriesActionCreators";
 
 
 export function *getSubscribes(action: IRunGetSubscribesSagaAction) {
@@ -23,13 +33,45 @@ export function *getSubscribes(action: IRunGetSubscribesSagaAction) {
     }
 }
 
+export function *saveSubscribe(action: IRunSaveSubscribeSagaAction) {
+    try {
+        const channelId = yield select(selectChannelId);
+        const follower = yield select(selectUsername);
+        const {followed, reponame} = yield select(selectSubscribe);
+        const addSubscribeResponse = yield call(fetchSaveSubscribe, {followed, follower, reponame, channelId});
+        const isSuccess = addSubscribeResponse.data;
+        yield put(setIsSuccess(isSuccess));
+        yield put(toggleEditingWindow());
+        yield put(runGetSubscribesSaga());
+        yield put(runGetFavoriteDevelopersSaga());
+        yield put(runGetFavoriteRepositoriesSaga());
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export function *editSubscribe(action: IRunEditSubscribeSagaAction) {
+    try {
+        const channelId = yield select(selectChannelId);
+        const follower = yield select(selectUsername);
+        const subscribeData = yield select(selectSubscribe);
+        const editSubscribeResponse = yield call(fetchEditSubscribe, {follower, channelId, ...subscribeData});
+        const isSuccess = editSubscribeResponse.data;
+        yield put(setIsSuccess(isSuccess));
+        yield put(toggleEditingWindow());
+        yield put(runGetSubscribesSaga());
+        yield put(runGetFavoriteDevelopersSaga());
+        yield put(runGetFavoriteRepositoriesSaga());
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export function *deleteSubscribe(action: IRunDeleteSubscribeSagaAction) {
     try {
-        const {reponame} = action.payload;
-        // const channelId = yield select(selectChannelId);
-        // yield call(fetchDeleteDeveloper, {username, channelId});
-        // const getDevelopersResponse = yield call(fetchGetDevelopers, {channelId});
-        // yield put(setDevelopersData(getDevelopersResponse.data));
+        const deleteSubscribeResponse = yield call(fetchDeleteSubscribe, action.payload);
+        const isSuccess = deleteSubscribeResponse.data;
+        yield put(runGetSubscribesSaga());
     } catch (err) {
         console.log(err);
     }

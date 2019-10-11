@@ -28,7 +28,7 @@ const FavoriteRepositories = ({repositories}: RepositoriesProps) => {
     const classes = useStyles();
 
     return (
-        <Grid item xs={3}>
+        <Grid item xs={5}>
             <Paper className={classes.paper}>
                 <FavoriteRepositoriesSearch />
                 <List className={classes.root}>

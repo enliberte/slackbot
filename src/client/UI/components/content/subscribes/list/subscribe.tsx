@@ -2,12 +2,16 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import {createStyles, makeStyles, Theme} from "@material-ui/core";
 import {connect} from "react-redux";
-import {ISubscribe} from "../../../../../../backend/db/models/SubscribeModel";
+import {ISubscribe} from "../../../../../../backend/db/models/subscribe/SubscribeModel";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
+import {
+    runDeleteSubscribeSaga, setIsNew, setSubscribe, toggleEditingWindow
+} from "../../../../../BLL/store/action_creators/subscribes/subscribesActionCreators";
+import {ISubscribeData} from "../../../../../BLL/store/reducers/subscribes/newSubscribe";
 
 
 interface ISubscribeProps extends ReturnType<typeof mapDispatchToProps> {
@@ -25,14 +29,17 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const Subscribe = ({subscribe, deleteSubscribe}: ISubscribeProps) => {
+const Subscribe = ({subscribe, deleteSubscribe, openSubscribeEditingWindow}: ISubscribeProps) => {
     const classes = useStyles();
 
     return (
         <ListItem button>
             <ListItemText
                 primary={
-                    <Grid container spacing={3}>
+                    <Grid container spacing={3}
+                          onClick={() => openSubscribeEditingWindow(
+                              {reponame: subscribe.reponame, followed: subscribe.followed, id: subscribe.id}
+                          )}>
                         <Grid item xs={4}>
                             <Typography component="span" variant="body2" className={classes.inline} color="textPrimary">
                                 {subscribe.followed}
@@ -49,7 +56,7 @@ const Subscribe = ({subscribe, deleteSubscribe}: ISubscribeProps) => {
             <IconButton
                 size="small"
                 className={classes.button} aria-label="delete"
-                onClick={() => deleteSubscribe({reponame: subscribe.reponame})}>
+                onClick={() => deleteSubscribe(subscribe)}>
                 <DeleteIcon />
             </IconButton>
         </ListItem>
@@ -57,8 +64,14 @@ const Subscribe = ({subscribe, deleteSubscribe}: ISubscribeProps) => {
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-    deleteSubscribe(filters: Partial<ISubscribe>) {
-        // dispatch(runDeleteSubscribeSaga(filters))
+    deleteSubscribe(subscribe: Partial<ISubscribe>) {
+        const {id, ...subscribeData} = subscribe;
+        dispatch(runDeleteSubscribeSaga(subscribeData));
+    },
+    openSubscribeEditingWindow(subscribeData: ISubscribeData) {
+        dispatch(setIsNew(false));
+        dispatch(setSubscribe(subscribeData));
+        dispatch(toggleEditingWindow());
     }
 });
 

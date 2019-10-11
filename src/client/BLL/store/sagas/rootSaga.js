@@ -45,7 +45,10 @@ function rootSaga() {
                     repositoriesWatchers_1.watchGetFavoriteRepositories(),
                     repositoriesWatchers_1.watchGetStashRepositories(),
                     repositoriesWatchers_1.watchDeleteFavoriteRepository(),
-                    repositoriesWatchers_1.watchAddStashRepositoryToFavorites()
+                    repositoriesWatchers_1.watchAddStashRepositoryToFavorites(),
+                    subscribesWatchers_1.watchSaveSubscribe(),
+                    subscribesWatchers_1.watchEditSubscribe(),
+                    subscribesWatchers_1.watchDeleteSubscribe()
                 ])];
             case 1:
                 _a.sent();

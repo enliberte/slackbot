@@ -54,10 +54,9 @@ export function *getStashDevelopers(action: IRunGetStashDevelopersSagaAction) {
 
 export function *deleteFavoriteDeveloper(action: IRunDeleteFavoriteDeveloperSagaAction) {
     try {
-        const {username} = action.payload;
         const channelId = yield select(selectChannelId);
         const search = yield select(selectSearchFavoriteDevelopersTerm);
-        yield call(fetchDeleteDeveloper, {username, channelId});
+        yield call(fetchDeleteDeveloper, {...action.payload, channelId});
         const getDevelopersResponse = yield call(fetchGetFavoriteDevelopers, {channelId, search});
         yield put(setFavoriteDevelopersData(getDevelopersResponse.data));
     } catch (err) {

@@ -37,7 +37,7 @@ exports.default = (function (state, action) {
         case repositoriesActions_1.default.SEARCH_FAVORITE_REPOSITORIES:
             return __assign(__assign({}, state), { favorites: __assign(__assign({}, state.favorites), { search: action.payload }) });
         case repositoriesActions_1.default.FILTER_STASH_REPOSITORIES:
-            return __assign(__assign({}, state), { stash: __assign(__assign({}, state.stash), { filter: action.payload }) });
+            return __assign(__assign({}, state), { stash: __assign(__assign({}, state.stash), { name: action.payload }) });
         default:
             return state;
     }

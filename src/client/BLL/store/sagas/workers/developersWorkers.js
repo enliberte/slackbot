@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __generator = (this && this.__generator) || function (thisArg, body) {
     var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
     return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
@@ -107,19 +118,18 @@ function getStashDevelopers(action) {
 }
 exports.getStashDevelopers = getStashDevelopers;
 function deleteFavoriteDeveloper(action) {
-    var username, channelId, search, getDevelopersResponse, err_3;
+    var channelId, search, getDevelopersResponse, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 6, , 7]);
-                username = action.payload.username;
                 return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
             case 1:
                 channelId = _a.sent();
                 return [4 /*yield*/, effects_1.select(developers_1.selectSearchFavoriteDevelopersTerm)];
             case 2:
                 search = _a.sent();
-                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchDeleteDeveloper, { username: username, channelId: channelId })];
+                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchDeleteDeveloper, __assign(__assign({}, action.payload), { channelId: channelId }))];
             case 3:
                 _a.sent();
                 return [4 /*yield*/, effects_1.call(developersAPI_1.fetchGetFavoriteDevelopers, { channelId: channelId, search: search })];

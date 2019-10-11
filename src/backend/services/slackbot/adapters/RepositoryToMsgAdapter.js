@@ -49,7 +49,7 @@ var RepositoryToMsgAdapter = /** @class */ (function () {
             var repos, emptyReposMsg;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repositoryService.list({ channelId: channelId })];
+                    case 0: return [4 /*yield*/, this.repositoryService.list({ filter: { channelId: channelId } })];
                     case 1:
                         repos = _a.sent();
                         if (repos.length === 0) {

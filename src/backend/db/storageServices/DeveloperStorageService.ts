@@ -1,28 +1,35 @@
-import {IDeveloper, DeveloperModel, IDeveloperModel} from '../models/DeveloperModel';
 import BaseStorageService, {IStorageService} from './BaseStorageService';
+import {
+    FavoriteDeveloperModel,
+    IFavoriteDeveloper,
+    IFavoriteDeveloperModel,
+    INewFavoriteDeveloper
+} from "../models/developer/favorite/FavoriteDeveloperModel";
+import {Types} from 'mongoose';
 
-export interface IGetDeveloperFilter {
-    channelId?: string;
-    addedByName?: string;
-    username?: string | RegExp;
-}
+export interface IDeveloperStorageService extends IStorageService<INewFavoriteDeveloper, IFavoriteDeveloper> {}
 
-export interface IDeveloperStorageService extends IStorageService<IDeveloper, IGetDeveloperFilter> {}
-
-export default class DeveloperStorageService extends BaseStorageService<IDeveloperModel, IDeveloper, IGetDeveloperFilter> implements IDeveloperStorageService {
+export default class DeveloperStorageService extends BaseStorageService<IFavoriteDeveloperModel, INewFavoriteDeveloper, IFavoriteDeveloper> implements IDeveloperStorageService {
     constructor() {
-        super(DeveloperModel);
+        super(FavoriteDeveloperModel);
     }
 
-    async get(filter: IGetDeveloperFilter, search?: string, limit?: number): Promise<IDeveloper[]> {
+    async get(filter: Partial<IFavoriteDeveloper>, search?: string, limit?: number): Promise<IFavoriteDeveloper[]> {
+        const {id, ...filterData} = filter;
+        let resFilter;
         if (search) {
-            filter.username = new RegExp(`.*${search}.*`);
+            resFilter = {...filterData, username: new RegExp(`.*${search}.*`)};
+        } else {
+            resFilter = {...filterData};
         }
-        let query = this.model.find(filter).sort({username: 1});
+        if (id) {
+            resFilter._id = Types.ObjectId(id);
+        }
+        let query = this.model.find(resFilter).sort({username: 1});
         if (limit) {
             query = query.limit(limit);
         }
         const docs = await query.exec();
-        return docs.map(doc => ({username: doc.username, channelId: doc.channelId, addedByName: doc.addedByName}));
+        return docs.map(doc => ({username: doc.username, channelId: doc.channelId, addedByName: doc.addedByName, id: doc._id}));
     }
 }

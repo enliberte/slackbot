@@ -1,9 +1,9 @@
-import {IRepository} from "../../../../db/models/RepositoryModel";
 import {IBlockMessage} from "../builders/elements";
 import IMsgBuilder from "../builders/IBuilder";
+import {IFavoriteRepository} from "../../../../db/models/repository/favorite/FavoriteRepositoryModel";
 
 interface IBuildReposList {
-    (builder: IMsgBuilder, repos: IRepository[]): IBlockMessage;
+    (builder: IMsgBuilder, repos: IFavoriteRepository[]): IBlockMessage;
 }
 
 const buildRepositoriesList: IBuildReposList = (builder, repos) => {

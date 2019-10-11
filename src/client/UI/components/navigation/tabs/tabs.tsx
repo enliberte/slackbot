@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {MouseEvent} from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {Paper} from "@material-ui/core";
 import {makeStyles} from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid";
-import {RouteComponentProps, withRouter} from 'react-router-dom'
 
 
 const useStyles = makeStyles({
@@ -15,16 +14,15 @@ const useStyles = makeStyles({
 });
 
 interface ITab {
-    icon: any;
     label: string;
-    link: string;
+    clickHandler: (event: MouseEvent) => void;
 }
 
-export interface IItemTabsProps extends RouteComponentProps {
+export interface IItemTabsProps {
     tabs: ITab[];
 }
 
-const ItemTabs = ({history, tabs}: IItemTabsProps) => {
+const ItemTabs = ({tabs}: IItemTabsProps) => {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
 
@@ -42,14 +40,11 @@ const ItemTabs = ({history, tabs}: IItemTabsProps) => {
                     indicatorColor="secondary"
                     textColor="secondary"
                 >
-                    {tabs.map(tab => {
-                        const Icon = tab.icon;
-                        return <Tab icon={<Icon/>} label={tab.label} onClick={() => history.push(tab.link)}/>
-                    })}
+                    {tabs.map(tab => <Tab label={tab.label} onClick={tab.clickHandler}/>)}
                 </Tabs>
             </Paper>
         </Grid>
     )
 };
 
-export default withRouter(ItemTabs);
+export default ItemTabs;

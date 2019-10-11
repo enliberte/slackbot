@@ -43,12 +43,12 @@ var DeveloperService = /** @class */ (function () {
     }
     DeveloperService.prototype.list = function (query) {
         return __awaiter(this, void 0, void 0, function () {
-            var channelId, search, limit;
+            var search, limit, filter;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        channelId = query.channelId, search = query.search, limit = query.limit;
-                        return [4 /*yield*/, this.developerStorageService.get({ channelId: channelId }, search, limit)];
+                        search = query.search, limit = query.limit, filter = query.filter;
+                        return [4 /*yield*/, this.developerStorageService.get(filter, search, limit)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -69,17 +69,22 @@ var DeveloperService = /** @class */ (function () {
     };
     DeveloperService.prototype.delete = function (obj) {
         return __awaiter(this, void 0, void 0, function () {
-            var username, channelId, developerRemovingOperationResult, subscribeRemovingOperationResult;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        username = obj.username, channelId = obj.channelId;
-                        return [4 /*yield*/, this.developerStorageService.remove(obj)];
+            var developers, _a, username, channelId, developerRemovingOperationResult, subscribeRemovingOperationResult;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.developerStorageService.get(obj)];
                     case 1:
-                        developerRemovingOperationResult = _a.sent();
-                        return [4 /*yield*/, this.subscribeStorageService.remove({ followed: username, channelId: channelId })];
+                        developers = _b.sent();
+                        if (developers.length === 0) {
+                            return [2 /*return*/, false];
+                        }
+                        _a = developers[0], username = _a.username, channelId = _a.channelId;
+                        return [4 /*yield*/, this.developerStorageService.remove({ username: username, channelId: channelId })];
                     case 2:
-                        subscribeRemovingOperationResult = _a.sent();
+                        developerRemovingOperationResult = _b.sent();
+                        return [4 /*yield*/, this.subscribeStorageService.remove({ followed: username, channelId: channelId })];
+                    case 3:
+                        subscribeRemovingOperationResult = _b.sent();
                         return [2 /*return*/, developerRemovingOperationResult && subscribeRemovingOperationResult];
                 }
             });

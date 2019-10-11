@@ -8,8 +8,3 @@ export interface IStashRepositoriesFilters {
     name: string;
     limit: number;
 }
-
-export interface IDeleteRepositoryFilters {
-    reponame: string;
-    channelId?: string;
-}

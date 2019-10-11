@@ -6,7 +6,11 @@ import {
     watchGetFavoriteDevelopers,
     watchGetStashDevelopers
 } from "./watchers/developersWatchers";
-import {watchGetSubscribes} from "./watchers/subscribesWatchers";
+import {
+    watchDeleteSubscribe, watchEditSubscribe,
+    watchGetSubscribes,
+    watchSaveSubscribe
+} from "./watchers/subscribesWatchers";
 import {
     watchAddStashRepositoryToFavorites,
     watchDeleteFavoriteRepository,
@@ -25,6 +29,9 @@ export default function *rootSaga() {
         watchGetFavoriteRepositories(),
         watchGetStashRepositories(),
         watchDeleteFavoriteRepository(),
-        watchAddStashRepositoryToFavorites()
+        watchAddStashRepositoryToFavorites(),
+        watchSaveSubscribe(),
+        watchEditSubscribe(),
+        watchDeleteSubscribe()
     ]);
 }

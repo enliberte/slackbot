@@ -1,16 +1,24 @@
 import axios from 'axios';
 import {
-    IDeleteRepositoryFilters,
     IRepositoriesFilters,
     IStashRepositoriesFilters
 } from "../store/action_creators/repositories/IRepositoriesFilters";
-import {IRepository} from "../../../backend/db/models/RepositoryModel";
+import {
+    IFavoriteRepository,
+    INewFavoriteRepository
+} from "../../../backend/db/models/repository/favorite/FavoriteRepositoryModel";
+import URLS from "../../../common/URLS";
+import queryString from 'query-string';
 
 
-export const fetchGetFavoriteRepositories = (filters: IRepositoriesFilters) => axios.post('/api/repositories/get', {filters});
+export const fetchGetFavoriteRepositories = (filters: IRepositoriesFilters) =>
+    axios.get(`${URLS.API_FAVORITE_REPOSITORIES}?${queryString.stringify(filters)}`);
 
-export const fetchGetStashRepositories = (filters: IStashRepositoriesFilters) => axios.post('/api/stash/repositories/get', {filters});
+export const fetchGetStashRepositories = (filters: IStashRepositoriesFilters) =>
+    axios.get(`${URLS.API_STASH_REPOSITORIES}?${queryString.stringify(filters)}`);
 
-export const fetchDeleteRepository = (filters: IDeleteRepositoryFilters) => axios.post('/api/repositories/delete', {filters});
+export const fetchDeleteRepository = (repository: Partial<IFavoriteRepository>) =>
+    axios.delete(`${URLS.API_FAVORITE_REPOSITORIES}?${queryString.stringify(repository)}`);
 
-export const fetchAddStashRepositoryToFavorites = (repository: IRepository) => axios.post('/api/repositories/add', {repository});
+export const fetchAddStashRepositoryToFavorites = (repository: INewFavoriteRepository) =>
+    axios.post(URLS.API_FAVORITE_REPOSITORIES, repository);

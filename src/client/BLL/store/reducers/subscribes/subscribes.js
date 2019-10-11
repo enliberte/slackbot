@@ -18,7 +18,7 @@ var subscribesActions_1 = __importDefault(require("../../action_creators/subscri
 var initialState = {
     data: [],
     isEditing: false,
-    filters: { followed: null }
+    filters: {}
 };
 exports.default = (function (state, action) {
     if (state === void 0) { state = initialState; }
@@ -26,7 +26,7 @@ exports.default = (function (state, action) {
         case subscribesActions_1.default.SET_SUBSCRIBES:
             return __assign(__assign({}, state), { data: action.payload });
         case subscribesActions_1.default.SET_SUBSCRIBE_FILTERS:
-            return __assign(__assign({}, state), { filters: __assign(__assign({}, state.filters), action.payload) });
+            return __assign(__assign({}, state), { filters: __assign({}, action.payload) });
         case subscribesActions_1.default.TOGGLE_EDITING_WINDOW:
             return __assign(__assign({}, state), { isEditing: !state.isEditing });
         default:

@@ -1,9 +1,10 @@
-import {IRepository, IStashRepositoryWithFavoriteSign} from "../../../../../backend/db/models/RepositoryModel";
 import repositoriesActions from "../../action_creators/repositories/repositoriesActions";
+import {IFavoriteRepository} from "../../../../../backend/db/models/repository/favorite/FavoriteRepositoryModel";
+import {IStashRepositoryWithFavoriteSign} from "../../../../../backend/db/models/repository/stash/StashRepositoryModel";
 
 export interface IRepositoryState {
     favorites: {
-        data: IRepository[];
+        data: IFavoriteRepository[];
         search: string;
         limit: number;
     }
@@ -59,7 +60,7 @@ export default (state: IRepositoryState = initialState, action: any) => {
                 ...state,
                 stash: {
                     ...state.stash,
-                    filter: action.payload
+                    name: action.payload
                 }
             };
         default:

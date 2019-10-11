@@ -33,7 +33,7 @@ var ListItemText_1 = __importDefault(require("@material-ui/core/ListItemText"));
 var Person_1 = __importDefault(require("@material-ui/icons/Person"));
 var Build_1 = __importDefault(require("@material-ui/icons/Build"));
 var react_router_dom_1 = require("react-router-dom");
-var URLS_1 = __importDefault(require("../../URLS"));
+var URLS_1 = __importDefault(require("../../../../common/URLS"));
 var drawerWidth = 240;
 var useStyles = styles_1.makeStyles(function (theme) {
     var _a;

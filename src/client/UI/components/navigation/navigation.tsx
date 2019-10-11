@@ -17,7 +17,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
 import BuildIcon from '@material-ui/icons/Build';
 import {Link} from 'react-router-dom';
-import URLS from "../../URLS";
+import URLS from "../../../../common/URLS";
 
 const drawerWidth = 240;
 

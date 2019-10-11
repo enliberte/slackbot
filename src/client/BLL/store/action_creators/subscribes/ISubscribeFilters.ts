@@ -1,4 +1,4 @@
 export interface ISubscribeFilters {
-    followed?: string | null;
-    reponame?: string | null;
+    followed?: string;
+    reponame?: string;
 }

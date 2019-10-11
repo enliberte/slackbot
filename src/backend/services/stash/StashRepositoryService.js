@@ -58,7 +58,7 @@ var StashRepositoryService = /** @class */ (function () {
     }
     StashRepositoryService.prototype.list = function (query) {
         return __awaiter(this, void 0, void 0, function () {
-            var channelId, limit, name, url, response, stashRepositories, stashRepositoriesWithFavoriteSign, _i, stashRepositories_1, stashRepository, favoriteRepositories, e_1;
+            var channelId, limit, name, url, response, stashRepositories, stashRepositoriesWithFavoriteSign, _i, stashRepositories_1, stashRepository, favoriteRepositories, isFavorite, favoriteId, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -80,7 +80,9 @@ var StashRepositoryService = /** @class */ (function () {
                         return [4 /*yield*/, this.repositoryStorageService.get({ channelId: channelId, reponame: stashRepository.links.self[0].href })];
                     case 4:
                         favoriteRepositories = _a.sent();
-                        stashRepositoriesWithFavoriteSign.push(__assign(__assign({}, stashRepository), { isFavorite: favoriteRepositories.length !== 0 }));
+                        isFavorite = favoriteRepositories.length !== 0;
+                        favoriteId = isFavorite ? favoriteRepositories[0].id : '';
+                        stashRepositoriesWithFavoriteSign.push(__assign(__assign({}, stashRepository), { isFavorite: isFavorite, favoriteId: favoriteId }));
                         _a.label = 5;
                     case 5:
                         _i++;

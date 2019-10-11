@@ -8,10 +8,10 @@ import {
     IRunGetStashDevelopersSagaAction, IRunAddStashDeveloperToFavoritesSagaAction
 } from "./IDevelopersActions";
 import developersActions from "./developersActions"
-import {IDeveloper, IStashDeveloper} from "../../../../../backend/db/models/DeveloperModel";
-import {IDeleteDeveloperFilters} from "./IDevelopersFilters";
+import {IFavoriteDeveloper} from "../../../../../backend/db/models/developer/favorite/FavoriteDeveloperModel";
+import {IStashDeveloper} from "../../../../../backend/db/models/developer/stash/StashDeveloperModel";
 
-export const setFavoriteDevelopersData = (developersData: IDeveloper[]): ISetFavoriteDevelopersDataAction =>
+export const setFavoriteDevelopersData = (developersData: IFavoriteDeveloper[]): ISetFavoriteDevelopersDataAction =>
     ({type: developersActions.SET_FAVORITE_DEVELOPERS, payload: developersData});
 
 export const setStashDevelopersData = (developersData: IStashDeveloper[]): ISetStashDevelopersDataAction =>
@@ -29,8 +29,8 @@ export const runGetFavoriteDevelopersSaga = (): IRunGetFavoriteDevelopersSagaAct
 export const runGetStashDevelopersSaga = (): IRunGetStashDevelopersSagaAction =>
     ({type: developersActions.GET_STASH_DEVELOPERS_SAGA});
 
-export const runDeleteFavoriteDeveloperSaga = (filters: IDeleteDeveloperFilters): IRunDeleteFavoriteDeveloperSagaAction =>
-    ({type: developersActions.DELETE_FAVORITE_DEVELOPER_SAGA, payload: filters});
+export const runDeleteFavoriteDeveloperSaga = (developer: Partial<IFavoriteDeveloper>): IRunDeleteFavoriteDeveloperSagaAction =>
+    ({type: developersActions.DELETE_FAVORITE_DEVELOPER_SAGA, payload: developer});
 
 export const runAddStashDeveloperToFavoritesSaga = (developerDisplayName: string): IRunAddStashDeveloperToFavoritesSagaAction =>
     ({type: developersActions.ADD_STASH_DEVELOPER_TO_FAVORITES_SAGA, payload: developerDisplayName});

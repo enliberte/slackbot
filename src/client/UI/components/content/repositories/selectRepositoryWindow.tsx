@@ -3,7 +3,7 @@
 // import {selectIsSubscribeEditing} from "../../../../../BLL/store/selectors/subscribes";
 // import {toggleEditingWindow} from "../../../../../BLL/store/action_creators/subscribes/subscribesActionCreators";
 // // @ts-ignore
-// import ModalWindow from "../modal/modal";
+// import ModalWindow from "../dialog/dialog";
 //
 //
 // type SubscribeEditingWindowProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;

@@ -36,8 +36,8 @@ var mapDispatchToProps = function (dispatch) { return ({
     setRepository: function (reponame) {
         dispatch(subscribesActionCreators_1.setSubscribeFilters({ reponame: reponame }));
     },
-    deleteRepository: function (filters) {
-        dispatch(repositoriesActionCreators_1.runDeleteFavoriteRepositorySaga(filters));
+    deleteRepository: function (repository) {
+        dispatch(repositoriesActionCreators_1.runDeleteFavoriteRepositorySaga(repository));
     }
 }); };
 exports.default = react_redux_1.connect(null, mapDispatchToProps)(FavoriteRepository);

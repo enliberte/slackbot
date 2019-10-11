@@ -1,18 +1,16 @@
-import {
-    IDeveloper,
-    IStashDeveloperWithFollowSign
-} from "../../../../../backend/db/models/DeveloperModel";
 import developersActions from "../../action_creators/developers/developersActions";
+import {IStashDeveloperWithFavoriteSign} from "../../../../../backend/db/models/developer/stash/StashDeveloperModel";
+import {IFavoriteDeveloper} from "../../../../../backend/db/models/developer/favorite/FavoriteDeveloperModel";
 
 
 export interface IDeveloperState {
     favorites: {
-        data: IDeveloper[];
+        data: IFavoriteDeveloper[];
         search: string;
         limit: number;
     }
     stash: {
-        data: IStashDeveloperWithFollowSign[];
+        data: IStashDeveloperWithFavoriteSign[];
         filter: string;
         limit: number;
     }

@@ -31,7 +31,7 @@ var useStyles = core_1.makeStyles(function (theme) {
 var StashDeveloper = function (_a) {
     var developer = _a.developer, addStashDeveloperToFavorites = _a.addStashDeveloperToFavorites, removeStashDeveloperFromFavorites = _a.removeStashDeveloperFromFavorites;
     var classes = useStyles();
-    var _b = react_1.default.useState(developer.isFollow), isActive = _b[0], setIsActive = _b[1];
+    var _b = react_1.default.useState(developer.isFavorite), isActive = _b[0], setIsActive = _b[1];
     var activityClass = isActive ? 'active' : 'passive';
     var handleClick = function () {
         if (isActive) {

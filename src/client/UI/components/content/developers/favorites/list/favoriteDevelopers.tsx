@@ -28,7 +28,7 @@ const FavoriteDevelopers = ({developers}: DevelopersProps) => {
     const classes = useStyles();
 
     return (
-        <Grid item xs={3}>
+        <Grid item xs={5}>
             <Paper className={classes.paper}>
                 <FavoriteDevelopersSearch />
                 <List className={classes.root}>

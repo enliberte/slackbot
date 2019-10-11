@@ -58,7 +58,7 @@ var StashDeveloperService = /** @class */ (function () {
     }
     StashDeveloperService.prototype.list = function (query) {
         return __awaiter(this, void 0, void 0, function () {
-            var channelId, limit, filter, url, response, stashDevelopers, stashDevelopersWithFollowSign, _i, stashDevelopers_1, stashDeveloper, favoriteDevelopers, e_1;
+            var channelId, limit, filter, url, response, stashDevelopers, stashDevelopersWithFavoriteSign, _i, stashDevelopers_1, stashDeveloper, favoriteDevelopers, isFavorite, favoriteId, e_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -71,7 +71,7 @@ var StashDeveloperService = /** @class */ (function () {
                     case 2:
                         response = _a.sent();
                         stashDevelopers = response.data.values;
-                        stashDevelopersWithFollowSign = [];
+                        stashDevelopersWithFavoriteSign = [];
                         _i = 0, stashDevelopers_1 = stashDevelopers;
                         _a.label = 3;
                     case 3:
@@ -80,12 +80,14 @@ var StashDeveloperService = /** @class */ (function () {
                         return [4 /*yield*/, this.developerStorageService.get({ channelId: channelId, username: stashDeveloper.displayName })];
                     case 4:
                         favoriteDevelopers = _a.sent();
-                        stashDevelopersWithFollowSign.push(__assign(__assign({}, stashDeveloper), { isFollow: favoriteDevelopers.length !== 0 }));
+                        isFavorite = favoriteDevelopers.length !== 0;
+                        favoriteId = isFavorite ? favoriteDevelopers[0].id : '';
+                        stashDevelopersWithFavoriteSign.push(__assign(__assign({}, stashDeveloper), { isFavorite: isFavorite, favoriteId: favoriteId }));
                         _a.label = 5;
                     case 5:
                         _i++;
                         return [3 /*break*/, 3];
-                    case 6: return [2 /*return*/, stashDevelopersWithFollowSign];
+                    case 6: return [2 /*return*/, stashDevelopersWithFavoriteSign];
                     case 7:
                         e_1 = _a.sent();
                         return [2 /*return*/, false];

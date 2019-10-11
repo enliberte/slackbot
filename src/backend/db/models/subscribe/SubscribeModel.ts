@@ -1,14 +1,19 @@
-import {Schema, Document, model, Model} from 'mongoose';
+import {Schema, Document, model, Model, Types} from 'mongoose';
 
 
-interface ISubscribe {
+interface INewSubscribe {
     channelId: string;
     followed: string;
     follower: string;
     reponame: string;
 }
 
-interface ISubscribeModel extends Document, ISubscribe {}
+interface ISubscribe extends INewSubscribe {
+    id: string;
+    _id?: Types.ObjectId;
+}
+
+interface ISubscribeModel extends Document, INewSubscribe {}
 
 const subscribeSchema: Schema = new Schema({
     channelId: {type: String, index: true},
@@ -19,4 +24,4 @@ const subscribeSchema: Schema = new Schema({
 
 const SubscribeModel: Model<ISubscribeModel> = model('Subscribe', subscribeSchema);
 
-export {ISubscribe, ISubscribeModel, SubscribeModel}
+export {INewSubscribe, ISubscribe, ISubscribeModel, SubscribeModel}

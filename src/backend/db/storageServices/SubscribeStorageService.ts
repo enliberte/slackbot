@@ -1,25 +1,24 @@
-import {ISubscribeModel, ISubscribe, SubscribeModel} from '../models/SubscribeModel';
+import {INewSubscribe, ISubscribeModel, ISubscribe, SubscribeModel} from '../models/subscribe/SubscribeModel';
 import BaseStorageService, {IStorageService} from './BaseStorageService';
 
 
-export interface IGetSubscribeFilter {
-    channelId?: string;
-    followed?: string;
-    follower?: string;
-    reponame?: string;
+export interface ISubscribeStorageService extends IStorageService<INewSubscribe, ISubscribe> {
+    edit(obj: ISubscribe): Promise<boolean>;
 }
 
-export interface ISubscribeStorageService extends IStorageService<ISubscribe, IGetSubscribeFilter> {}
-
-export default class SubscribeStorageService extends BaseStorageService<ISubscribeModel, ISubscribe, IGetSubscribeFilter> implements ISubscribeStorageService {
+export default class SubscribeStorageService extends BaseStorageService<ISubscribeModel, INewSubscribe, ISubscribe> implements ISubscribeStorageService {
     constructor() {
         super(SubscribeModel);
     }
 
-    async get(filter: IGetSubscribeFilter, search?: string, limit?: number): Promise<ISubscribe[]> {
+    async get(filter: Partial<ISubscribe>, search?: string, limit?: number): Promise<ISubscribe[]> {
         const docs = await this.model.find(filter).sort({reponame: 1}).exec();
         return docs.map(doc =>
-            ({channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame})
+            ({channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame, id: doc._id})
         );
+    }
+
+    edit(obj: ISubscribe): Promise<boolean> {
+        return this.model.update({_id: obj.id}, obj).exec();
     }
 }

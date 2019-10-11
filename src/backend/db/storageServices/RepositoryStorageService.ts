@@ -1,28 +1,35 @@
 import BaseStorageService, {IStorageService} from './BaseStorageService';
-import {IRepository, IRepositoryModel, RepositoryModel} from "../models/RepositoryModel";
+import {
+    FavoriteRepositoryModel,
+    IFavoriteRepository,
+    IFavoriteRepositoryModel,
+    INewFavoriteRepository
+} from "../models/repository/favorite/FavoriteRepositoryModel";
+import {Types} from 'mongoose';
 
-export interface IGetRepositoryFilter {
-    channelId?: string;
-    addedByName?: string;
-    reponame?: string | RegExp;
-}
+export interface IRepositoryStorageService extends IStorageService<INewFavoriteRepository, IFavoriteRepository> {}
 
-export interface IRepositoryStorageService extends IStorageService<IRepository, IGetRepositoryFilter> {}
-
-export default class RepositoryStorageService extends BaseStorageService<IRepositoryModel, IRepository, IGetRepositoryFilter> implements IRepositoryStorageService {
+export default class RepositoryStorageService extends BaseStorageService<IFavoriteRepositoryModel, INewFavoriteRepository, IFavoriteRepository> implements IRepositoryStorageService {
     constructor() {
-        super(RepositoryModel);
+        super(FavoriteRepositoryModel);
     }
 
-    async get(filter: IGetRepositoryFilter, search?: string, limit?: number): Promise<IRepository[]> {
+    async get(filter: Partial<IFavoriteRepository>, search?: string, limit?: number): Promise<IFavoriteRepository[]> {
+        const {id, ...filterData} = filter;
+        let resFilter;
         if (search) {
-            filter.reponame = new RegExp(`.*${search}.*`);
+            resFilter = {...filterData, reponame: new RegExp(`.*${search}.*`)};
+        } else {
+            resFilter = {...filterData};
         }
-        let query = this.model.find(filter).sort({reponame: 1});
+        if (id) {
+            resFilter._id = Types.ObjectId(id);
+        }
+        let query = this.model.find(resFilter).sort({reponame: 1});
         if (limit) {
             query = query.limit(limit);
         }
         const docs = await query.exec();
-        return docs.map(doc => ({reponame: doc.reponame, channelId: doc.channelId, addedByName: doc.addedByName}));
+        return docs.map(doc => ({reponame: doc.reponame, channelId: doc.channelId, addedByName: doc.addedByName, id: doc._id}));
     }
 }

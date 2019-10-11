@@ -22,8 +22,8 @@ exports.runGetFavoriteDevelopersSaga = function () {
 exports.runGetStashDevelopersSaga = function () {
     return ({ type: developersActions_1.default.GET_STASH_DEVELOPERS_SAGA });
 };
-exports.runDeleteFavoriteDeveloperSaga = function (filters) {
-    return ({ type: developersActions_1.default.DELETE_FAVORITE_DEVELOPER_SAGA, payload: filters });
+exports.runDeleteFavoriteDeveloperSaga = function (developer) {
+    return ({ type: developersActions_1.default.DELETE_FAVORITE_DEVELOPER_SAGA, payload: developer });
 };
 exports.runAddStashDeveloperToFavoritesSaga = function (developerDisplayName) {
     return ({ type: developersActions_1.default.ADD_STASH_DEVELOPER_TO_FAVORITES_SAGA, payload: developerDisplayName });

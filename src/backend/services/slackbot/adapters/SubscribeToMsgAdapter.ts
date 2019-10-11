@@ -1,14 +1,14 @@
 import {IBlockMessage} from "../templates/builders/elements";
 import IMessageBuilder from "../templates/builders/IBuilder";
-import {ISubscribe} from "../../../db/models/SubscribeModel";
+import {INewSubscribe} from "../../../db/models/subscribe/SubscribeModel";
 import {ISubscribeService} from "../../admin/SubscribeService";
 import buildSubscribesList from "../templates/common/buildSubscribesList";
 
 
 export interface ISubscribeToMessageAdapter {
     getSubscribesListMsg(builder: IMessageBuilder, channelId: string): Promise<IBlockMessage>;
-    getAddResultMsg(builder: IMessageBuilder, obj: ISubscribe): Promise<IBlockMessage>;
-    getDeleteResultMsg(builder: IMessageBuilder, obj: ISubscribe): Promise<IBlockMessage>;
+    getAddResultMsg(builder: IMessageBuilder, obj: INewSubscribe): Promise<IBlockMessage>;
+    getDeleteResultMsg(builder: IMessageBuilder, obj: INewSubscribe): Promise<IBlockMessage>;
 }
 
 export default class SubscribeToMessageAdapter implements ISubscribeToMessageAdapter {
@@ -20,7 +20,7 @@ export default class SubscribeToMessageAdapter implements ISubscribeToMessageAda
 
     async getSubscribesListMsg(builder: IMessageBuilder, channelId: string): Promise<IBlockMessage> {
         const emptySubscribesMsg = "You don't have subscribes yet. To add them please sign in admin site";
-        const subscribes = await this.subscribeService.list({channelId});
+        const subscribes = await this.subscribeService.list({filter: {channelId}});
         if (subscribes.length === 0) {
             return builder.buildSection(emptySubscribesMsg).getMessage();
         } else {
@@ -28,9 +28,9 @@ export default class SubscribeToMessageAdapter implements ISubscribeToMessageAda
         }
     }
 
-    async getAddResultMsg(builder: IMessageBuilder, obj: ISubscribe): Promise<IBlockMessage> {
+    async getAddResultMsg(builder: IMessageBuilder, obj: INewSubscribe): Promise<IBlockMessage> {
         if (obj.followed && obj.reponame) {
-            const addOperationSuccess = await this.subscribeService.subscribeCMD(obj);
+            const addOperationSuccess = await this.subscribeService.subscribe(obj);
             if (addOperationSuccess) {
                 builder.buildSection(`You have subscribed for ${obj.followed}'s PR into ${obj.reponame}`);
             } else {
@@ -42,7 +42,7 @@ export default class SubscribeToMessageAdapter implements ISubscribeToMessageAda
         return builder.getMessage();
     }
 
-    async getDeleteResultMsg(builder: IMessageBuilder, obj: ISubscribe): Promise<IBlockMessage> {
+    async getDeleteResultMsg(builder: IMessageBuilder, obj: INewSubscribe): Promise<IBlockMessage> {
         if (obj.followed && obj.reponame) {
             const deleteOperationSuccess = await this.subscribeService.unsubscribe(obj);
             if (deleteOperationSuccess) {

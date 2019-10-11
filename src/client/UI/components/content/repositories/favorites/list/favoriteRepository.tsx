@@ -7,13 +7,12 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
-import {IRepository} from "../../../../../../../backend/db/models/RepositoryModel";
-import {IDeleteRepositoryFilters} from "../../../../../../BLL/store/action_creators/repositories/IRepositoriesFilters";
 import {runDeleteFavoriteRepositorySaga} from "../../../../../../BLL/store/action_creators/repositories/repositoriesActionCreators";
+import {IFavoriteRepository} from "../../../../../../../backend/db/models/repository/favorite/FavoriteRepositoryModel";
 
 
 interface IFavoriteRepositoryProps extends ReturnType<typeof mapDispatchToProps> {
-    repository: IRepository;
+    repository: IFavoriteRepository;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -60,8 +59,8 @@ const mapDispatchToProps = (dispatch: any) => ({
     setRepository(reponame: string) {
         dispatch(setSubscribeFilters({reponame}));
     },
-    deleteRepository(filters: IDeleteRepositoryFilters) {
-        dispatch(runDeleteFavoriteRepositorySaga(filters));
+    deleteRepository(repository: Partial<IFavoriteRepository>) {
+        dispatch(runDeleteFavoriteRepositorySaga(repository));
     }
 });
 

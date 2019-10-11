@@ -8,12 +8,12 @@ import {
     ISetFavoriteRepositoriesDataAction,
     ISetStashRepositoriesDataAction
 } from "./IRepositoriesActions";
-import {IDeleteRepositoryFilters, IRepositoriesFilters} from "./IRepositoriesFilters";
-import {IRepository, IStashRepositoryWithFavoriteSign} from "../../../../../backend/db/models/RepositoryModel";
 import repositoriesActions from "./repositoriesActions";
+import {IFavoriteRepository} from "../../../../../backend/db/models/repository/favorite/FavoriteRepositoryModel";
+import {IStashRepositoryWithFavoriteSign} from "../../../../../backend/db/models/repository/stash/StashRepositoryModel";
 
 
-export const setFavoriteRepositoriesData = (repositoriesData: IRepository[]): ISetFavoriteRepositoriesDataAction =>
+export const setFavoriteRepositoriesData = (repositoriesData: IFavoriteRepository[]): ISetFavoriteRepositoriesDataAction =>
     ({type: repositoriesActions.SET_FAVORITE_REPOSITORIES, payload: repositoriesData});
 
 export const setStashRepositoriesData = (repositoriesData: IStashRepositoryWithFavoriteSign[]): ISetStashRepositoriesDataAction =>
@@ -31,8 +31,8 @@ export const runGetFavoriteRepositoriesSaga = (): IRunGetFavoriteRepositoriesSag
 export const runGetStashRepositoriesSaga = (): IRunGetStashRepositoriesSagaAction =>
     ({type: repositoriesActions.GET_STASH_REPOSITORIES_SAGA});
 
-export const runDeleteFavoriteRepositorySaga = (filters: IDeleteRepositoryFilters): IRunDeleteFavoriteRepositorySagaAction =>
-    ({type: repositoriesActions.DELETE_FAVORITE_REPOSITORY_SAGA, payload: filters});
+export const runDeleteFavoriteRepositorySaga = (repository: Partial<IFavoriteRepository>): IRunDeleteFavoriteRepositorySagaAction =>
+    ({type: repositoriesActions.DELETE_FAVORITE_REPOSITORY_SAGA, payload: repository});
 
 export const runAddStashRepositoryToFavoritesSaga = (repositoryURL: string): IRunAddStashRepositoryToFavoritesSagaAction =>
     ({type: repositoriesActions.ADD_STASH_REPOSITORY_TO_FAVORITES_SAGA, payload: repositoryURL});

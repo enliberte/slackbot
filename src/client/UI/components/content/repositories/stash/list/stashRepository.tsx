@@ -7,11 +7,11 @@ import ListItem from "@material-ui/core/ListItem";
 import IconButton from "@material-ui/core/IconButton";
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import {red} from "@material-ui/core/colors";
-import {IStashRepositoryWithFavoriteSign} from "../../../../../../../backend/db/models/RepositoryModel";
 import {
     runAddStashRepositoryToFavoritesSaga,
     runDeleteFavoriteRepositorySaga
 } from "../../../../../../BLL/store/action_creators/repositories/repositoriesActionCreators";
+import {IStashRepositoryWithFavoriteSign} from "../../../../../../../backend/db/models/repository/stash/StashRepositoryModel";
 
 
 interface IStashRepositoryProps extends ReturnType<typeof mapDispatchToProps> {

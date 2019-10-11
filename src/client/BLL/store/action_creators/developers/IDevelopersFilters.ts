@@ -8,8 +8,3 @@ export interface IStashDevelopersFilters {
     filter: string;
     limit: number;
 }
-
-export interface IDeleteDeveloperFilters {
-    username: string;
-    channelId?: string;
-}

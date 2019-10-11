@@ -26,7 +26,7 @@ var useStyles = core_1.makeStyles(function (theme) {
 var FavoriteRepositories = function (_a) {
     var repositories = _a.repositories;
     var classes = useStyles();
-    return (react_1.default.createElement(Grid_1.default, { item: true, xs: 3 },
+    return (react_1.default.createElement(Grid_1.default, { item: true, xs: 5 },
         react_1.default.createElement(Paper_1.default, { className: classes.paper },
             react_1.default.createElement(favoriteRepositoriesSearch_1.default, null),
             react_1.default.createElement(List_1.default, { className: classes.root }, repositories.map(function (repository) { return react_1.default.createElement(favoriteRepository_1.default, { key: repository.reponame, repository: repository }); })))));

@@ -8,7 +8,7 @@ import Subscribe from "./subscribe";
 import Grid from "@material-ui/core/Grid";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from '@material-ui/icons/Add';
-import {toggleEditingWindow} from "../../../../../BLL/store/action_creators/subscribes/subscribesActionCreators";
+import {setIsNew, setSubscribe, toggleEditingWindow} from "../../../../../BLL/store/action_creators/subscribes/subscribesActionCreators";
 import SubscribeEditingWindow from "../editWindow/subscribeEditingWindow";
 
 
@@ -30,15 +30,17 @@ const useStyles = makeStyles((theme: Theme) =>
 const Subscribes = ({subscribes, openSubscribeEditingWindow}: SubscribesProps) => {
     const classes = useStyles();
 
+    console.log(subscribes);
+
     return (
-        <Grid item xs={9}>
+        <Grid item xs={7}>
             <Paper className={classes.paper}>
                 <SubscribeEditingWindow />
                 <Fab size="small" color="primary" aria-label="add" onClick={openSubscribeEditingWindow}>
                     <AddIcon />
                 </Fab>
                 <List className={classes.root}>
-                    {subscribes.map(subscribe => <Subscribe key={subscribe.reponame} subscribe={subscribe} />)}
+                    {subscribes.map(subscribe => <Subscribe key={subscribe.reponame + subscribe.followed} subscribe={subscribe} />)}
                 </List>
             </Paper>
         </Grid>
@@ -51,6 +53,8 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = (dispatch: any) => ({
     openSubscribeEditingWindow() {
+        dispatch(setIsNew(true));
+        dispatch(setSubscribe({reponame: '', followed: '', id: ''}));
         dispatch(toggleEditingWindow());
     }
 });

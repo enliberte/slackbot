@@ -43,10 +43,10 @@ var RepositoryService = /** @class */ (function () {
     }
     RepositoryService.prototype.list = function (query) {
         return __awaiter(this, void 0, void 0, function () {
-            var channelId, search, limit;
+            var filter, search, limit;
             return __generator(this, function (_a) {
-                channelId = query.channelId, search = query.search, limit = query.limit;
-                return [2 /*return*/, this.repositoryStorageService.get({ channelId: channelId }, search, limit)];
+                filter = query.filter, search = query.search, limit = query.limit;
+                return [2 /*return*/, this.repositoryStorageService.get(filter, search, limit)];
             });
         });
     };
@@ -65,15 +65,23 @@ var RepositoryService = /** @class */ (function () {
     };
     RepositoryService.prototype.delete = function (obj) {
         return __awaiter(this, void 0, void 0, function () {
-            var repoRemovingOperationResult, subscribeRemovingOperationResult;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.repositoryStorageService.remove(obj)];
+            var repositories, _a, reponame, channelId, repoRemovingOperationResult, subscribeRemovingOperationResult;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.repositoryStorageService.get(obj)];
                     case 1:
-                        repoRemovingOperationResult = _a.sent();
-                        return [4 /*yield*/, this.subscribeStorageService.remove(obj)];
+                        repositories = _b.sent();
+                        console.log(obj, repositories);
+                        if (repositories.length === 0) {
+                            return [2 /*return*/, false];
+                        }
+                        _a = repositories[0], reponame = _a.reponame, channelId = _a.channelId;
+                        return [4 /*yield*/, this.repositoryStorageService.remove({ reponame: reponame, channelId: channelId })];
                     case 2:
-                        subscribeRemovingOperationResult = _a.sent();
+                        repoRemovingOperationResult = _b.sent();
+                        return [4 /*yield*/, this.subscribeStorageService.remove({ reponame: reponame, channelId: channelId })];
+                    case 3:
+                        subscribeRemovingOperationResult = _b.sent();
                         return [2 /*return*/, repoRemovingOperationResult && subscribeRemovingOperationResult];
                 }
             });

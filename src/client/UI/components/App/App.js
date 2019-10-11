@@ -6,21 +6,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importDefault(require("react"));
 var react_router_dom_1 = require("react-router-dom");
 var history_1 = require("history");
-var navigation_1 = __importDefault(require("./navigation/navigation"));
+var navigation_1 = __importDefault(require("../navigation/navigation"));
 var core_1 = require("@material-ui/core");
-var content_1 = __importDefault(require("./content/content"));
-var favoriteDevelopersContainer_1 = __importDefault(require("./content/developers/favorites/list/favoriteDevelopersContainer"));
-var stashDevelopersContainer_1 = __importDefault(require("./content/developers/stash/list/stashDevelopersContainer"));
-var favoriteRepositoriesContainer_1 = __importDefault(require("./content/repositories/favorites/list/favoriteRepositoriesContainer"));
-var stashRepositoriesContainer_1 = __importDefault(require("./content/repositories/stash/list/stashRepositoriesContainer"));
-var subscribesContainer_1 = __importDefault(require("./content/subscribes/list/subscribesContainer"));
+var content_1 = __importDefault(require("../content/content"));
+var favoriteDevelopersContainer_1 = __importDefault(require("../content/developers/favorites/list/favoriteDevelopersContainer"));
+var stashDevelopersContainer_1 = __importDefault(require("../content/developers/stash/list/stashDevelopersContainer"));
+var favoriteRepositoriesContainer_1 = __importDefault(require("../content/repositories/favorites/list/favoriteRepositoriesContainer"));
+var stashRepositoriesContainer_1 = __importDefault(require("../content/repositories/stash/list/stashRepositoriesContainer"));
+var subscribesContainer_1 = __importDefault(require("../content/subscribes/list/subscribesContainer"));
 var react_redux_1 = require("react-redux");
-var authActionCreators_1 = require("../../BLL/store/action_creators/auth/authActionCreators");
-var auth_1 = require("../../BLL/store/selectors/auth");
-var unauthorized_1 = __importDefault(require("./pages/unauthorized"));
-var URLS_1 = __importDefault(require("../URLS"));
-var developersTabs_1 = __importDefault(require("./content/developers/tabs/developersTabs"));
-var repositoriesTabs_1 = __importDefault(require("./content/repositories/tabs/repositoriesTabs"));
+var auth_1 = require("../../../BLL/store/selectors/auth");
+var unauthorized_1 = __importDefault(require("../pages/unauthorized"));
+var URLS_1 = __importDefault(require("../../../../common/URLS"));
+var developersTabs_1 = __importDefault(require("../content/developers/tabs/developersTabs"));
+var repositoriesTabs_1 = __importDefault(require("../content/repositories/tabs/repositoriesTabs"));
 var history = history_1.createBrowserHistory();
 var useStyles = core_1.makeStyles(function (theme) { return ({
     root: {
@@ -28,11 +27,8 @@ var useStyles = core_1.makeStyles(function (theme) { return ({
     }
 }); });
 var App = function (_a) {
-    var isAuth = _a.isAuth, getAuthData = _a.getAuthData;
+    var isAuth = _a.isAuth;
     var classes = useStyles();
-    react_1.default.useEffect(function () {
-        getAuthData();
-    });
     return (react_1.default.createElement(react_router_dom_1.Router, { history: history },
         react_1.default.createElement("div", { className: classes.root }, isAuth ? (react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement(navigation_1.default, null),
@@ -52,9 +48,4 @@ var App = function (_a) {
 var mapStateToProps = function (state) { return ({
     isAuth: auth_1.selectIsAuth(state)
 }); };
-var mapDispatchToProps = function (dispatch) { return ({
-    getAuthData: function () {
-        dispatch(authActionCreators_1.runGetAuthSaga());
-    }
-}); };
-exports.default = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(App);
+exports.default = react_redux_1.connect(mapStateToProps)(App);

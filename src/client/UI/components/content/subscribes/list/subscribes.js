@@ -29,18 +29,21 @@ var useStyles = core_1.makeStyles(function (theme) {
 var Subscribes = function (_a) {
     var subscribes = _a.subscribes, openSubscribeEditingWindow = _a.openSubscribeEditingWindow;
     var classes = useStyles();
-    return (react_1.default.createElement(Grid_1.default, { item: true, xs: 9 },
+    console.log(subscribes);
+    return (react_1.default.createElement(Grid_1.default, { item: true, xs: 7 },
         react_1.default.createElement(Paper_1.default, { className: classes.paper },
             react_1.default.createElement(subscribeEditingWindow_1.default, null),
             react_1.default.createElement(Fab_1.default, { size: "small", color: "primary", "aria-label": "add", onClick: openSubscribeEditingWindow },
                 react_1.default.createElement(Add_1.default, null)),
-            react_1.default.createElement(List_1.default, { className: classes.root }, subscribes.map(function (subscribe) { return react_1.default.createElement(subscribe_1.default, { key: subscribe.reponame, subscribe: subscribe }); })))));
+            react_1.default.createElement(List_1.default, { className: classes.root }, subscribes.map(function (subscribe) { return react_1.default.createElement(subscribe_1.default, { key: subscribe.reponame + subscribe.followed, subscribe: subscribe }); })))));
 };
 var mapStateToProps = function (state) { return ({
     subscribes: subscribes_1.selectSubscribes(state)
 }); };
 var mapDispatchToProps = function (dispatch) { return ({
     openSubscribeEditingWindow: function () {
+        dispatch(subscribesActionCreators_1.setIsNew(true));
+        dispatch(subscribesActionCreators_1.setSubscribe({ reponame: '', followed: '', id: '' }));
         dispatch(subscribesActionCreators_1.toggleEditingWindow());
     }
 }); };

@@ -48,12 +48,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseController_1 = __importDefault(require("./BaseController"));
 var auth_1 = require("../middlewares/auth");
+var URLS_1 = __importDefault(require("../../common/URLS"));
 var DeveloperController = /** @class */ (function (_super) {
     __extends(DeveloperController, _super);
     function DeveloperController() {
@@ -61,12 +73,14 @@ var DeveloperController = /** @class */ (function (_super) {
     }
     DeveloperController.prototype.postDevelopersList = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var developersList;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.developerService.list(req.body.filters)];
+            var _a, search, limit, filter, developersList;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.query, search = _a.search, limit = _a.limit, filter = __rest(_a, ["search", "limit"]);
+                        return [4 /*yield*/, this.services.developerService.list({ filter: filter, search: search, limit: limit })];
                     case 1:
-                        developersList = _a.sent();
+                        developersList = _b.sent();
                         res.send(developersList);
                         return [2 /*return*/];
                 }
@@ -78,7 +92,7 @@ var DeveloperController = /** @class */ (function (_super) {
             var developersList;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.stashDeveloperService.list(req.body.filters)];
+                    case 0: return [4 /*yield*/, this.services.stashDeveloperService.list(req.query)];
                     case 1:
                         developersList = _a.sent();
                         res.send(developersList);
@@ -92,7 +106,7 @@ var DeveloperController = /** @class */ (function (_super) {
             var developerDeleteResult, code;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.developerService.delete(req.body.filters)];
+                    case 0: return [4 /*yield*/, this.services.developerService.delete(req.query)];
                     case 1:
                         developerDeleteResult = _a.sent();
                         code = developerDeleteResult ? 200 : 404;
@@ -107,7 +121,7 @@ var DeveloperController = /** @class */ (function (_super) {
             var addStashDeveloperToFavoritesResult, code;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.developerService.add(req.body.developer)];
+                    case 0: return [4 /*yield*/, this.services.developerService.add(req.body)];
                     case 1:
                         addStashDeveloperToFavoritesResult = _a.sent();
                         code = addStashDeveloperToFavoritesResult ? 200 : 404;
@@ -118,10 +132,10 @@ var DeveloperController = /** @class */ (function (_super) {
         });
     };
     DeveloperController.prototype.makeRouter = function () {
-        this.router.post('/api/developers/get', auth_1.userAuth, this.postDevelopersList.bind(this));
-        this.router.post('/api/developers/add', auth_1.userAuth, this.postAddStashDeveloperToFavoritesResult.bind(this));
-        this.router.post('/api/stash/developers/get', auth_1.userAuth, this.postStashDevelopersList.bind(this));
-        this.router.post('/api/developers/delete', auth_1.userAuth, this.postDeveloperDeleteResult.bind(this));
+        this.router.get(URLS_1.default.API_FAVORITE_DEVELOPERS, auth_1.userAuth, this.postDevelopersList.bind(this));
+        this.router.post(URLS_1.default.API_FAVORITE_DEVELOPERS, auth_1.userAuth, this.postAddStashDeveloperToFavoritesResult.bind(this));
+        this.router.get(URLS_1.default.API_STASH_DEVELOPERS, auth_1.userAuth, this.postStashDevelopersList.bind(this));
+        this.router.delete(URLS_1.default.API_FAVORITE_DEVELOPERS, auth_1.userAuth, this.postDeveloperDeleteResult.bind(this));
         return this.router;
     };
     return DeveloperController;

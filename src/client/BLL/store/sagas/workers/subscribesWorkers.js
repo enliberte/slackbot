@@ -43,6 +43,8 @@ var subscribesActionCreators_1 = require("../../action_creators/subscribes/subsc
 var subscribesAPI_1 = require("../../../API/subscribesAPI");
 var auth_1 = require("../../selectors/auth");
 var subscribes_1 = require("../../selectors/subscribes");
+var developersActionCreators_1 = require("../../action_creators/developers/developersActionCreators");
+var repositoriesActionCreators_1 = require("../../action_creators/repositories/repositoriesActionCreators");
 function getSubscribes(action) {
     var channelId, subscribeFilters, response, err_1;
     return __generator(this, function (_a) {
@@ -71,20 +73,114 @@ function getSubscribes(action) {
     });
 }
 exports.getSubscribes = getSubscribes;
-function deleteSubscribe(action) {
-    var reponame;
+function saveSubscribe(action) {
+    var channelId, follower, _a, followed, reponame, addSubscribeResponse, isSuccess, err_2;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 10, , 11]);
+                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
+            case 1:
+                channelId = _b.sent();
+                return [4 /*yield*/, effects_1.select(auth_1.selectUsername)];
+            case 2:
+                follower = _b.sent();
+                return [4 /*yield*/, effects_1.select(subscribes_1.selectSubscribe)];
+            case 3:
+                _a = _b.sent(), followed = _a.followed, reponame = _a.reponame;
+                return [4 /*yield*/, effects_1.call(subscribesAPI_1.fetchSaveSubscribe, { followed: followed, follower: follower, reponame: reponame, channelId: channelId })];
+            case 4:
+                addSubscribeResponse = _b.sent();
+                isSuccess = addSubscribeResponse.data;
+                return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.setIsSuccess(isSuccess))];
+            case 5:
+                _b.sent();
+                return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.toggleEditingWindow())];
+            case 6:
+                _b.sent();
+                return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.runGetSubscribesSaga())];
+            case 7:
+                _b.sent();
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.runGetFavoriteDevelopersSaga())];
+            case 8:
+                _b.sent();
+                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.runGetFavoriteRepositoriesSaga())];
+            case 9:
+                _b.sent();
+                return [3 /*break*/, 11];
+            case 10:
+                err_2 = _b.sent();
+                console.log(err_2);
+                return [3 /*break*/, 11];
+            case 11: return [2 /*return*/];
+        }
+    });
+}
+exports.saveSubscribe = saveSubscribe;
+function editSubscribe(action) {
+    var channelId, follower, subscribeData, editSubscribeResponse, isSuccess, err_3;
     return __generator(this, function (_a) {
-        try {
-            reponame = action.payload.reponame;
-            // const channelId = yield select(selectChannelId);
-            // yield call(fetchDeleteDeveloper, {username, channelId});
-            // const getDevelopersResponse = yield call(fetchGetDevelopers, {channelId});
-            // yield put(setDevelopersData(getDevelopersResponse.data));
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 10, , 11]);
+                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
+            case 1:
+                channelId = _a.sent();
+                return [4 /*yield*/, effects_1.select(auth_1.selectUsername)];
+            case 2:
+                follower = _a.sent();
+                return [4 /*yield*/, effects_1.select(subscribes_1.selectSubscribe)];
+            case 3:
+                subscribeData = _a.sent();
+                return [4 /*yield*/, effects_1.call(subscribesAPI_1.fetchEditSubscribe, __assign({ follower: follower, channelId: channelId }, subscribeData))];
+            case 4:
+                editSubscribeResponse = _a.sent();
+                isSuccess = editSubscribeResponse.data;
+                return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.setIsSuccess(isSuccess))];
+            case 5:
+                _a.sent();
+                return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.toggleEditingWindow())];
+            case 6:
+                _a.sent();
+                return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.runGetSubscribesSaga())];
+            case 7:
+                _a.sent();
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.runGetFavoriteDevelopersSaga())];
+            case 8:
+                _a.sent();
+                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.runGetFavoriteRepositoriesSaga())];
+            case 9:
+                _a.sent();
+                return [3 /*break*/, 11];
+            case 10:
+                err_3 = _a.sent();
+                console.log(err_3);
+                return [3 /*break*/, 11];
+            case 11: return [2 /*return*/];
         }
-        catch (err) {
-            console.log(err);
+    });
+}
+exports.editSubscribe = editSubscribe;
+function deleteSubscribe(action) {
+    var deleteSubscribeResponse, isSuccess, err_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                return [4 /*yield*/, effects_1.call(subscribesAPI_1.fetchDeleteSubscribe, action.payload)];
+            case 1:
+                deleteSubscribeResponse = _a.sent();
+                isSuccess = deleteSubscribeResponse.data;
+                return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.runGetSubscribesSaga())];
+            case 2:
+                _a.sent();
+                return [3 /*break*/, 4];
+            case 3:
+                err_4 = _a.sent();
+                console.log(err_4);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
-        return [2 /*return*/];
     });
 }
 exports.deleteSubscribe = deleteSubscribe;

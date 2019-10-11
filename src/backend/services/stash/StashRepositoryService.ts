@@ -1,7 +1,10 @@
 import StashClient from "./StashClient";
 import queryString from 'query-string';
-import {IStashRepository, IStashRepositoryWithFavoriteSign} from "../../db/models/RepositoryModel";
 import {IRepositoryStorageService} from "../../db/storageServices/RepositoryStorageService";
+import {
+    IStashRepository,
+    IStashRepositoryWithFavoriteSign
+} from "../../db/models/repository/stash/StashRepositoryModel";
 
 
 export interface IGetStashRepositoryQuery {
@@ -32,7 +35,9 @@ export default class StashRepositoryService implements IStashRepositoryService {
             const stashRepositoriesWithFavoriteSign = [];
             for (let stashRepository of stashRepositories) {
                 const favoriteRepositories = await this.repositoryStorageService.get({channelId, reponame: stashRepository.links.self[0].href});
-                stashRepositoriesWithFavoriteSign.push({...stashRepository, isFavorite: favoriteRepositories.length !== 0})
+                const isFavorite = favoriteRepositories.length !== 0;
+                const favoriteId = isFavorite ? favoriteRepositories[0].id : '';
+                stashRepositoriesWithFavoriteSign.push({...stashRepository, isFavorite, favoriteId})
             }
             return stashRepositoriesWithFavoriteSign;
         } catch (e) {

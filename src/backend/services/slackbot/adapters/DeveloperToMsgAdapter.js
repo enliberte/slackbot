@@ -51,7 +51,7 @@ var DeveloperToMsgAdapter = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         emptyDevelopersMsg = "You don't have added developers yet. To add them please use command /add_developer";
-                        return [4 /*yield*/, this.developerService.list({ channelId: channelId })];
+                        return [4 /*yield*/, this.developerService.list({ filter: { channelId: channelId } })];
                     case 1:
                         users = _a.sent();
                         if (users.length === 0) {

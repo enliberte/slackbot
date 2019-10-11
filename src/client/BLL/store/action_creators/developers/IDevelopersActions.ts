@@ -1,10 +1,11 @@
 import developersActions from './developersActions';
-import {IDeveloper, IStashDeveloper} from "../../../../../backend/db/models/DeveloperModel";
+import {IFavoriteDeveloper} from "../../../../../backend/db/models/developer/favorite/FavoriteDeveloperModel";
+import {IStashDeveloper} from "../../../../../backend/db/models/developer/stash/StashDeveloperModel";
 
 
 export interface ISetFavoriteDevelopersDataAction {
     type: typeof developersActions.SET_FAVORITE_DEVELOPERS;
-    payload: IDeveloper[];
+    payload: IFavoriteDeveloper[];
 }
 
 export interface ISetStashDevelopersDataAction {
@@ -32,7 +33,7 @@ export interface IRunGetStashDevelopersSagaAction {
 
 export interface IRunDeleteFavoriteDeveloperSagaAction {
     type: typeof developersActions.DELETE_FAVORITE_DEVELOPER_SAGA;
-    payload: {username: string};
+    payload: Partial<IFavoriteDeveloper>;
 }
 
 export interface IRunAddStashDeveloperToFavoritesSagaAction {

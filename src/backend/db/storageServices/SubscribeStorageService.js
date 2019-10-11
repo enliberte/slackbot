@@ -52,7 +52,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var SubscribeModel_1 = require("../models/SubscribeModel");
+var SubscribeModel_1 = require("../models/subscribe/SubscribeModel");
 var BaseStorageService_1 = __importDefault(require("./BaseStorageService"));
 var SubscribeStorageService = /** @class */ (function (_super) {
     __extends(SubscribeStorageService, _super);
@@ -68,11 +68,14 @@ var SubscribeStorageService = /** @class */ (function (_super) {
                     case 1:
                         docs = _a.sent();
                         return [2 /*return*/, docs.map(function (doc) {
-                                return ({ channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame });
+                                return ({ channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame, id: doc._id });
                             })];
                 }
             });
         });
+    };
+    SubscribeStorageService.prototype.edit = function (obj) {
+        return this.model.update({ _id: obj.id }, obj).exec();
     };
     return SubscribeStorageService;
 }(BaseStorageService_1.default));

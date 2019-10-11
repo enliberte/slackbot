@@ -42,22 +42,16 @@ var SubscribeService = /** @class */ (function () {
         this.repositoryStorageService = repositoryStorageService;
         this.developerStorageService = developerStorageService;
     }
-    SubscribeService.prototype.list = function (filter) {
+    SubscribeService.prototype.list = function (query) {
         return __awaiter(this, void 0, void 0, function () {
+            var filter, search, limit;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.subscribeStorageService.get(filter)];
+                filter = query.filter, search = query.search, limit = query.limit;
+                return [2 /*return*/, this.subscribeStorageService.get(filter, search, limit)];
             });
         });
     };
     SubscribeService.prototype.subscribe = function (obj) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, this.subscribeStorageService.add(obj)];
-            });
-        });
-    };
-    ;
-    SubscribeService.prototype.subscribeCMD = function (obj) {
         return __awaiter(this, void 0, void 0, function () {
             var developer, repository, addDeveloperOperationSuccess, addRepositoryOperationSuccess, addSubscribeOperationSuccess;
             return __generator(this, function (_a) {
@@ -71,7 +65,7 @@ var SubscribeService = /** @class */ (function () {
                         return [4 /*yield*/, this.repositoryStorageService.add(repository)];
                     case 2:
                         addRepositoryOperationSuccess = _a.sent();
-                        return [4 /*yield*/, this.subscribe(obj)];
+                        return [4 /*yield*/, this.subscribeStorageService.add(obj)];
                     case 3:
                         addSubscribeOperationSuccess = _a.sent();
                         return [2 /*return*/, addDeveloperOperationSuccess && addRepositoryOperationSuccess && addSubscribeOperationSuccess];
@@ -87,6 +81,13 @@ var SubscribeService = /** @class */ (function () {
         });
     };
     ;
+    SubscribeService.prototype.editSubscribe = function (obj) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.subscribeStorageService.edit(obj)];
+            });
+        });
+    };
     return SubscribeService;
 }());
 exports.default = SubscribeService;

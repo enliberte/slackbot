@@ -12,6 +12,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -48,34 +59,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseStorageService_1 = __importDefault(require("./BaseStorageService"));
-var RepositoryModel_1 = require("../models/RepositoryModel");
+var FavoriteRepositoryModel_1 = require("../models/repository/favorite/FavoriteRepositoryModel");
+var mongoose_1 = require("mongoose");
 var RepositoryStorageService = /** @class */ (function (_super) {
     __extends(RepositoryStorageService, _super);
     function RepositoryStorageService() {
-        return _super.call(this, RepositoryModel_1.RepositoryModel) || this;
+        return _super.call(this, FavoriteRepositoryModel_1.FavoriteRepositoryModel) || this;
     }
     RepositoryStorageService.prototype.get = function (filter, search, limit) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, docs;
+            var id, filterData, resFilter, query, docs;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        id = filter.id, filterData = __rest(filter, ["id"]);
                         if (search) {
-                            filter.reponame = new RegExp(".*" + search + ".*");
+                            resFilter = __assign(__assign({}, filterData), { reponame: new RegExp(".*" + search + ".*") });
                         }
-                        query = this.model.find(filter).sort({ reponame: 1 });
+                        else {
+                            resFilter = __assign({}, filterData);
+                        }
+                        if (id) {
+                            resFilter._id = mongoose_1.Types.ObjectId(id);
+                        }
+                        query = this.model.find(resFilter).sort({ reponame: 1 });
                         if (limit) {
                             query = query.limit(limit);
                         }
                         return [4 /*yield*/, query.exec()];
                     case 1:
                         docs = _a.sent();
-                        return [2 /*return*/, docs.map(function (doc) { return ({ reponame: doc.reponame, channelId: doc.channelId, addedByName: doc.addedByName }); })];
+                        return [2 /*return*/, docs.map(function (doc) { return ({ reponame: doc.reponame, channelId: doc.channelId, addedByName: doc.addedByName, id: doc._id }); })];
                 }
             });
         });

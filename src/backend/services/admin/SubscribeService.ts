@@ -1,14 +1,15 @@
-import {ISubscribe} from "../../db/models/SubscribeModel";
-import {IGetSubscribeFilter, ISubscribeStorageService} from "../../db/storageServices/SubscribeStorageService";
+import {ISubscribe, INewSubscribe} from "../../db/models/subscribe/SubscribeModel";
+import {ISubscribeStorageService} from "../../db/storageServices/SubscribeStorageService";
 import {IRepositoryStorageService} from "../../db/storageServices/RepositoryStorageService";
 import {IDeveloperStorageService} from "../../db/storageServices/DeveloperStorageService";
+import {IListQuery} from "./IListQuery";
 
 
 export interface ISubscribeService {
-    list(filter: Partial<ISubscribe>): Promise<ISubscribe[]>
-    subscribe(obj: ISubscribe): Promise<boolean>;
-    subscribeCMD(obj: ISubscribe): Promise<boolean>;
-    unsubscribe(obj: ISubscribe): Promise<boolean>;
+    list(query: IListQuery<ISubscribe>): Promise<ISubscribe[]>;
+    editSubscribe(obj: ISubscribe): Promise<boolean>;
+    subscribe(obj: INewSubscribe): Promise<boolean>;
+    unsubscribe(obj: Partial<ISubscribe>): Promise<boolean>;
 }
 
 
@@ -27,24 +28,25 @@ export default class SubscribeService implements ISubscribeService {
         this.developerStorageService = developerStorageService;
     }
 
-    async list(filter: IGetSubscribeFilter): Promise<ISubscribe[]> {
-        return this.subscribeStorageService.get(filter);
+    async list(query: IListQuery<ISubscribe>): Promise<ISubscribe[]> {
+        const {filter, search, limit} = query;
+        return this.subscribeStorageService.get(filter, search, limit);
     }
 
-    async subscribe(obj: ISubscribe): Promise<boolean> {
-        return this.subscribeStorageService.add(obj);
-    };
-
-    async subscribeCMD(obj: ISubscribe): Promise<boolean> {
+    async subscribe(obj: INewSubscribe): Promise<boolean> {
         const developer = {channelId: obj.channelId, username: obj.followed, addedByName: obj.follower};
         const repository = {channelId: obj.channelId, reponame: obj.reponame, addedByName: obj.follower};
         const addDeveloperOperationSuccess = await this.developerStorageService.add(developer);
         const addRepositoryOperationSuccess = await this.repositoryStorageService.add(repository);
-        const addSubscribeOperationSuccess = await this.subscribe(obj);
+        const addSubscribeOperationSuccess = await this.subscribeStorageService.add(obj);
         return addDeveloperOperationSuccess && addRepositoryOperationSuccess && addSubscribeOperationSuccess;
     }
 
-    async unsubscribe(obj: ISubscribe): Promise<boolean> {
+    async unsubscribe(obj: Partial<ISubscribe>): Promise<boolean> {
         return this.subscribeStorageService.remove(obj);
     };
+
+    async editSubscribe(obj: ISubscribe): Promise<boolean> {
+        return this.subscribeStorageService.edit(obj);
+    }
 }

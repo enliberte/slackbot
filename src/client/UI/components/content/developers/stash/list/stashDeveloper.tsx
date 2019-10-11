@@ -1,7 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import {createStyles, makeStyles, Theme} from "@material-ui/core";
-import {IStashDeveloperWithFollowSign} from "../../../../../../../backend/db/models/DeveloperModel";
 import {connect} from "react-redux";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
@@ -12,10 +11,11 @@ import {
     runDeleteFavoriteDeveloperSaga
 } from "../../../../../../BLL/store/action_creators/developers/developersActionCreators";
 import {red} from "@material-ui/core/colors";
+import {IStashDeveloperWithFavoriteSign} from "../../../../../../../backend/db/models/developer/stash/StashDeveloperModel";
 
 
 interface IStashDeveloperProps extends ReturnType<typeof mapDispatchToProps> {
-    developer: IStashDeveloperWithFollowSign;
+    developer: IStashDeveloperWithFavoriteSign;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const StashDeveloper = ({developer, addStashDeveloperToFavorites, removeStashDeveloperFromFavorites}: IStashDeveloperProps) => {
     const classes = useStyles();
-    const [isActive, setIsActive] = React.useState(developer.isFollow);
+    const [isActive, setIsActive] = React.useState(developer.isFavorite);
     const activityClass = isActive ? 'active' : 'passive';
 
     const handleClick = (): void => {

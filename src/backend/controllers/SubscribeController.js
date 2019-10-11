@@ -12,6 +12,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -48,12 +59,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseController_1 = __importDefault(require("./BaseController"));
 var auth_1 = require("../middlewares/auth");
+var URLS_1 = __importDefault(require("../../common/URLS"));
 var SubscribeController = /** @class */ (function (_super) {
     __extends(SubscribeController, _super);
     function SubscribeController() {
@@ -61,13 +84,43 @@ var SubscribeController = /** @class */ (function (_super) {
     }
     SubscribeController.prototype.postSubscribesList = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var subscribesList;
+            var _a, search, limit, filter, subscribesList;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = req.query, search = _a.search, limit = _a.limit, filter = __rest(_a, ["search", "limit"]);
+                        return [4 /*yield*/, this.services.subscribeService.list({ search: search, limit: limit, filter: filter })];
+                    case 1:
+                        subscribesList = _b.sent();
+                        res.send(subscribesList);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SubscribeController.prototype.postAddSubscribeResult = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var addSubscribeResult;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.subscribeService.list(req.body.filters)];
+                    case 0: return [4 /*yield*/, this.services.subscribeService.subscribe(req.body)];
                     case 1:
-                        subscribesList = _a.sent();
-                        res.send(subscribesList);
+                        addSubscribeResult = _a.sent();
+                        res.send(addSubscribeResult);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SubscribeController.prototype.postEditSubscribeResult = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var editSubscribeResult;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.services.subscribeService.editSubscribe(__assign(__assign({}, req.body), { id: req.params.id }))];
+                    case 1:
+                        editSubscribeResult = _a.sent();
+                        res.send(editSubscribeResult);
                         return [2 /*return*/];
                 }
             });
@@ -78,7 +131,7 @@ var SubscribeController = /** @class */ (function (_super) {
             var subscribeDeleteResult, code;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.subscribeService.unsubscribe(req.body.filters)];
+                    case 0: return [4 /*yield*/, this.services.subscribeService.unsubscribe(req.query)];
                     case 1:
                         subscribeDeleteResult = _a.sent();
                         code = subscribeDeleteResult ? 200 : 404;
@@ -89,8 +142,10 @@ var SubscribeController = /** @class */ (function (_super) {
         });
     };
     SubscribeController.prototype.makeRouter = function () {
-        this.router.post('/api/subscribes/get', auth_1.userAuth, this.postSubscribesList.bind(this));
-        this.router.post('/api/subscribes/delete', auth_1.userAuth, this.postSubscribeDeleteResult.bind(this));
+        this.router.get(URLS_1.default.API_SUBSCRIBES, auth_1.userAuth, this.postSubscribesList.bind(this));
+        this.router.post(URLS_1.default.API_SUBSCRIBES, auth_1.userAuth, this.postAddSubscribeResult.bind(this));
+        this.router.put(URLS_1.default.API_SUBSCRIBES + "/:id", auth_1.userAuth, this.postEditSubscribeResult.bind(this));
+        this.router.delete(URLS_1.default.API_SUBSCRIBES, auth_1.userAuth, this.postSubscribeDeleteResult.bind(this));
         return this.router;
     };
     return SubscribeController;

@@ -44,3 +44,36 @@ function watchGetSubscribes() {
     });
 }
 exports.watchGetSubscribes = watchGetSubscribes;
+function watchSaveSubscribe() {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.takeEvery(subscribesActions_1.default.SAVE_SUBSCRIBE_SAGA, subscribesWorkers_1.saveSubscribe)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}
+exports.watchSaveSubscribe = watchSaveSubscribe;
+function watchEditSubscribe() {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.takeEvery(subscribesActions_1.default.EDIT_SUBSCRIBE_SAGA, subscribesWorkers_1.editSubscribe)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}
+exports.watchEditSubscribe = watchEditSubscribe;
+function watchDeleteSubscribe() {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.takeEvery(subscribesActions_1.default.DELETE_SUBSCRIBE_SAGA, subscribesWorkers_1.deleteSubscribe)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}
+exports.watchDeleteSubscribe = watchDeleteSubscribe;

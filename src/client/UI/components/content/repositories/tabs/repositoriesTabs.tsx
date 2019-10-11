@@ -1,16 +1,16 @@
 import React from 'react';
-import FavoriteIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import ListIcon from '@material-ui/icons/List';
-import URLS from "../../../../URLS";
+import URLS from "../../../../../../common/URLS";
 import ItemTabs from "../../../navigation/tabs/tabs";
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-const tabs = [
-    {icon: FavoriteIcon, label: 'FAVORITES', link: URLS.FAVORITE_REPOSITORIES},
-    {icon: ListIcon, label: 'ALL', link: URLS.STASH_REPOSITORIES}
-];
 
-const RepositoriesTabs = () => {
-    return <ItemTabs tabs={tabs} />
+const RepositoriesTabs = ({history}: RouteComponentProps) => {
+    return (
+        <ItemTabs tabs={[
+            {label: 'FAVORITES', clickHandler: () => history.push(URLS.FAVORITE_REPOSITORIES)},
+            {label: 'ALL', clickHandler: () => history.push(URLS.STASH_REPOSITORIES)}
+        ]} />
+    );
 };
 
-export default RepositoriesTabs;
+export default withRouter(RepositoriesTabs);

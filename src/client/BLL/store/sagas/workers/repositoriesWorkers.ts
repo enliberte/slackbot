@@ -54,10 +54,9 @@ export function *getStashRepositories(action: IRunGetStashRepositoriesSagaAction
 
 export function *deleteFavoriteRepository(action: IRunDeleteFavoriteRepositorySagaAction) {
     try {
-        const {reponame} = action.payload;
         const channelId = yield select(selectChannelId);
         const search = yield select(selectSearchFavoriteRepositoriesTerm);
-        yield call(fetchDeleteRepository, {reponame, channelId});
+        yield call(fetchDeleteRepository, {...action.payload, channelId});
         const getRepositoriesResponse = yield call(fetchGetFavoriteRepositories, {channelId, search});
         yield put(setFavoriteRepositoriesData(getRepositoriesResponse.data));
     } catch (err) {

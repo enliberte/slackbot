@@ -2,11 +2,11 @@ import Services from "../services/Services";
 import {Router} from "express";
 
 
-export interface IRouter {
+export interface IController {
     makeRouter(): Router;
 }
 
-export default abstract class BaseController implements IRouter {
+export default abstract class BaseController implements IController {
     protected services: Services;
     protected router: Router;
 

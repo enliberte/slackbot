@@ -1,7 +1,6 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import {createStyles, makeStyles, Theme} from "@material-ui/core";
-import {IDeveloper} from "../../../../../../../backend/db/models/DeveloperModel";
 import {setSubscribeFilters} from "../../../../../../BLL/store/action_creators/subscribes/subscribesActionCreators";
 import {connect} from "react-redux";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -9,11 +8,11 @@ import ListItem from "@material-ui/core/ListItem";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
 import {runDeleteFavoriteDeveloperSaga} from "../../../../../../BLL/store/action_creators/developers/developersActionCreators";
-import {IDeleteDeveloperFilters} from "../../../../../../BLL/store/action_creators/developers/IDevelopersFilters";
+import {IFavoriteDeveloper} from "../../../../../../../backend/db/models/developer/favorite/FavoriteDeveloperModel";
 
 
 interface IFavoriteDeveloperProps extends ReturnType<typeof mapDispatchToProps> {
-    developer: IDeveloper;
+    developer: IFavoriteDeveloper;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,11 +26,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const FavoriteDeveloper = ({developer, setFollower, deleteDeveloper}: IFavoriteDeveloperProps) => {
+const FavoriteDeveloper = ({developer, setFollowed, deleteDeveloper}: IFavoriteDeveloperProps) => {
     const classes = useStyles();
 
     return (
-        <ListItem button onClick={() => setFollower(developer.username)}>
+        <ListItem button onClick={() => setFollowed(developer.username)}>
             <ListItemText
                 primary={
                     <React.Fragment>
@@ -57,11 +56,11 @@ const FavoriteDeveloper = ({developer, setFollower, deleteDeveloper}: IFavoriteD
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-    setFollower(followed: string) {
+    setFollowed(followed: string) {
         dispatch(setSubscribeFilters({followed}));
     },
-    deleteDeveloper(filters: IDeleteDeveloperFilters) {
-        dispatch(runDeleteFavoriteDeveloperSaga(filters));
+    deleteDeveloper(developer: Partial<IFavoriteDeveloper>) {
+        dispatch(runDeleteFavoriteDeveloperSaga(developer));
     }
 });
 

@@ -1,21 +1,21 @@
-import {ISubscribe} from "../../../../../backend/db/models/SubscribeModel";
+import {ISubscribe} from "../../../../../backend/db/models/subscribe/SubscribeModel";
 import subscribesActions from "../../action_creators/subscribes/subscribesActions";
 import {ISubscribeFilters} from "../../action_creators/subscribes/ISubscribeFilters";
 
-export interface ISubscribeState {
+export interface ISubscribesState {
     data: ISubscribe[];
     isEditing: boolean;
     filters: ISubscribeFilters;
 }
 
-const initialState: ISubscribeState = {
+const initialState: ISubscribesState = {
     data: [],
     isEditing: false,
-    filters: {followed: null}
+    filters: {}
 };
 
 
-export default (state: ISubscribeState = initialState, action: any) => {
+export default (state: ISubscribesState = initialState, action: any) => {
     switch (action.type) {
         case subscribesActions.SET_SUBSCRIBES:
             return {
@@ -25,7 +25,7 @@ export default (state: ISubscribeState = initialState, action: any) => {
         case subscribesActions.SET_SUBSCRIBE_FILTERS:
             return {
                 ...state,
-                filters: {...state.filters, ...action.payload}
+                filters: {...action.payload}
             };
         case subscribesActions.TOGGLE_EDITING_WINDOW:
             return {

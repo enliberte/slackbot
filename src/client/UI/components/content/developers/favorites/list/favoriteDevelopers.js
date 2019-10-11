@@ -26,7 +26,7 @@ var useStyles = core_1.makeStyles(function (theme) {
 var FavoriteDevelopers = function (_a) {
     var developers = _a.developers;
     var classes = useStyles();
-    return (react_1.default.createElement(Grid_1.default, { item: true, xs: 3 },
+    return (react_1.default.createElement(Grid_1.default, { item: true, xs: 5 },
         react_1.default.createElement(Paper_1.default, { className: classes.paper },
             react_1.default.createElement(favoriteDevelopersSearch_1.default, null),
             react_1.default.createElement(List_1.default, { className: classes.root }, developers.map(function (developer) { return react_1.default.createElement(favoriteDeveloper_1.default, { key: developer.username, developer: developer }); })))));
