@@ -39,38 +39,95 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var effects_1 = require("redux-saga/effects");
-var fetchingActionCreators_1 = require("../../action_creators/fetching/fetchingActionCreators");
 var repositoriesActionCreators_1 = require("../../action_creators/repositories/repositoriesActionCreators");
 var repositoriesAPI_1 = require("../../../API/repositoriesAPI");
 var auth_1 = require("../../selectors/auth");
-var repositories_1 = require("../../selectors/repositories");
 function getFavoriteRepositories(action) {
     var channelId, search, response, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 6, 7, 9]);
-                return [4 /*yield*/, effects_1.put(fetchingActionCreators_1.setIsFetching(true))];
-            case 1:
-                _a.sent();
+                _a.trys.push([0, 4, 5, 6]);
                 return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
-            case 2:
+            case 1:
                 channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(repositories_1.selectSearchFavoriteRepositoriesTerm)];
-            case 3:
-                search = _a.sent();
+                search = '';
                 return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchGetFavoriteRepositories, { channelId: channelId, search: search })];
-            case 4:
+            case 2:
                 response = _a.sent();
                 return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setFavoriteRepositoriesData(response.data))];
+            case 3:
+                _a.sent();
+                return [3 /*break*/, 6];
+            case 4:
+                err_1 = _a.sent();
+                console.log(err_1);
+                return [3 /*break*/, 6];
+            case 5: return [7 /*endfinally*/];
+            case 6: return [2 /*return*/];
+        }
+    });
+}
+exports.getFavoriteRepositories = getFavoriteRepositories;
+function getStashRepositories(action) {
+    var channelId, response, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, 6, 8]);
+                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
+            case 1:
+                channelId = _a.sent();
+                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setIsRepositoriesFetching(true))];
+            case 2:
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchGetStashRepositories, { channelId: channelId })];
+            case 3:
+                response = _a.sent();
+                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setStashRepositoriesData(response.data))];
+            case 4:
+                _a.sent();
+                return [3 /*break*/, 8];
+            case 5:
+                err_2 = _a.sent();
+                console.log(err_2);
+                return [3 /*break*/, 8];
+            case 6: return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setIsRepositoriesFetching(false))];
+            case 7:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 8: return [2 /*return*/];
+        }
+    });
+}
+exports.getStashRepositories = getStashRepositories;
+function deleteFavoriteRepository(action) {
+    var channelId, getStashRepositoriesResponse, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 6, 7, 9]);
+                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
+            case 1:
+                channelId = _a.sent();
+                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setIsRepositoriesFetching(true))];
+            case 2:
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchDeleteRepository, __assign(__assign({}, action.payload), { channelId: channelId }))];
+            case 3:
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchGetStashRepositories, { channelId: channelId })];
+            case 4:
+                getStashRepositoriesResponse = _a.sent();
+                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setStashRepositoriesData(getStashRepositoriesResponse.data))];
             case 5:
                 _a.sent();
                 return [3 /*break*/, 9];
             case 6:
-                err_1 = _a.sent();
-                console.log(err_1);
+                err_3 = _a.sent();
+                console.log(err_3);
                 return [3 /*break*/, 9];
-            case 7: return [4 /*yield*/, effects_1.put(fetchingActionCreators_1.setIsFetching(false))];
+            case 7: return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setIsRepositoriesFetching(false))];
             case 8:
                 _a.sent();
                 return [7 /*endfinally*/];
@@ -78,98 +135,42 @@ function getFavoriteRepositories(action) {
         }
     });
 }
-exports.getFavoriteRepositories = getFavoriteRepositories;
-function getStashRepositories(action) {
-    var channelId, name_1, limit, response, err_2;
+exports.deleteFavoriteRepository = deleteFavoriteRepository;
+function addStashRepositoryToFavorites(action) {
+    var channelId, addedByName, reponame, getStashRepositoriesResponse, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 7, 8, 10]);
-                return [4 /*yield*/, effects_1.put(fetchingActionCreators_1.setIsFetching(true))];
-            case 1:
-                _a.sent();
                 return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
-            case 2:
+            case 1:
                 channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(repositories_1.selectFilterStashRepositoriesTerm)];
+                return [4 /*yield*/, effects_1.select(auth_1.selectStashDisplayName)];
+            case 2:
+                addedByName = _a.sent();
+                reponame = action.payload.reponame;
+                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setIsRepositoriesFetching(true))];
             case 3:
-                name_1 = _a.sent();
-                return [4 /*yield*/, effects_1.select(repositories_1.selectLimitStashRepositories)];
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchAddStashRepositoryToFavorites, { reponame: reponame, channelId: channelId, addedByName: addedByName })];
             case 4:
-                limit = _a.sent();
-                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchGetStashRepositories, { name: name_1, limit: limit, channelId: channelId })];
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchGetStashRepositories, { channelId: channelId })];
             case 5:
-                response = _a.sent();
-                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setStashRepositoriesData(response.data))];
+                getStashRepositoriesResponse = _a.sent();
+                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setStashRepositoriesData(getStashRepositoriesResponse.data))];
             case 6:
                 _a.sent();
                 return [3 /*break*/, 10];
             case 7:
-                err_2 = _a.sent();
-                console.log(err_2);
+                err_4 = _a.sent();
+                console.log(err_4);
                 return [3 /*break*/, 10];
-            case 8: return [4 /*yield*/, effects_1.put(fetchingActionCreators_1.setIsFetching(false))];
+            case 8: return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setIsRepositoriesFetching(false))];
             case 9:
                 _a.sent();
                 return [7 /*endfinally*/];
             case 10: return [2 /*return*/];
-        }
-    });
-}
-exports.getStashRepositories = getStashRepositories;
-function deleteFavoriteRepository(action) {
-    var channelId, search, getRepositoriesResponse, err_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 6, , 7]);
-                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
-            case 1:
-                channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(repositories_1.selectSearchFavoriteRepositoriesTerm)];
-            case 2:
-                search = _a.sent();
-                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchDeleteRepository, __assign(__assign({}, action.payload), { channelId: channelId }))];
-            case 3:
-                _a.sent();
-                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchGetFavoriteRepositories, { channelId: channelId, search: search })];
-            case 4:
-                getRepositoriesResponse = _a.sent();
-                return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.setFavoriteRepositoriesData(getRepositoriesResponse.data))];
-            case 5:
-                _a.sent();
-                return [3 /*break*/, 7];
-            case 6:
-                err_3 = _a.sent();
-                console.log(err_3);
-                return [3 /*break*/, 7];
-            case 7: return [2 /*return*/];
-        }
-    });
-}
-exports.deleteFavoriteRepository = deleteFavoriteRepository;
-function addStashRepositoryToFavorites(action) {
-    var channelId, addedByName, reponame, err_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 4, , 5]);
-                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
-            case 1:
-                channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(auth_1.selectUsername)];
-            case 2:
-                addedByName = _a.sent();
-                reponame = action.payload;
-                return [4 /*yield*/, effects_1.call(repositoriesAPI_1.fetchAddStashRepositoryToFavorites, { reponame: reponame, channelId: channelId, addedByName: addedByName })];
-            case 3:
-                _a.sent();
-                return [3 /*break*/, 5];
-            case 4:
-                err_4 = _a.sent();
-                console.log(err_4);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
         }
     });
 }

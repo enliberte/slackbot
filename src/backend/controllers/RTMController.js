@@ -52,6 +52,8 @@ var MessageBuilder_1 = __importDefault(require("../services/slackbot/templates/b
 var WebChatAdapter_1 = __importDefault(require("../services/slackbot/adapters/WebChatAdapter"));
 var buildCommandsList_1 = __importDefault(require("../services/slackbot/templates/common/buildCommandsList"));
 var commands_1 = require("../services/slackbot/commands/commands");
+var buildGreeting_1 = __importDefault(require("../services/slackbot/templates/common/buildGreeting"));
+var buildAddUserResult_1 = __importDefault(require("../services/slackbot/templates/common/buildAddUserResult"));
 var BOT_TOKEN = require('../../../config').BOT_TOKEN;
 var RTMController = /** @class */ (function () {
     function RTMController(services) {
@@ -90,7 +92,7 @@ var RTMController = /** @class */ (function () {
             var msg;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.repositoryMessageAdapter.getAddResultMsg(new MessageBuilder_1.default(), { channelId: channelId, reponame: reponame, addedByName: addedByName })];
+                    case 0: return [4 /*yield*/, this.services.repositoryMessageAdapter.getAddResultMsg(new MessageBuilder_1.default(), { channelId: channelId, addedByName: addedByName, reponame: reponame })];
                     case 1:
                         msg = _a.sent();
                         this.postMessage(msg, channelId);
@@ -145,9 +147,13 @@ var RTMController = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var msg;
             return __generator(this, function (_a) {
-                msg = this.services.authToMessageAdapter.getCreateAuthLinkMsg(new MessageBuilder_1.default(), { channelId: channelId, username: username });
-                this.postMessage(msg, channelId);
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.services.sessionToMessageAdapter.getCreateAuthLinkMsg(new MessageBuilder_1.default(), channelId)];
+                    case 1:
+                        msg = _a.sent();
+                        this.postMessage(msg, channelId);
+                        return [2 /*return*/];
+                }
             });
         });
     };
@@ -157,7 +163,7 @@ var RTMController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        subscribe = { follower: follower, reponame: reponame, channelId: channelId, followed: followed };
+                        subscribe = { follower: follower, reponame: reponame, channelId: channelId, followed: followed, followedEmail: '', repoUrl: '' };
                         return [4 /*yield*/, this.services.subscribeToMessageAdapter.getAddResultMsg(new MessageBuilder_1.default(), subscribe)];
                     case 1:
                         msg = _a.sent();
@@ -187,18 +193,67 @@ var RTMController = /** @class */ (function () {
         var msg = buildCommandsList_1.default(new MessageBuilder_1.default());
         this.postMessage(msg, channelId);
     };
+    RTMController.prototype.postMsgWithGreeting = function (channelId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, isAuth, stashName, msg;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.services.userService.list({ filter: { channelId: channelId } })];
+                    case 1:
+                        users = _a.sent();
+                        isAuth = users.length !== 0;
+                        stashName = isAuth ? users[0].stashDisplayName : '';
+                        msg = buildGreeting_1.default(new MessageBuilder_1.default(), isAuth, stashName);
+                        this.postMessage(msg, channelId);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    RTMController.prototype.postMsgAddStashNameResult = function (channelId, username, stashDisplayName) {
+        return __awaiter(this, void 0, void 0, function () {
+            var addUserResult, msgText, msg;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.services.userService.add({
+                            channelId: channelId,
+                            stashDisplayName: stashDisplayName,
+                            subscribesNotifications: true,
+                            commentsNotifications: false,
+                            reviewNotifications: false
+                        })];
+                    case 1:
+                        addUserResult = _a.sent();
+                        msgText = typeof addUserResult !== 'string' ? "Nice to meet you " + stashDisplayName : addUserResult;
+                        msg = buildAddUserResult_1.default(new MessageBuilder_1.default(), msgText);
+                        this.postMessage(msg, channelId);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     RTMController.prototype.processMessages = function (event) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, command, args;
+            var _a, command, rest, args, clearedArgs;
             var _b;
             return __generator(this, function (_c) {
-                _a = event.text.split(' '), command = _a[0], args = _a.slice(1);
-                (_b = this.ee).emit.apply(_b, __spreadArrays([command, event.channel, event.user], args));
+                _a = event.text.split(' '), command = _a[0], rest = _a.slice(1);
+                if (event.text && typeof event.text === 'string') {
+                    if (command === commands_1.commands.IAM) {
+                        this.postMsgAddStashNameResult(event.channel, event.user, rest.join(' '));
+                    }
+                    else {
+                        args = event.text.match(/\"([^\"]+)\"/g) || [];
+                        clearedArgs = args.map(function (arg) { return arg.replace(/"/g, ''); });
+                        (_b = this.ee).emit.apply(_b, __spreadArrays([command, event.channel, event.user], clearedArgs));
+                    }
+                }
                 return [2 /*return*/];
             });
         });
     };
     RTMController.prototype.start = function () {
+        this.ee.on(commands_1.commands.HI, this.postMsgWithGreeting.bind(this));
         this.ee.on(commands_1.commands.ADD_DEVELOPER, this.postMsgWithDeveloperAdditionResult.bind(this));
         this.ee.on(commands_1.commands.ADD_REPOSITORY, this.postMsgWithRepositoryAdditionResult.bind(this));
         this.ee.on(commands_1.commands.DEVELOPERS, this.postMsgWithDevelopersList.bind(this));

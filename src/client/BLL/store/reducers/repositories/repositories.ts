@@ -2,30 +2,27 @@ import repositoriesActions from "../../action_creators/repositories/repositories
 import {IFavoriteRepository} from "../../../../../backend/db/models/repository/favorite/FavoriteRepositoryModel";
 import {IStashRepositoryWithFavoriteSign} from "../../../../../backend/db/models/repository/stash/StashRepositoryModel";
 
+
 export interface IRepositoryState {
     favorites: {
         data: IFavoriteRepository[];
-        search: string;
-        limit: number;
     }
     stash: {
         data: IStashRepositoryWithFavoriteSign[];
-        name: string;
-        limit: number;
+        isFavoriteOnly: boolean;
     }
+    isFetching: boolean;
 }
 
 const initialState: IRepositoryState = {
     favorites: {
         data: [],
-        search: '',
-        limit: 20
     },
     stash: {
         data: [],
-        name: '',
-        limit: 20
-    }
+        isFavoriteOnly: false
+    },
+    isFetching: false
 };
 
 
@@ -62,6 +59,16 @@ export default (state: IRepositoryState = initialState, action: any) => {
                     ...state.stash,
                     name: action.payload
                 }
+            };
+        case repositoriesActions.SET_IS_REPOSITORIES_FETCHING:
+            return {
+                ...state,
+                isFetching: action.payload
+            };
+        case repositoriesActions.SET_IS_FAVORITE_ONLY:
+            return {
+                ...state,
+                stash: {...state.stash, isFavoriteOnly: action.payload}
             };
         default:
             return state;

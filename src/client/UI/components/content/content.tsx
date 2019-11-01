@@ -1,17 +1,10 @@
 import React, {ReactNode} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
 import {Grid} from "@material-ui/core";
+import useStyles from "./styles";
 
 interface IContentProps {
     children: ReactNode;
 }
-
-const useStyles = makeStyles(theme => ({
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing(3),
-    }
-}));
 
 const Content = ({children}: IContentProps) => {
     const classes = useStyles();

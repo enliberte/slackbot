@@ -52,46 +52,81 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var StashClient_1 = __importDefault(require("./StashClient"));
 var query_string_1 = __importDefault(require("query-string"));
+var ServiceErrorMessages_1 = __importDefault(require("../ServiceErrorMessages"));
 var StashDeveloperService = /** @class */ (function () {
     function StashDeveloperService(developerStorageService) {
         this.developerStorageService = developerStorageService;
     }
-    StashDeveloperService.prototype.list = function (query) {
+    StashDeveloperService.prototype.clearData = function (channelId, stashDevelopers) {
         return __awaiter(this, void 0, void 0, function () {
-            var channelId, limit, filter, url, response, stashDevelopers, stashDevelopersWithFavoriteSign, _i, stashDevelopers_1, stashDeveloper, favoriteDevelopers, isFavorite, favoriteId, e_1;
+            var stashDevelopersWithFavoriteSign, _i, stashDevelopers_1, stashDeveloper, favoriteDevelopers, isFavorite, favoriteId;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        channelId = query.channelId, limit = query.limit, filter = query.filter;
-                        url = "/users?" + query_string_1.default.stringify({ limit: limit, filter: filter });
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 7, , 8]);
-                        return [4 /*yield*/, StashClient_1.default.get(url)];
-                    case 2:
-                        response = _a.sent();
-                        stashDevelopers = response.data.values;
                         stashDevelopersWithFavoriteSign = [];
                         _i = 0, stashDevelopers_1 = stashDevelopers;
-                        _a.label = 3;
-                    case 3:
-                        if (!(_i < stashDevelopers_1.length)) return [3 /*break*/, 6];
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < stashDevelopers_1.length)) return [3 /*break*/, 4];
                         stashDeveloper = stashDevelopers_1[_i];
                         return [4 /*yield*/, this.developerStorageService.get({ channelId: channelId, username: stashDeveloper.displayName })];
-                    case 4:
+                    case 2:
                         favoriteDevelopers = _a.sent();
                         isFavorite = favoriteDevelopers.length !== 0;
                         favoriteId = isFavorite ? favoriteDevelopers[0].id : '';
                         stashDevelopersWithFavoriteSign.push(__assign(__assign({}, stashDeveloper), { isFavorite: isFavorite, favoriteId: favoriteId }));
-                        _a.label = 5;
-                    case 5:
+                        _a.label = 3;
+                    case 3:
                         _i++;
-                        return [3 /*break*/, 3];
-                    case 6: return [2 /*return*/, stashDevelopersWithFavoriteSign];
-                    case 7:
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/, stashDevelopersWithFavoriteSign];
+                }
+            });
+        });
+    };
+    StashDeveloperService.prototype.list = function (query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var channelId, filter, url, response, stashDevelopers, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        channelId = query.channelId, filter = query.filter;
+                        url = "/users?" + query_string_1.default.stringify({ limit: 1000, filter: filter });
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, StashClient_1.default.get(url)];
+                    case 2:
+                        response = _a.sent();
+                        stashDevelopers = response.data.values;
+                        return [2 /*return*/, this.clearData(channelId, stashDevelopers)];
+                    case 3:
                         e_1 = _a.sent();
                         return [2 /*return*/, false];
-                    case 8: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    StashDeveloperService.prototype.getValidDeveloper = function (developerName) {
+        return __awaiter(this, void 0, void 0, function () {
+            var url, response, stashDevelopers, e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        url = "/users?" + query_string_1.default.stringify({ filter: developerName });
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, StashClient_1.default.get(url)];
+                    case 2:
+                        response = _a.sent();
+                        stashDevelopers = response.data.values;
+                        return [2 /*return*/, stashDevelopers.find(function (developer) { return developer.displayName === developerName; }) || ServiceErrorMessages_1.default.DEVELOPER_NOT_FOUND];
+                    case 3:
+                        e_2 = _a.sent();
+                        return [2 /*return*/, ServiceErrorMessages_1.default.STASH];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

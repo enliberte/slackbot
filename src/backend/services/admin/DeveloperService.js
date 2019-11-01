@@ -35,11 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var ServiceErrorMessages_1 = __importDefault(require("../ServiceErrorMessages"));
 var DeveloperService = /** @class */ (function () {
-    function DeveloperService(developerStorageService, subscribeStorageService) {
+    function DeveloperService(developerStorageService, subscribeStorageService, developerStashService) {
         this.developerStorageService = developerStorageService;
         this.subscribeStorageService = subscribeStorageService;
+        this.developerStashService = developerStashService;
     }
     DeveloperService.prototype.list = function (query) {
         return __awaiter(this, void 0, void 0, function () {
@@ -56,14 +61,21 @@ var DeveloperService = /** @class */ (function () {
     };
     DeveloperService.prototype.add = function (obj) {
         return __awaiter(this, void 0, void 0, function () {
+            var validDeveloper;
             return __generator(this, function (_a) {
-                if (obj.username.length !== 0) {
-                    return [2 /*return*/, this.developerStorageService.add(obj)];
+                switch (_a.label) {
+                    case 0:
+                        if (!(obj.username.length !== 0)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.developerStashService.getValidDeveloper(obj.username)];
+                    case 1:
+                        validDeveloper = _a.sent();
+                        if (!(typeof validDeveloper !== 'string')) return [3 /*break*/, 3];
+                        obj.email = validDeveloper.emailAddress;
+                        return [4 /*yield*/, this.developerStorageService.add(obj)];
+                    case 2: return [2 /*return*/, (_a.sent()) ? obj : ServiceErrorMessages_1.default.DB];
+                    case 3: return [2 /*return*/, validDeveloper];
+                    case 4: return [2 /*return*/, ServiceErrorMessages_1.default.DEVELOPER_NOT_GIVEN];
                 }
-                else {
-                    return [2 /*return*/, false];
-                }
-                return [2 /*return*/];
             });
         });
     };

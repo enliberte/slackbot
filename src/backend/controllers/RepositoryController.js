@@ -118,14 +118,16 @@ var RepositoryController = /** @class */ (function (_super) {
     };
     RepositoryController.prototype.postAddStashRepositoryToFavoritesResult = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var addStashRepositoryToFavoritesResult, code;
+            var addStashRepositoryToFavoritesResult, isError, code, message;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.services.repositoryService.add(req.body)];
                     case 1:
                         addStashRepositoryToFavoritesResult = _a.sent();
-                        code = addStashRepositoryToFavoritesResult ? 200 : 404;
-                        res.status(code).send();
+                        isError = typeof addStashRepositoryToFavoritesResult === 'string';
+                        code = isError ? 404 : 200;
+                        message = isError ? addStashRepositoryToFavoritesResult : 'ok';
+                        res.status(code).send(message);
                         return [2 /*return*/];
                 }
             });

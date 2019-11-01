@@ -6,14 +6,18 @@ import {IDeveloperToMessageAdapter} from "./slackbot/adapters/DeveloperToMsgAdap
 import {IRepositoryToMessageAdapter} from "./slackbot/adapters/RepositoryToMsgAdapter";
 import IServicesFactory from "./factories/IServicesFactory";
 import {IAuthService} from "./slackbot/AuthService";
-import {IAuthToMessageAdapter} from "./slackbot/adapters/AuthToMsgAdapter";
+import {ISessionToMessageAdapter} from "./slackbot/adapters/SessionToMsgAdapter";
 import {ISubscribeToMessageAdapter} from "./slackbot/adapters/SubscribeToMsgAdapter";
 import {IStashDeveloperService} from "./stash/StashDeveloperService";
 import {IStashRepositoryService} from "./stash/StashRepositoryService";
+import {IUserService} from "./admin/UserService";
+import {ISessionService} from "./admin/SessionService";
 
 export default class Services {
     authService: IAuthService;
+    sessionService: ISessionService;
     developerService: IDeveloperService;
+    userService: IUserService;
     stashDeveloperService: IStashDeveloperService;
     stashRepositoryService: IStashRepositoryService;
     repositoryService: IRepositoryService;
@@ -21,12 +25,14 @@ export default class Services {
     notifyService: INotifyService;
     developerMessageAdapter: IDeveloperToMessageAdapter;
     repositoryMessageAdapter: IRepositoryToMessageAdapter;
-    authToMessageAdapter: IAuthToMessageAdapter;
+    sessionToMessageAdapter: ISessionToMessageAdapter;
     subscribeToMessageAdapter: ISubscribeToMessageAdapter;
 
     constructor(factory: IServicesFactory) {
         this.authService = factory.getAuthService();
+        this.sessionService = factory.getSessionService();
         this.developerService = factory.getDeveloperService();
+        this.userService = factory.getUserService();
         this.stashDeveloperService = factory.getStashDeveloperService();
         this.stashRepositoryService = factory.getStashRepositoryService();
         this.repositoryService = factory.getRepositoryService();
@@ -34,7 +40,7 @@ export default class Services {
         this.notifyService = factory.getNotifyService();
         this.developerMessageAdapter = factory.getDeveloperToMsgAdapter();
         this.repositoryMessageAdapter = factory.getRepositoryToMsgAdapter();
-        this.authToMessageAdapter = factory.getAuthToMessageAdapter();
+        this.sessionToMessageAdapter = factory.getSessionToMessageAdapter();
         this.subscribeToMessageAdapter = factory.getSubscribeToMessageAdapter();
     }
 }

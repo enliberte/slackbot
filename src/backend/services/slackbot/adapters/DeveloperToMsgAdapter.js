@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var buildDevelopersList_1 = __importDefault(require("../templates/common/buildDevelopersList"));
+var ServiceErrorMessages_1 = __importDefault(require("../../ServiceErrorMessages"));
 var DeveloperToMsgAdapter = /** @class */ (function () {
     function DeveloperToMsgAdapter(developerService) {
         this.developerService = developerService;
@@ -71,19 +72,19 @@ var DeveloperToMsgAdapter = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(obj.username.length !== 0)) return [3 /*break*/, 2];
+                        if (!obj.username) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.developerService.add(obj)];
                     case 1:
                         addOperationSuccess = _a.sent();
-                        if (addOperationSuccess) {
+                        if (typeof addOperationSuccess !== 'string') {
                             builder.buildSection("You have added new developer " + obj.username);
                         }
                         else {
-                            builder.buildSection("DB Error has been occurred");
+                            builder.buildSection(addOperationSuccess);
                         }
                         return [3 /*break*/, 3];
                     case 2:
-                        builder.buildSection("Incorrect developer name " + obj.username);
+                        builder.buildSection(ServiceErrorMessages_1.default.DEVELOPER_NOT_GIVEN);
                         _a.label = 3;
                     case 3: return [2 /*return*/, builder.getMessage()];
                 }

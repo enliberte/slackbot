@@ -1,5 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.selectUsername = function (state) { return state.auth.username; };
 exports.selectChannelId = function (state) { return state.auth.channelId; };
+exports.selectExp = function (state) { return state.auth.exp; };
 exports.selectIsAuth = function (state) { return state.auth.isAuth; };
+exports.selectSessionEndWarningMsg = function (state) { return state.auth.sessionEndWarningMsg; };
+exports.selectIsSessionWarningMsgDisplayed = function (state) { return state.auth.isSessionWarningMsgDisplayed; };
+exports.selectIsStashDeveloper = function (state) { return state.auth.stashDisplayName !== ''; };
+exports.selectStashDisplayName = function (state) { return state.auth.stashDisplayName; };
+exports.selectIsCommentsNotifications = function (state) { return state.auth.commentsNotifications; };
+exports.selectIsSubscribesNotifications = function (state) { return state.auth.subscribesNotifications; };
+exports.selectIsReviewNotifications = function (state) { return state.auth.reviewNotifications; };
+exports.selectIsAuthFetching = function (state) { return state.auth.isFetching; };

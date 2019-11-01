@@ -4,7 +4,7 @@ import {
     IRunGetSubscribesSagaAction, IRunSaveSubscribeSagaAction
 } from "../../action_creators/subscribes/ISubscribesActions";
 import {
-    runGetSubscribesSaga, setIsSuccess,
+    runGetSubscribesSaga, setIsSuccess, setSubscribeError,
     setSubscribesData,
     toggleEditingWindow
 } from "../../action_creators/subscribes/subscribesActionCreators";
@@ -14,8 +14,8 @@ import {
     fetchGetSubscribes,
     fetchSaveSubscribe
 } from "../../../API/subscribesAPI";
-import {selectChannelId, selectUsername} from "../../selectors/auth";
-import {selectSubscribe, selectSubscribeFilters} from "../../selectors/subscribes";
+import {selectChannelId, selectStashDisplayName} from "../../selectors/auth";
+import {selectSubscribeFilters} from "../../selectors/subscribes";
 import {runGetFavoriteDevelopersSaga} from "../../action_creators/developers/developersActionCreators";
 import {
     runGetFavoriteRepositoriesSaga,
@@ -36,15 +36,24 @@ export function *getSubscribes(action: IRunGetSubscribesSagaAction) {
 export function *saveSubscribe(action: IRunSaveSubscribeSagaAction) {
     try {
         const channelId = yield select(selectChannelId);
-        const follower = yield select(selectUsername);
-        const {followed, reponame} = yield select(selectSubscribe);
-        const addSubscribeResponse = yield call(fetchSaveSubscribe, {followed, follower, reponame, channelId});
-        const isSuccess = addSubscribeResponse.data;
+        const follower = yield select(selectStashDisplayName);
+        const addSubscribeResponse = yield call(fetchSaveSubscribe, {follower, channelId, ...action.payload});
+        const {developer, repository, subscribe} = addSubscribeResponse.data;
+        const developerError = typeof developer === 'string' ? developer : '';
+        const repositoryError = typeof repository === 'string' ? repository : '';
+        const subscribeError = typeof subscribe === 'string' ? subscribe : '';
+        const isSuccess = developerError === '' && repositoryError === '' && subscribeError === '';
         yield put(setIsSuccess(isSuccess));
-        yield put(toggleEditingWindow());
-        yield put(runGetSubscribesSaga());
-        yield put(runGetFavoriteDevelopersSaga());
-        yield put(runGetFavoriteRepositoriesSaga());
+        if (isSuccess) {
+            yield action.resolve();
+            yield put(toggleEditingWindow());
+            yield put(runGetSubscribesSaga());
+            yield put(runGetFavoriteDevelopersSaga());
+            yield put(runGetFavoriteRepositoriesSaga());
+        } else {
+            yield put(setSubscribeError({developer: developerError, repository: repositoryError, subscribe: subscribeError}));
+            yield action.reject();
+        }
     } catch (err) {
         console.log(err);
     }
@@ -53,15 +62,24 @@ export function *saveSubscribe(action: IRunSaveSubscribeSagaAction) {
 export function *editSubscribe(action: IRunEditSubscribeSagaAction) {
     try {
         const channelId = yield select(selectChannelId);
-        const follower = yield select(selectUsername);
-        const subscribeData = yield select(selectSubscribe);
-        const editSubscribeResponse = yield call(fetchEditSubscribe, {follower, channelId, ...subscribeData});
-        const isSuccess = editSubscribeResponse.data;
+        const follower = yield select(selectStashDisplayName);
+        const editSubscribeResponse = yield call(fetchEditSubscribe, {follower, channelId, ...action.payload});
+        const {developer, repository, subscribe} = editSubscribeResponse.data;
+        const developerError = typeof developer === 'string' ? developer : '';
+        const repositoryError = typeof repository === 'string' ? repository : '';
+        const subscribeError = typeof subscribe === 'string' ? subscribe : '';
+        const isSuccess = developerError === '' && repositoryError === '' && subscribeError === '';
         yield put(setIsSuccess(isSuccess));
-        yield put(toggleEditingWindow());
-        yield put(runGetSubscribesSaga());
-        yield put(runGetFavoriteDevelopersSaga());
-        yield put(runGetFavoriteRepositoriesSaga());
+        if (isSuccess) {
+            yield action.resolve();
+            yield put(toggleEditingWindow());
+            yield put(runGetSubscribesSaga());
+            yield put(runGetFavoriteDevelopersSaga());
+            yield put(runGetFavoriteRepositoriesSaga());
+        } else {
+            yield put(setSubscribeError({developer: developerError, repository: repositoryError, subscribe: subscribeError}));
+            yield action.reject();
+        }
     } catch (err) {
         console.log(err);
     }

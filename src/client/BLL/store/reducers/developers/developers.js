@@ -18,14 +18,12 @@ var developersActions_1 = __importDefault(require("../../action_creators/develop
 var initialState = {
     favorites: {
         data: [],
-        search: '',
-        limit: 20
     },
     stash: {
         data: [],
-        filter: '',
-        limit: 20
-    }
+        isFavoriteOnly: false
+    },
+    isFetching: false
 };
 exports.default = (function (state, action) {
     if (state === void 0) { state = initialState; }
@@ -38,6 +36,10 @@ exports.default = (function (state, action) {
             return __assign(__assign({}, state), { favorites: __assign(__assign({}, state.favorites), { search: action.payload }) });
         case developersActions_1.default.FILTER_STASH_DEVELOPERS:
             return __assign(__assign({}, state), { stash: __assign(__assign({}, state.stash), { filter: action.payload }) });
+        case developersActions_1.default.SET_IS_DEVELOPERS_FETCHING:
+            return __assign(__assign({}, state), { isFetching: action.payload });
+        case developersActions_1.default.SET_IS_FAVORITE_ONLY:
+            return __assign(__assign({}, state), { stash: __assign(__assign({}, state.stash), { isFavoriteOnly: action.payload }) });
         default:
             return state;
     }

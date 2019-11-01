@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -46,62 +35,193 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var crypto_1 = __importDefault(require("crypto"));
 var NotifyService = /** @class */ (function () {
-    function NotifyService(webChatAdapter, subscribeStorageService) {
+    function NotifyService(webChatAdapter, subscribeStorageService, userStorageService) {
         this.webChatAdapter = webChatAdapter;
         this.subscribeStorageService = subscribeStorageService;
+        this.userStorageService = userStorageService;
+        this.PR = {};
     }
-    NotifyService.prototype.getSubscribersChannelId = function (followed, reponame) {
+    NotifyService.prototype.addSubscribersChannelId = function (PRid, followed, repoUrl) {
         return __awaiter(this, void 0, void 0, function () {
-            var subscribes;
+            var subscribes, subscribersChannelId, _i, subscribersChannelId_1, channelId, users;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.subscribeStorageService.get({ followed: followed, reponame: reponame })];
+                    case 0: return [4 /*yield*/, this.subscribeStorageService.get({ followed: followed, repoUrl: repoUrl })];
                     case 1:
                         subscribes = _a.sent();
-                        return [2 /*return*/, subscribes.map(function (subscribe) { return subscribe.channelId; })];
+                        subscribersChannelId = subscribes.map(function (subscribe) { return subscribe.channelId; });
+                        _i = 0, subscribersChannelId_1 = subscribersChannelId;
+                        _a.label = 2;
+                    case 2:
+                        if (!(_i < subscribersChannelId_1.length)) return [3 /*break*/, 5];
+                        channelId = subscribersChannelId_1[_i];
+                        return [4 /*yield*/, this.userStorageService.get({ channelId: channelId, subscribesNotifications: true })];
+                    case 3:
+                        users = _a.sent();
+                        if (users.length !== 0) {
+                            this.PR[PRid].add(channelId);
+                        }
+                        _a.label = 4;
+                    case 4:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
-    NotifyService.prototype.notify = function (subscribersChannelId, data) {
+    NotifyService.prototype.addMentionedAsReviewerChannelId = function (PRid, reviewersStashSlug) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
+            var _i, reviewersStashSlug_1, stashSlug, users;
             return __generator(this, function (_a) {
-                subscribersChannelId.map(function (channelId) { return __awaiter(_this, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.webChatAdapter.post(__assign(__assign({ text: 'New pull request' }, data), { channelId: channelId }))];
-                            case 1:
-                                _a.sent();
-                                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        _i = 0, reviewersStashSlug_1 = reviewersStashSlug;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < reviewersStashSlug_1.length)) return [3 /*break*/, 4];
+                        stashSlug = reviewersStashSlug_1[_i];
+                        return [4 /*yield*/, this.userStorageService.get({ stashSlug: stashSlug, reviewNotifications: true })];
+                    case 2:
+                        users = _a.sent();
+                        if (users.length !== 0 && users[0].channelId) {
+                            this.PR[PRid].add(users[0].channelId);
                         }
-                    });
-                }); });
-                return [2 /*return*/];
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
             });
         });
     };
-    NotifyService.prototype.notifyAboutPR = function (data) {
+    NotifyService.prototype.addMentionedInCommentChannelId = function (PRid, commentedStashSlug) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, fallback, followed, result, reponame, subscribersChannelId;
+            var _i, commentedStashSlug_1, stashSlug, users;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _i = 0, commentedStashSlug_1 = commentedStashSlug;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < commentedStashSlug_1.length)) return [3 /*break*/, 4];
+                        stashSlug = commentedStashSlug_1[_i];
+                        return [4 /*yield*/, this.userStorageService.get({ stashSlug: stashSlug, commentsNotifications: true })];
+                    case 2:
+                        users = _a.sent();
+                        if (users.length !== 0 && users[0].channelId) {
+                            this.PR[PRid].add(users[0].channelId);
+                        }
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    NotifyService.prototype.notify = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var PRid;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        PRid = crypto_1.default.createHash('md5').update(JSON.stringify(data)).digest('hex');
+                        if (!!this.PR[PRid]) return [3 /*break*/, 4];
+                        this.PR[PRid] = new Set();
+                        return [4 /*yield*/, this.formPRNotifyList(PRid, data)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.formReviewersNotifyList(PRid, data)];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, this.formCommentsNotifyList(PRid, data)];
+                    case 3:
+                        _a.sent();
+                        Array.from(this.PR[PRid]).map(function (channelId) { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this.webChatAdapter.post({ text: 'Look at pull request', msg: data, channelId: channelId })];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    NotifyService.prototype.formPRNotifyList = function (PRid, data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var openedPattern, _a, fallback, followed, text, result, repoUrl;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = data.attachments[0], fallback = _a.fallback, followed = _a.author_name;
-                        if (!(fallback && followed)) return [3 /*break*/, 3];
+                        openedPattern = 'opened pull request';
+                        _a = data.attachments[0], fallback = _a.fallback, followed = _a.author_name, text = _a.text;
+                        if (!(fallback && followed && text.includes(openedPattern))) return [3 /*break*/, 2];
                         result = fallback.match(/<(.*)\/pull-requests/);
-                        if (!result) return [3 /*break*/, 3];
-                        reponame = result[1];
-                        return [4 /*yield*/, this.getSubscribersChannelId(followed, reponame)];
+                        if (!result) return [3 /*break*/, 2];
+                        repoUrl = result[1] + "/browse";
+                        return [4 /*yield*/, this.addSubscribersChannelId(PRid, followed, repoUrl)];
                     case 1:
-                        subscribersChannelId = _b.sent();
-                        return [4 /*yield*/, this.notify(subscribersChannelId, data)];
-                    case 2:
                         _b.sent();
-                        _b.label = 3;
-                    case 3: return [2 /*return*/];
+                        _b.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
+    NotifyService.prototype.formReviewersNotifyList = function (PRid, data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var fields, reviewersField, reviewers;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        fields = data.attachments[0].fields;
+                        if (!(fields && fields.length !== 0)) return [3 /*break*/, 2];
+                        reviewersField = fields.find(function (field) { return field.title === 'Reviewers'; });
+                        if (!reviewersField) return [3 /*break*/, 2];
+                        reviewers = reviewersField.value.trim().split(' ').map(function (reviewer) { return reviewer.slice(1).toLowerCase(); });
+                        return [4 /*yield*/, this.addMentionedAsReviewerChannelId(PRid, reviewers)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ;
+    NotifyService.prototype.formCommentsNotifyList = function (PRid, data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var commentPattern, text, commented;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        commentPattern = 'commented on pull request';
+                        text = data.attachments[0].text;
+                        if (!(text && text.length !== 0 && text.includes(commentPattern))) return [3 /*break*/, 2];
+                        commented = text.match(/@\w*/g);
+                        if (!commented) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.addMentionedInCommentChannelId(PRid, commented.map(function (commented) { return commented.slice(1).toLowerCase(); }))];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
                 }
             });
         });

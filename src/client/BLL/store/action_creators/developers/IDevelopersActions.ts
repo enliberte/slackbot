@@ -38,5 +38,15 @@ export interface IRunDeleteFavoriteDeveloperSagaAction {
 
 export interface IRunAddStashDeveloperToFavoritesSagaAction {
     type: typeof developersActions.ADD_STASH_DEVELOPER_TO_FAVORITES_SAGA;
-    payload: string;
+    payload: {username: string, email: string};
+}
+
+export interface ISetIsDevelopersFetchingAction {
+    type: typeof developersActions.SET_IS_DEVELOPERS_FETCHING;
+    payload: boolean;
+}
+
+export interface ISetIsFavoriteDevelopersOnlyAction {
+    type: typeof developersActions.SET_IS_FAVORITE_ONLY;
+    payload: boolean;
 }

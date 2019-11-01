@@ -25,8 +25,10 @@ export default class RepositoryController extends BaseController {
 
     async postAddStashRepositoryToFavoritesResult(req: Request, res: Response): Promise<void> {
         const addStashRepositoryToFavoritesResult = await this.services.repositoryService.add(req.body);
-        const code = addStashRepositoryToFavoritesResult ? 200 : 404;
-        res.status(code).send();
+        const isError = typeof addStashRepositoryToFavoritesResult === 'string';
+        const code = isError ? 404 : 200;
+        const message = isError ? addStashRepositoryToFavoritesResult : 'ok';
+        res.status(code).send(message);
     }
 
     makeRouter(): Router {

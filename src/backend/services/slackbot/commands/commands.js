@@ -9,7 +9,9 @@ var commands = {
     SUBSCRIBES: 'subscribes',
     SUBSCRIBE: 'subscribe',
     UNSUBSCRIBE: 'unsubscribe',
-    HELP: 'help'
+    HELP: 'help',
+    HI: 'hi',
+    IAM: "I'm"
 };
 exports.commands = commands;
 var commandsDescription = [
@@ -21,22 +23,22 @@ var commandsDescription = [
     {
         name: commands.SUBSCRIBE,
         description: '*Subcribe* to PR',
-        hint: "Write me \"" + commands.SUBSCRIBE + " RepositoryURL DeveloperDisplayName\" (for instance \"" + commands.SUBSCRIBE + " https://stash.firmglobal.com/developers/alexeysu/repos/slackbot Alexey Sumatokhin.EXT\") to *subscribe*"
+        hint: "Write me " + commands.SUBSCRIBE + " \"RepositoryName\" \"DeveloperDisplayName\" (for instance " + commands.SUBSCRIBE + " \"Confirmit.AppStudio.Client\" \"Alexey Sumatokhin.EXT\") to *subscribe*"
     },
     {
         name: commands.UNSUBSCRIBE,
         description: '*Unsubscribe* from PR',
-        hint: "Write me \"" + commands.UNSUBSCRIBE + " RepositoryURL DeveloperDisplayName\" (for instance \"" + commands.UNSUBSCRIBE + " https://stash.firmglobal.com/developers/alexeysu/repos/slackbot Alexey Sumatokhin.EXT\") to *unsubscribe*"
+        hint: "Write me " + commands.UNSUBSCRIBE + " \"RepositoryName\" \"DeveloperDisplayName\" (for instance " + commands.UNSUBSCRIBE + " \"Confirmit.AppStudio.Client\" \"Alexey Sumatokhin.EXT\") to *unsubscribe*"
     },
     {
         name: commands.ADD_DEVELOPER,
         description: '*Add developer* into your favorites',
-        hint: "Write me \"" + commands.ADD_DEVELOPER + " DeveloperDisplayName\" (for instance \"" + commands.ADD_DEVELOPER + " Alexey Sumatokhin.EXT\") to *add developer* into your favorites"
+        hint: "Write me " + commands.ADD_DEVELOPER + " \"DeveloperDisplayName\" (for instance " + commands.ADD_DEVELOPER + " \"Alexey Sumatokhin.EXT\") to *add developer* into your favorites"
     },
     {
         name: commands.ADD_REPOSITORY,
         description: '*Add repository* into your favorites',
-        hint: "Write me \"" + commands.ADD_REPOSITORY + " RepositoryURL\" (for instance \"" + commands.ADD_REPOSITORY + " https://stash.firmglobal.com/users/alexeysu/repos/slackbot\") to *add repository* into your favorites"
+        hint: "Write me " + commands.ADD_REPOSITORY + " \"RepositoryName\" (for instance " + commands.ADD_REPOSITORY + " \"Confirmit.AppStudio.Client\") to *add repository* into your favorites"
     },
     {
         name: commands.REPOSITORIES,

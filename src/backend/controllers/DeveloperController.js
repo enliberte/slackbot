@@ -118,14 +118,16 @@ var DeveloperController = /** @class */ (function (_super) {
     };
     DeveloperController.prototype.postAddStashDeveloperToFavoritesResult = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var addStashDeveloperToFavoritesResult, code;
+            var addStashDeveloperToFavoritesResult, isError, code, message;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.services.developerService.add(req.body)];
                     case 1:
                         addStashDeveloperToFavoritesResult = _a.sent();
-                        code = addStashDeveloperToFavoritesResult ? 200 : 404;
-                        res.status(code).send();
+                        isError = typeof addStashDeveloperToFavoritesResult === 'string';
+                        code = isError ? 404 : 200;
+                        message = isError ? addStashDeveloperToFavoritesResult : 'ok';
+                        res.status(code).send(message);
                         return [2 /*return*/];
                 }
             });

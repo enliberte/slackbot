@@ -6,6 +6,8 @@ interface INewSubscribe {
     followed: string;
     follower: string;
     reponame: string;
+    repoUrl?: string;
+    followedEmail?: string;
 }
 
 interface ISubscribe extends INewSubscribe {
@@ -13,13 +15,18 @@ interface ISubscribe extends INewSubscribe {
     _id?: Types.ObjectId;
 }
 
-interface ISubscribeModel extends Document, INewSubscribe {}
+interface ISubscribeModel extends Document, INewSubscribe {
+    repoUrl: string;
+    followedEmail: string;
+}
 
 const subscribeSchema: Schema = new Schema({
-    channelId: {type: String, index: true},
-    followed: {type: String, index: true},
-    follower: {type: String, index: true},
-    reponame: {type: String, index: true}
+    channelId: String,
+    followed: String,
+    followedEmail: String,
+    follower: String,
+    reponame: String,
+    repoUrl: String
 });
 
 const SubscribeModel: Model<ISubscribeModel> = model('Subscribe', subscribeSchema);

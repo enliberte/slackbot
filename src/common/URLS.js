@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var URLS = {
+    SUBSCRIBES: "/subscribes",
     DEVELOPERS: "/developers",
-    FAVORITE_DEVELOPERS: "/developers/favorite",
-    STASH_DEVELOPERS: "/developers/stash",
     REPOSITORIES: "/repositories",
-    FAVORITE_REPOSITORIES: "/repositories/favorite",
-    STASH_REPOSITORIES: "/repositories/stash",
+    SETTINGS: "/settings",
+    LOGIN: "/login/:token",
+    REFRESH: "/refresh",
+    API_AUTH: "/auth",
+    API_USERS: "/api/users",
     API_FAVORITE_DEVELOPERS: "/api/favorite-developers",
     API_STASH_DEVELOPERS: "/api/stash-developers",
     API_FAVORITE_REPOSITORIES: "/api/favorite-repositories",

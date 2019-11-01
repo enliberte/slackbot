@@ -25,8 +25,10 @@ export default class DeveloperController extends BaseController {
 
     async postAddStashDeveloperToFavoritesResult(req: Request, res: Response): Promise<void> {
         const addStashDeveloperToFavoritesResult = await this.services.developerService.add(req.body);
-        const code = addStashDeveloperToFavoritesResult ? 200 : 404;
-        res.status(code).send();
+        const isError = typeof addStashDeveloperToFavoritesResult === 'string';
+        const code = isError ? 404 : 200;
+        const message = isError ? addStashDeveloperToFavoritesResult : 'ok';
+        res.status(code).send(message);
     }
 
     makeRouter(): Router {

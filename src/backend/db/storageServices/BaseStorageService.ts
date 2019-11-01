@@ -14,10 +14,11 @@ export default abstract class BaseStorageService<T extends Document, U, V extend
         this.model = model;
     }
 
-    abstract get(filter: Partial<V>, search?: string, limit?: number): Promise<V[]>
+    abstract get(filter: Partial<V>): Promise<V[]>
 
-    add(obj: U): Promise<boolean> {
-        return this.model.update(obj, {}, {upsert: true}).exec();
+    async add(obj: U): Promise<boolean> {
+        const operationResult = await this.model.update(obj, {}, {upsert: true}).exec();
+        return operationResult.ok === 1;
     }
 
     async remove(filter: Partial<V>): Promise<boolean> {

@@ -62,7 +62,9 @@ var NotifyController = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.notifyService.notifyAboutPR(req.body)];
+                    case 0:
+                        console.log(JSON.stringify(req.body, null, 2));
+                        return [4 /*yield*/, this.services.notifyService.notify(req.body)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];

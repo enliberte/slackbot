@@ -5,9 +5,11 @@ interface IStashRepository {
     }
 }
 
-interface IStashRepositoryWithFavoriteSign extends IStashRepository {
+interface IStashRepositoryWithFavoriteSign {
+    name: string;
     favoriteId?: string;
     isFavorite: boolean;
+    url: string;
 }
 
 export {IStashRepository, IStashRepositoryWithFavoriteSign}

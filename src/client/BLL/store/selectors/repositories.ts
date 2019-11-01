@@ -2,12 +2,13 @@ import IState from "../IState";
 
 export const selectFavoriteRepositories = (state: IState) => state.repositories.favorites.data;
 
-export const selectSearchFavoriteRepositoriesTerm = (state: IState) => state.repositories.favorites.search;
+export const selectStashRepositories = (state: IState) =>
+    state.repositories.stash.isFavoriteOnly ?
+        state.repositories.stash.data.filter(repository => repository.isFavorite) : state.repositories.stash.data;
 
-export const selectLimitFavoriteRepositories = (state: IState) => state.repositories.favorites.limit;
+export const selectIsFavoriteRepositoriesOnly = (state: IState) => state.repositories.stash.isFavoriteOnly;
 
-export const selectStashRepositories = (state: IState) => state.repositories.stash.data;
+export const selectIsRepositoriesFetching = (state: IState) => state.repositories.isFetching;
 
-export const selectFilterStashRepositoriesTerm = (state: IState) => state.repositories.stash.name;
+export const selectStashRepositoriesSuggests = (state: IState) => state.repositories.stash.data.map(repository => repository.name);
 
-export const selectLimitStashRepositories = (state: IState) => state.repositories.stash.limit;

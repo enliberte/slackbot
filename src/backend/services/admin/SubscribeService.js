@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,12 +46,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var ServiceErrorMessages_1 = __importDefault(require("../ServiceErrorMessages"));
 var SubscribeService = /** @class */ (function () {
-    function SubscribeService(subscribeStorageService, repositoryStorageService, developerStorageService) {
+    function SubscribeService(subscribeStorageService, repositoryStorageService, developerStorageService, repositoryService, developerService, stashDeveloperService, stashRepositoryService) {
         this.subscribeStorageService = subscribeStorageService;
         this.repositoryStorageService = repositoryStorageService;
         this.developerStorageService = developerStorageService;
+        this.repositoryService = repositoryService;
+        this.developerService = developerService;
+        this.stashDeveloperService = stashDeveloperService;
+        this.stashRepositoryService = stashRepositoryService;
     }
     SubscribeService.prototype.list = function (query) {
         return __awaiter(this, void 0, void 0, function () {
@@ -51,24 +70,51 @@ var SubscribeService = /** @class */ (function () {
             });
         });
     };
-    SubscribeService.prototype.subscribe = function (obj) {
+    SubscribeService.prototype.validateSubscribe = function (obj) {
         return __awaiter(this, void 0, void 0, function () {
-            var developer, repository, addDeveloperOperationSuccess, addRepositoryOperationSuccess, addSubscribeOperationSuccess;
+            var channelId, username, addedByName, reponame, stashDeveloper, stashRepository, developer, repository, subscribe;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        developer = { channelId: obj.channelId, username: obj.followed, addedByName: obj.follower };
-                        repository = { channelId: obj.channelId, reponame: obj.reponame, addedByName: obj.follower };
-                        return [4 /*yield*/, this.developerStorageService.add(developer)];
+                        channelId = obj.channelId, username = obj.followed, addedByName = obj.follower, reponame = obj.reponame;
+                        return [4 /*yield*/, this.stashDeveloperService.getValidDeveloper(username)];
                     case 1:
-                        addDeveloperOperationSuccess = _a.sent();
-                        return [4 /*yield*/, this.repositoryStorageService.add(repository)];
+                        stashDeveloper = _a.sent();
+                        return [4 /*yield*/, this.stashRepositoryService.getValidRepository(reponame)];
                     case 2:
-                        addRepositoryOperationSuccess = _a.sent();
-                        return [4 /*yield*/, this.subscribeStorageService.add(obj)];
+                        stashRepository = _a.sent();
+                        developer = typeof stashDeveloper !== 'string' ?
+                            { channelId: channelId, username: username, addedByName: addedByName, email: stashDeveloper.emailAddress } : stashDeveloper;
+                        repository = typeof stashRepository !== 'string' ?
+                            { channelId: channelId, reponame: reponame, addedByName: addedByName, url: stashRepository.links.self[0].href } : stashRepository;
+                        subscribe = typeof developer !== 'string' && typeof repository !== 'string'
+                            ? __assign(__assign({}, obj), { followedEmail: developer.email, repoUrl: repository.url }) : ServiceErrorMessages_1.default.INVALID_SUBSCRIBE;
+                        return [2 /*return*/, { developer: developer, repository: repository, subscribe: subscribe }];
+                }
+            });
+        });
+    };
+    SubscribeService.prototype.subscribe = function (obj) {
+        return __awaiter(this, void 0, void 0, function () {
+            var validationResult, developer, repository, subscribe;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.validateSubscribe(obj)];
+                    case 1:
+                        validationResult = _a.sent();
+                        developer = validationResult.developer, repository = validationResult.repository, subscribe = validationResult.subscribe;
+                        if (!(typeof subscribe !== 'string' && typeof developer !== 'string' && typeof repository !== 'string')) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.developerStorageService.add(developer)];
+                    case 2:
+                        developer = (_a.sent()) ? developer : ServiceErrorMessages_1.default.DB;
+                        return [4 /*yield*/, this.repositoryStorageService.add(repository)];
                     case 3:
-                        addSubscribeOperationSuccess = _a.sent();
-                        return [2 /*return*/, addDeveloperOperationSuccess && addRepositoryOperationSuccess && addSubscribeOperationSuccess];
+                        repository = (_a.sent()) ? repository : ServiceErrorMessages_1.default.DB;
+                        return [4 /*yield*/, this.subscribeStorageService.add(subscribe)];
+                    case 4:
+                        subscribe = (_a.sent()) ? subscribe : ServiceErrorMessages_1.default.DB;
+                        _a.label = 5;
+                    case 5: return [2 /*return*/, { developer: developer, repository: repository, subscribe: subscribe }];
                 }
             });
         });
@@ -83,8 +129,27 @@ var SubscribeService = /** @class */ (function () {
     ;
     SubscribeService.prototype.editSubscribe = function (obj) {
         return __awaiter(this, void 0, void 0, function () {
+            var validationResult, developer, repository, subscribe, editedSubscribe;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.subscribeStorageService.edit(obj)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.validateSubscribe(obj)];
+                    case 1:
+                        validationResult = _a.sent();
+                        developer = validationResult.developer, repository = validationResult.repository, subscribe = validationResult.subscribe;
+                        if (!(typeof subscribe !== 'string' && typeof developer !== 'string' && typeof repository !== 'string')) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.developerStorageService.add(developer)];
+                    case 2:
+                        developer = (_a.sent()) ? developer : ServiceErrorMessages_1.default.DB;
+                        return [4 /*yield*/, this.repositoryStorageService.add(repository)];
+                    case 3:
+                        repository = (_a.sent()) ? repository : ServiceErrorMessages_1.default.DB;
+                        editedSubscribe = __assign(__assign({}, subscribe), { id: obj.id });
+                        return [4 /*yield*/, this.subscribeStorageService.edit(editedSubscribe)];
+                    case 4:
+                        subscribe = (_a.sent()) ? subscribe : ServiceErrorMessages_1.default.DB;
+                        _a.label = 5;
+                    case 5: return [2 /*return*/, { developer: developer, repository: repository, subscribe: subscribe }];
+                }
             });
         });
     };

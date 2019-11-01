@@ -14,7 +14,7 @@ export default class SubscribeStorageService extends BaseStorageService<ISubscri
     async get(filter: Partial<ISubscribe>, search?: string, limit?: number): Promise<ISubscribe[]> {
         const docs = await this.model.find(filter).sort({reponame: 1}).exec();
         return docs.map(doc =>
-            ({channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame, id: doc._id})
+            ({channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame, id: doc._id, followedEmail: doc.followedEmail, repoUrl: doc.repoUrl})
         );
     }
 

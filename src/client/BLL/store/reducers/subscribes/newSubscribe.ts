@@ -5,36 +5,37 @@ export interface ISubscribeData {
     id: string;
     followed: string;
     reponame: string;
+    followedEmail: string;
+    repoUrl: string;
+}
+
+export interface ISubscribeError {
+    developer: string;
+    repository: string;
+    subscribe: string;
 }
 
 export interface ISubscribeState {
-    data: ISubscribeData;
-    isNew: true;
     isRepositoryPanelDisplayed: boolean;
     isDeveloperPanelDisplayed: boolean;
     success: boolean;
+    error: ISubscribeError;
 }
 
 const initialState: ISubscribeState = {
-    data: {
-        id: '',
-        followed: '',
-        reponame: ''
-    },
-    isNew: true,
     isDeveloperPanelDisplayed: false,
     isRepositoryPanelDisplayed: false,
-    success: true
+    success: true,
+    error: {
+        developer: '',
+        repository: '',
+        subscribe: ''
+    }
 };
 
 
 export default (state: ISubscribeState = initialState, action: any) => {
     switch (action.type) {
-        case subscribesActions.SET_SUBSCRIBE:
-            return {
-                ...state,
-                data: {...state.data, ...action.payload}
-            };
         case subscribesActions.TOGGLE_EDITING_REPOSITORY_WINDOW:
             return {
                 ...state,
@@ -50,10 +51,10 @@ export default (state: ISubscribeState = initialState, action: any) => {
                 ...state,
                 success: action.payload
             };
-        case subscribesActions.SET_IS_NEW:
+        case subscribesActions.SET_SUBSCRIBE_ERROR:
             return {
                 ...state,
-                isNew: action.payload
+                error: action.payload
             };
         default:
             return state;

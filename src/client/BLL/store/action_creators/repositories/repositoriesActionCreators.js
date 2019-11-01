@@ -25,6 +25,12 @@ exports.runGetStashRepositoriesSaga = function () {
 exports.runDeleteFavoriteRepositorySaga = function (repository) {
     return ({ type: repositoriesActions_1.default.DELETE_FAVORITE_REPOSITORY_SAGA, payload: repository });
 };
-exports.runAddStashRepositoryToFavoritesSaga = function (repositoryURL) {
-    return ({ type: repositoriesActions_1.default.ADD_STASH_REPOSITORY_TO_FAVORITES_SAGA, payload: repositoryURL });
+exports.runAddStashRepositoryToFavoritesSaga = function (repository) {
+    return ({ type: repositoriesActions_1.default.ADD_STASH_REPOSITORY_TO_FAVORITES_SAGA, payload: repository });
+};
+exports.setIsRepositoriesFetching = function (isFetching) {
+    return ({ type: repositoriesActions_1.default.SET_IS_REPOSITORIES_FETCHING, payload: isFetching });
+};
+exports.setIsFavoriteRepositoriesOnly = function (isFavoriteOnly) {
+    return ({ type: repositoriesActions_1.default.SET_IS_FAVORITE_ONLY, payload: isFavoriteOnly });
 };

@@ -8,7 +8,7 @@ import buildSubscribesList from "../templates/common/buildSubscribesList";
 export interface ISubscribeToMessageAdapter {
     getSubscribesListMsg(builder: IMessageBuilder, channelId: string): Promise<IBlockMessage>;
     getAddResultMsg(builder: IMessageBuilder, obj: INewSubscribe): Promise<IBlockMessage>;
-    getDeleteResultMsg(builder: IMessageBuilder, obj: INewSubscribe): Promise<IBlockMessage>;
+    getDeleteResultMsg(builder: IMessageBuilder, obj: Partial<INewSubscribe>): Promise<IBlockMessage>;
 }
 
 export default class SubscribeToMessageAdapter implements ISubscribeToMessageAdapter {
@@ -31,10 +31,10 @@ export default class SubscribeToMessageAdapter implements ISubscribeToMessageAda
     async getAddResultMsg(builder: IMessageBuilder, obj: INewSubscribe): Promise<IBlockMessage> {
         if (obj.followed && obj.reponame) {
             const addOperationSuccess = await this.subscribeService.subscribe(obj);
-            if (addOperationSuccess) {
+            if (typeof addOperationSuccess.subscribe !== 'string') {
                 builder.buildSection(`You have subscribed for ${obj.followed}'s PR into ${obj.reponame}`);
             } else {
-                builder.buildSection(`DB Error has been occurred`);
+                builder.buildSection(addOperationSuccess.subscribe);
             }
         } else {
             builder.buildSection('Incorrect params');
@@ -42,7 +42,7 @@ export default class SubscribeToMessageAdapter implements ISubscribeToMessageAda
         return builder.getMessage();
     }
 
-    async getDeleteResultMsg(builder: IMessageBuilder, obj: INewSubscribe): Promise<IBlockMessage> {
+    async getDeleteResultMsg(builder: IMessageBuilder, obj: Partial<INewSubscribe>): Promise<IBlockMessage> {
         if (obj.followed && obj.reponame) {
             const deleteOperationSuccess = await this.subscribeService.unsubscribe(obj);
             if (deleteOperationSuccess) {

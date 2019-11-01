@@ -14,22 +14,15 @@ export default class DeveloperStorageService extends BaseStorageService<IFavorit
         super(FavoriteDeveloperModel);
     }
 
-    async get(filter: Partial<IFavoriteDeveloper>, search?: string, limit?: number): Promise<IFavoriteDeveloper[]> {
-        const {id, ...filterData} = filter;
-        let resFilter;
-        if (search) {
-            resFilter = {...filterData, username: new RegExp(`.*${search}.*`)};
-        } else {
-            resFilter = {...filterData};
-        }
+    async get(filter: Partial<IFavoriteDeveloper>): Promise<IFavoriteDeveloper[]> {
+        const {id, ...resFilter} = filter;
         if (id) {
             resFilter._id = Types.ObjectId(id);
         }
-        let query = this.model.find(resFilter).sort({username: 1});
-        if (limit) {
-            query = query.limit(limit);
-        }
+        const query = this.model.find(resFilter).sort({username: 1});
         const docs = await query.exec();
-        return docs.map(doc => ({username: doc.username, channelId: doc.channelId, addedByName: doc.addedByName, id: doc._id}));
+        return docs.map(doc =>
+            ({username: doc.username, email: doc.email, channelId: doc.channelId, addedByName: doc.addedByName, id: doc._id})
+        );
     }
 }

@@ -1,7 +1,7 @@
 import subscribesActions from "./subscribesActions";
-import {ISubscribe} from "../../../../../backend/db/models/subscribe/SubscribeModel";
+import {INewSubscribe, ISubscribe} from "../../../../../backend/db/models/subscribe/SubscribeModel";
 import {ISubscribeFilters} from "./ISubscribeFilters";
-import {ISubscribeData} from "../../reducers/subscribes/newSubscribe";
+import {ISubscribeData, ISubscribeError} from "../../reducers/subscribes/newSubscribe";
 
 
 export interface ISetSubscribesDataAction {
@@ -17,6 +17,11 @@ export interface ISetSubscribeAction {
 export interface ISetIsSuccessAction {
     type: typeof subscribesActions.SET_IS_SUCCESS;
     payload: boolean;
+}
+
+export interface ISetSubscribeErrorAction {
+    type: typeof subscribesActions.SET_SUBSCRIBE_ERROR;
+    payload: ISubscribeError;
 }
 
 export interface ISetIsNewAction {
@@ -47,10 +52,16 @@ export interface IRunGetSubscribesSagaAction {
 
 export interface IRunSaveSubscribeSagaAction {
     type: typeof subscribesActions.SAVE_SUBSCRIBE_SAGA;
+    payload: INewSubscribe;
+    resolve: () => Promise<void>;
+    reject: () => Promise<void>;
 }
 
 export interface IRunEditSubscribeSagaAction {
     type: typeof subscribesActions.EDIT_SUBSCRIBE_SAGA;
+    payload: ISubscribeData;
+    resolve: () => Promise<void>;
+    reject: () => Promise<void>;
 }
 
 export interface IRunDeleteSubscribeSagaAction {
@@ -60,4 +71,9 @@ export interface IRunDeleteSubscribeSagaAction {
 
 export interface IRunCreateSubscribeSagaAction {
     type: typeof subscribesActions.CREATE_SUBSCRIBE_SAGA;
+}
+
+export interface ISetIsSubscribesFetchingAction {
+    type: typeof subscribesActions.SET_IS_SUBSCRIBES_FETCHING;
+    payload: boolean;
 }

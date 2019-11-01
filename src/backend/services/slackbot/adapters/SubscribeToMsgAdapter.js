@@ -75,11 +75,11 @@ var SubscribeToMessageAdapter = /** @class */ (function () {
                         return [4 /*yield*/, this.subscribeService.subscribe(obj)];
                     case 1:
                         addOperationSuccess = _a.sent();
-                        if (addOperationSuccess) {
+                        if (typeof addOperationSuccess.subscribe !== 'string') {
                             builder.buildSection("You have subscribed for " + obj.followed + "'s PR into " + obj.reponame);
                         }
                         else {
-                            builder.buildSection("DB Error has been occurred");
+                            builder.buildSection(addOperationSuccess.subscribe);
                         }
                         return [3 /*break*/, 3];
                     case 2:

@@ -11,66 +11,68 @@ import {
     fetchGetStashDevelopers
 } from "../../../API/developersAPI";
 import {
-    setFavoriteDevelopersData,
+    setFavoriteDevelopersData, setIsDevelopersFetching,
     setStashDevelopersData
 } from "../../action_creators/developers/developersActionCreators";
-import {selectChannelId, selectUsername} from "../../selectors/auth";
-import {
-    selectFilterStashDevelopersTerm,
-    selectLimitStashDevelopers,
-    selectSearchFavoriteDevelopersTerm
-} from "../../selectors/developers";
-import {setIsFetching} from "../../action_creators/fetching/fetchingActionCreators";
+import {selectChannelId, selectStashDisplayName} from "../../selectors/auth";
 
 
 export function *getFavoriteDevelopers(action: IRunGetFavoriteDevelopersSagaAction) {
     try {
-        yield put(setIsFetching(true));
+        // yield put(setIsFetching(true));
         const channelId = yield select(selectChannelId);
-        const search = yield select(selectSearchFavoriteDevelopersTerm);
+        // const search = yield select(selectSearchFavoriteDevelopersTerm);
+        const search = '';
         const response = yield call(fetchGetFavoriteDevelopers, {channelId, search});
         yield put(setFavoriteDevelopersData(response.data));
     } catch (err) {
         console.log(err);
     } finally {
-        yield put(setIsFetching(false));
+        // yield put(setIsFetching(false));
     }
 }
 
 export function *getStashDevelopers(action: IRunGetStashDevelopersSagaAction) {
     try {
-        yield put(setIsFetching(true));
+        yield put(setIsDevelopersFetching(true));
         const channelId = yield select(selectChannelId);
-        const filter = yield select(selectFilterStashDevelopersTerm);
-        const limit = yield select(selectLimitStashDevelopers);
-        const response = yield call(fetchGetStashDevelopers, {filter, limit, channelId});
+        // const filter = yield select(selectFilterStashDevelopersTerm);
+        // const limit = yield select(selectLimitStashDevelopers);
+        const response = yield call(fetchGetStashDevelopers, {channelId});
         yield put(setStashDevelopersData(response.data));
     } catch (err) {
         console.log(err);
     } finally {
-        yield put(setIsFetching(false));
+        yield put(setIsDevelopersFetching(false));
     }
 }
 
 export function *deleteFavoriteDeveloper(action: IRunDeleteFavoriteDeveloperSagaAction) {
     try {
         const channelId = yield select(selectChannelId);
-        const search = yield select(selectSearchFavoriteDevelopersTerm);
+        yield put(setIsDevelopersFetching(true));
         yield call(fetchDeleteDeveloper, {...action.payload, channelId});
-        const getDevelopersResponse = yield call(fetchGetFavoriteDevelopers, {channelId, search});
-        yield put(setFavoriteDevelopersData(getDevelopersResponse.data));
+        const getStashDevelopersResponse = yield call(fetchGetStashDevelopers, {channelId});
+        yield put(setStashDevelopersData(getStashDevelopersResponse.data));
     } catch (err) {
         console.log(err);
+    } finally {
+        yield put(setIsDevelopersFetching(false));
     }
 }
 
 export function *addStashDeveloperToFavorites(action: IRunAddStashDeveloperToFavoritesSagaAction) {
     try {
         const channelId = yield select(selectChannelId);
-        const addedByName = yield select(selectUsername);
-        const username = action.payload;
+        const addedByName = yield select(selectStashDisplayName);
+        const {username} = action.payload;
+        yield put(setIsDevelopersFetching(true));
         yield call(fetchAddStashDeveloperToFavorites, {username, channelId, addedByName});
+        const getStashDevelopersResponse = yield call(fetchGetStashDevelopers, {channelId});
+        yield put(setStashDevelopersData(getStashDevelopersResponse.data));
     } catch (err) {
         console.log(err);
+    } finally {
+        yield put(setIsDevelopersFetching(false));
     }
 }

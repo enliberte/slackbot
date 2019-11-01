@@ -37,29 +37,175 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var effects_1 = require("redux-saga/effects");
+var store_1 = __importDefault(require("../../store"));
 var authAPI_1 = require("../../../API/authAPI");
 var authActionCreators_1 = require("../../action_creators/auth/authActionCreators");
-function getAuth(action) {
+var auth_1 = require("../../selectors/auth");
+var settingsActionCreators_1 = require("../../action_creators/settings/settingsActionCreators");
+var ServiceErrorMessages_1 = __importDefault(require("../../../../../backend/services/ServiceErrorMessages"));
+function logout(delayTime) {
+    var exp;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.delay(delayTime)];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, effects_1.select(auth_1.selectExp)];
+            case 2:
+                exp = _a.sent();
+                if (!(exp > Math.floor(Date.now() / 1000))) return [3 /*break*/, 4];
+                return [4 /*yield*/, effects_1.spawn(logout((exp - Math.floor(Date.now() / 1000)) * 1000))];
+            case 3:
+                _a.sent();
+                return [3 /*break*/, 6];
+            case 4: return [4 /*yield*/, effects_1.put(authActionCreators_1.setLogout())];
+            case 5:
+                _a.sent();
+                _a.label = 6;
+            case 6: return [2 /*return*/];
+        }
+    });
+}
+var startRefresh = function () {
+    store_1.default.dispatch(authActionCreators_1.runRefreshSaga());
+};
+function refreshToken() {
     var response, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
-                return [4 /*yield*/, effects_1.call(authAPI_1.fetchGetAuth)];
+                document.removeEventListener('mousemove', startRefresh);
+                _a.label = 1;
             case 1:
-                response = _a.sent();
-                return [4 /*yield*/, effects_1.put(authActionCreators_1.setAuthData(__assign(__assign({}, response.data), { isAuth: true })))];
+                _a.trys.push([1, 6, , 7]);
+                return [4 /*yield*/, effects_1.call(authAPI_1.fetchRefreshToken)];
             case 2:
-                _a.sent();
-                return [3 /*break*/, 4];
+                response = _a.sent();
+                return [4 /*yield*/, effects_1.put(authActionCreators_1.setExp(response.data))];
             case 3:
+                _a.sent();
+                return [4 /*yield*/, effects_1.put(authActionCreators_1.setSessionEndWarning({ isSessionWarningMsgDisplayed: false, sessionEndWarningMsg: '' }))];
+            case 4:
+                _a.sent();
+                return [4 /*yield*/, effects_1.spawn(delayRefreshToken, 300000)];
+            case 5:
+                _a.sent();
+                return [3 /*break*/, 7];
+            case 6:
                 err_1 = _a.sent();
                 console.log(err_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
+    });
+}
+exports.refreshToken = refreshToken;
+function delayRefreshToken(delayTime) {
+    var isAuth, exp;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.delay(delayTime)];
+            case 1:
+                _a.sent();
+                isAuth = effects_1.select(auth_1.selectIsAuth);
+                if (!isAuth) return [3 /*break*/, 6];
+                document.addEventListener('mousemove', startRefresh);
+                return [4 /*yield*/, effects_1.select(auth_1.selectExp)];
+            case 2:
+                exp = _a.sent();
+                if (!(exp - Math.floor(Date.now() / 1000) <= 300)) return [3 /*break*/, 4];
+                return [4 /*yield*/, effects_1.put(authActionCreators_1.setSessionEndWarning({
+                        isSessionWarningMsgDisplayed: true,
+                        sessionEndWarningMsg: 'The session will expire in less than 5 minutes. To avoid that move a mouse'
+                    }))];
+            case 3:
+                _a.sent();
+                return [3 /*break*/, 6];
+            case 4: return [4 /*yield*/, effects_1.spawn(delayRefreshToken, 300000)];
+            case 5:
+                _a.sent();
+                _a.label = 6;
+            case 6: return [2 /*return*/];
+        }
+    });
+}
+function getAuth(action) {
+    var response, exp, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 6, 7, 9]);
+                return [4 /*yield*/, effects_1.put(authActionCreators_1.setIsAuthFetching(true))];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(authAPI_1.fetchGetAuth)];
+            case 2:
+                response = _a.sent();
+                exp = response.data.exp;
+                return [4 /*yield*/, effects_1.put(authActionCreators_1.setAuthData(__assign(__assign({}, response.data), { isAuth: true })))];
+            case 3:
+                _a.sent();
+                return [4 /*yield*/, effects_1.spawn(delayRefreshToken, 300000)];
+            case 4:
+                _a.sent();
+                return [4 /*yield*/, effects_1.spawn(logout, (exp - Math.floor(Date.now() / 1000)) * 1000)];
+            case 5:
+                _a.sent();
+                return [3 /*break*/, 9];
+            case 6:
+                err_2 = _a.sent();
+                console.log(err_2);
+                return [3 /*break*/, 9];
+            case 7: return [4 /*yield*/, effects_1.put(authActionCreators_1.setIsAuthFetching(false))];
+            case 8:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 9: return [2 /*return*/];
         }
     });
 }
 exports.getAuth = getAuth;
+function addStashUser(action) {
+    var channelId, _a, stashDisplayName, _b, commentsNotifications, _c, reviewNotifications, _d, subscribesNotifications, response, err_3;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
+            case 0:
+                _e.trys.push([0, 6, 8, 10]);
+                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
+            case 1:
+                channelId = _e.sent();
+                _a = action.payload, stashDisplayName = _a.stashDisplayName, _b = _a.commentsNotifications, commentsNotifications = _b === void 0 ? false : _b, _c = _a.reviewNotifications, reviewNotifications = _c === void 0 ? false : _c, _d = _a.subscribesNotifications, subscribesNotifications = _d === void 0 ? false : _d;
+                return [4 /*yield*/, effects_1.call(authAPI_1.fetchPostStashUser, { channelId: channelId, stashDisplayName: stashDisplayName, commentsNotifications: commentsNotifications, reviewNotifications: reviewNotifications, subscribesNotifications: subscribesNotifications })];
+            case 2:
+                response = _e.sent();
+                return [4 /*yield*/, effects_1.put(settingsActionCreators_1.setSaveSuccessDisplayed(true))];
+            case 3:
+                _e.sent();
+                return [4 /*yield*/, effects_1.put(authActionCreators_1.setStashUserData(response.data))];
+            case 4:
+                _e.sent();
+                return [4 /*yield*/, effects_1.put(settingsActionCreators_1.clearSaveSettingsError())];
+            case 5:
+                _e.sent();
+                return [3 /*break*/, 10];
+            case 6:
+                err_3 = _e.sent();
+                console.log(err_3);
+                return [4 /*yield*/, effects_1.put(settingsActionCreators_1.setSaveSettingsError(ServiceErrorMessages_1.default.DEVELOPER_NOT_FOUND))];
+            case 7:
+                _e.sent();
+                return [3 /*break*/, 10];
+            case 8: return [4 /*yield*/, effects_1.put(authActionCreators_1.setIsAuthFetching(false))];
+            case 9:
+                _e.sent();
+                return [7 /*endfinally*/];
+            case 10: return [2 /*return*/];
+        }
+    });
+}
+exports.addStashUser = addStashUser;

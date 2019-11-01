@@ -1,6 +1,8 @@
 interface IStashDeveloper {
     id: number;
     displayName: string;
+    emailAddress: string;
+    slug: string;
 }
 
 interface IStashDeveloperWithFavoriteSign extends IStashDeveloper {

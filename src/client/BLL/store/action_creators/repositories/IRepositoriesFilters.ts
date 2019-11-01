@@ -5,6 +5,4 @@ export interface IRepositoriesFilters {
 
 export interface IStashRepositoriesFilters {
     channelId: string;
-    name: string;
-    limit: number;
 }

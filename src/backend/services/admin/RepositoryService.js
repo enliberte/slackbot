@@ -35,11 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var ServiceErrorMessages_1 = __importDefault(require("../ServiceErrorMessages"));
 var RepositoryService = /** @class */ (function () {
-    function RepositoryService(repositoryStorageService, subscribeStorageService) {
+    function RepositoryService(repositoryStorageService, subscribeStorageService, repositoryStashService) {
         this.repositoryStorageService = repositoryStorageService;
         this.subscribeStorageService = subscribeStorageService;
+        this.repositoryStashService = repositoryStashService;
     }
     RepositoryService.prototype.list = function (query) {
         return __awaiter(this, void 0, void 0, function () {
@@ -52,14 +57,21 @@ var RepositoryService = /** @class */ (function () {
     };
     RepositoryService.prototype.add = function (obj) {
         return __awaiter(this, void 0, void 0, function () {
+            var validRepository;
             return __generator(this, function (_a) {
-                if (obj.reponame.length !== 0) {
-                    return [2 /*return*/, this.repositoryStorageService.add(obj)];
+                switch (_a.label) {
+                    case 0:
+                        if (!(obj.reponame.length !== 0)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.repositoryStashService.getValidRepository(obj.reponame)];
+                    case 1:
+                        validRepository = _a.sent();
+                        if (!(typeof validRepository !== 'string')) return [3 /*break*/, 3];
+                        obj.url = validRepository.links.self[0].href;
+                        return [4 /*yield*/, this.repositoryStorageService.add(obj)];
+                    case 2: return [2 /*return*/, (_a.sent()) ? obj : ServiceErrorMessages_1.default.DB];
+                    case 3: return [2 /*return*/, validRepository];
+                    case 4: return [2 /*return*/, ServiceErrorMessages_1.default.DEVELOPER_NOT_GIVEN];
                 }
-                else {
-                    return [2 /*return*/, false];
-                }
-                return [2 /*return*/];
             });
         });
     };
@@ -71,7 +83,6 @@ var RepositoryService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.repositoryStorageService.get(obj)];
                     case 1:
                         repositories = _b.sent();
-                        console.log(obj, repositories);
                         if (repositories.length === 0) {
                             return [2 /*return*/, false];
                         }

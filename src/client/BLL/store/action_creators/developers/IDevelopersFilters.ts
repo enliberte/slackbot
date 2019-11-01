@@ -5,6 +5,4 @@ export interface IDevelopersFilters {
 
 export interface IStashDevelopersFilters {
     channelId: string;
-    filter: string;
-    limit: number;
 }

@@ -5,6 +5,7 @@ interface INewFavoriteRepository {
     channelId: string;
     addedByName: string;
     reponame: string;
+    url?: string;
 }
 
 interface IFavoriteRepository extends INewFavoriteRepository {
@@ -12,12 +13,15 @@ interface IFavoriteRepository extends INewFavoriteRepository {
     _id?: Types.ObjectId;
 }
 
-interface IFavoriteRepositoryModel extends Document, INewFavoriteRepository {}
+interface IFavoriteRepositoryModel extends Document, INewFavoriteRepository {
+    url: string;
+}
 
 const favoriteRepositorySchema: Schema = new Schema({
-    channelId: {type: String, index: true},
-    addedByName: {type: String, index: true},
-    reponame: {type: String, index: true}
+    channelId: String,
+    addedByName: String,
+    reponame: String,
+    url: String
 });
 
 const FavoriteRepositoryModel: Model<IFavoriteRepositoryModel> = model<IFavoriteRepositoryModel>('Repo', favoriteRepositorySchema);

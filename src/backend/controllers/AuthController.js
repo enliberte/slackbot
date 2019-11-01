@@ -12,6 +12,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -53,6 +64,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var BaseController_1 = __importDefault(require("./BaseController"));
+var URLS_1 = __importDefault(require("../../common/URLS"));
+var JWT_DURATION = require('../../../config').JWT_DURATION;
 var AuthController = /** @class */ (function (_super) {
     __extends(AuthController, _super);
     function AuthController() {
@@ -60,57 +73,101 @@ var AuthController = /** @class */ (function (_super) {
     }
     AuthController.prototype.setJWT = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var decodedJWT, token;
+            var sessions, newJWT;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.services.authService.verifyJWT(req.params.token)];
+                    case 0: return [4 /*yield*/, this.services.sessionService.list({ filter: { sid: req.params.token } })];
                     case 1:
-                        decodedJWT = _a.sent();
-                        if (!decodedJWT) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.services.authService.createJWT({
-                                channelId: decodedJWT.channelId, username: decodedJWT.username
-                            }, { expiresIn: '120m' })];
+                        sessions = _a.sent();
+                        if (!(sessions.length !== 0)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.services.sessionService.delete(sessions[0])];
                     case 2:
-                        token = _a.sent();
-                        res.cookie('token', token, { httpOnly: true });
-                        res.redirect('/');
-                        return [3 /*break*/, 4];
+                        _a.sent();
+                        return [4 /*yield*/, this.services.authService.createJWT({ channelId: sessions[0].channelId }, { expiresIn: JWT_DURATION })];
                     case 3:
+                        newJWT = _a.sent();
+                        res.cookie('token', newJWT, { httpOnly: true });
+                        res.redirect('/');
+                        return [3 /*break*/, 5];
+                    case 4:
                         res.status(401).send();
-                        _a.label = 4;
-                    case 4: return [2 /*return*/];
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    AuthController.prototype.refreshJWT = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var oldDecodedJWT, newJWT, newDecodedJWT;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.services.authService.verifyJWT(req.cookies.token)];
+                    case 1:
+                        oldDecodedJWT = _a.sent();
+                        if (!oldDecodedJWT) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.services.authService.createJWT({ channelId: oldDecodedJWT.channelId }, { expiresIn: JWT_DURATION })];
+                    case 2:
+                        newJWT = _a.sent();
+                        return [4 /*yield*/, this.services.authService.verifyJWT(newJWT)];
+                    case 3:
+                        newDecodedJWT = _a.sent();
+                        res.cookie('token', newJWT, { httpOnly: true });
+                        res.status(200).send({ exp: newDecodedJWT.exp });
+                        return [3 /*break*/, 5];
+                    case 4:
+                        res.status(401).send();
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
                 }
             });
         });
     };
     AuthController.prototype.postAuthData = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var decodedJWT;
+            var oldDecodedJWT, users, newJWT, newDecodedJWT, user;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(req.cookies && req.cookies.token)) return [3 /*break*/, 2];
+                        if (!(req.cookies && req.cookies.token)) return [3 /*break*/, 7];
                         return [4 /*yield*/, this.services.authService.verifyJWT(req.cookies.token)];
                     case 1:
-                        decodedJWT = _a.sent();
-                        if (decodedJWT) {
-                            res.status(200).send({ channelId: decodedJWT.channelId, username: decodedJWT.username });
+                        oldDecodedJWT = _a.sent();
+                        if (!oldDecodedJWT) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.services.userService.list({ filter: { channelId: oldDecodedJWT.channelId } })];
+                    case 2:
+                        users = _a.sent();
+                        return [4 /*yield*/, this.services.authService.createJWT({ channelId: oldDecodedJWT.channelId }, { expiresIn: JWT_DURATION })];
+                    case 3:
+                        newJWT = _a.sent();
+                        return [4 /*yield*/, this.services.authService.verifyJWT(newJWT)];
+                    case 4:
+                        newDecodedJWT = _a.sent();
+                        res.cookie('token', newJWT, { httpOnly: true });
+                        if (users.length > 0) {
+                            user = users[0];
+                            res.status(200).send(__assign(__assign({}, user), { exp: newDecodedJWT.exp }));
                         }
                         else {
-                            res.status(401).send();
+                            res.status(200).send({ channelId: newDecodedJWT.channelId, exp: newDecodedJWT.exp });
                         }
-                        return [3 /*break*/, 3];
-                    case 2:
+                        return [3 /*break*/, 6];
+                    case 5:
+                        res.status(401).send();
+                        _a.label = 6;
+                    case 6: return [3 /*break*/, 8];
+                    case 7:
                         res.status(404).send();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
+                        _a.label = 8;
+                    case 8: return [2 /*return*/];
                 }
             });
         });
     };
     AuthController.prototype.makeRouter = function () {
-        this.router.get('/login/:token', this.setJWT.bind(this));
-        this.router.get('/auth', this.postAuthData.bind(this));
+        this.router.get(URLS_1.default.LOGIN, this.setJWT.bind(this));
+        this.router.get(URLS_1.default.REFRESH, this.refreshJWT.bind(this));
+        this.router.get(URLS_1.default.API_AUTH, this.postAuthData.bind(this));
         return this.router;
     };
     return AuthController;

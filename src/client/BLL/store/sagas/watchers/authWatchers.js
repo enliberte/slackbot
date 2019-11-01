@@ -44,3 +44,25 @@ function watchGetAuth() {
     });
 }
 exports.watchGetAuth = watchGetAuth;
+function watchRefreshToken() {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.takeEvery(authActions_1.default.RUN_REFRESH_SAGA, authWorkers_1.refreshToken)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}
+exports.watchRefreshToken = watchRefreshToken;
+function watchAddStashUser() {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, effects_1.takeEvery(authActions_1.default.ADD_STASH_USER_SAGA, authWorkers_1.addStashUser)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}
+exports.watchAddStashUser = watchAddStashUser;

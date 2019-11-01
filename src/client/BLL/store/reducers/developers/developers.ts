@@ -6,28 +6,24 @@ import {IFavoriteDeveloper} from "../../../../../backend/db/models/developer/fav
 export interface IDeveloperState {
     favorites: {
         data: IFavoriteDeveloper[];
-        search: string;
-        limit: number;
     }
     stash: {
         data: IStashDeveloperWithFavoriteSign[];
-        filter: string;
-        limit: number;
+        isFavoriteOnly: boolean;
     }
+    isFetching: boolean;
 }
 
 
 const initialState: IDeveloperState = {
     favorites: {
         data: [],
-        search: '',
-        limit: 20
     },
     stash: {
         data: [],
-        filter: '',
-        limit: 20
-    }
+        isFavoriteOnly: false
+    },
+    isFetching: false
 };
 
 
@@ -64,6 +60,16 @@ export default (state: IDeveloperState = initialState, action: any) => {
                     ...state.stash,
                     filter: action.payload
                 }
+            };
+        case developersActions.SET_IS_DEVELOPERS_FETCHING:
+            return {
+                ...state,
+                isFetching: action.payload
+            };
+        case developersActions.SET_IS_FAVORITE_ONLY:
+            return {
+                ...state,
+                stash: {...state.stash, isFavoriteOnly: action.payload}
             };
         default:
             return state;

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -52,46 +41,83 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var StashClient_1 = __importDefault(require("./StashClient"));
 var query_string_1 = __importDefault(require("query-string"));
+var ServiceErrorMessages_1 = __importDefault(require("../ServiceErrorMessages"));
 var StashRepositoryService = /** @class */ (function () {
     function StashRepositoryService(repositoryStorageService) {
         this.repositoryStorageService = repositoryStorageService;
     }
-    StashRepositoryService.prototype.list = function (query) {
+    StashRepositoryService.prototype.clearData = function (channelId, stashRepositories) {
         return __awaiter(this, void 0, void 0, function () {
-            var channelId, limit, name, url, response, stashRepositories, stashRepositoriesWithFavoriteSign, _i, stashRepositories_1, stashRepository, favoriteRepositories, isFavorite, favoriteId, e_1;
+            var stashRepositoriesWithFavoriteSign, _i, stashRepositories_1, stashRepository, url, name_1, favoriteRepositories, isFavorite, favoriteId;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        channelId = query.channelId, limit = query.limit, name = query.name;
-                        url = "/repos?" + query_string_1.default.stringify({ limit: limit, name: name });
+                        stashRepositoriesWithFavoriteSign = [];
+                        _i = 0, stashRepositories_1 = stashRepositories;
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 7, , 8]);
+                        if (!(_i < stashRepositories_1.length)) return [3 /*break*/, 4];
+                        stashRepository = stashRepositories_1[_i];
+                        url = stashRepository.links.self[0].href;
+                        name_1 = stashRepository.name;
+                        return [4 /*yield*/, this.repositoryStorageService.get({ channelId: channelId, reponame: name_1 })];
+                    case 2:
+                        favoriteRepositories = _a.sent();
+                        isFavorite = favoriteRepositories.length !== 0;
+                        favoriteId = isFavorite ? favoriteRepositories[0].id : '';
+                        stashRepositoriesWithFavoriteSign.push({ isFavorite: isFavorite, favoriteId: favoriteId, url: url, name: name_1 });
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/, stashRepositoriesWithFavoriteSign];
+                }
+            });
+        });
+    };
+    StashRepositoryService.prototype.list = function (query) {
+        return __awaiter(this, void 0, void 0, function () {
+            var channelId, name, url, response, stashRepositories, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        channelId = query.channelId, name = query.name;
+                        url = "/repos?" + query_string_1.default.stringify({ limit: 1000, name: name });
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
                         return [4 /*yield*/, StashClient_1.default.get(url)];
                     case 2:
                         response = _a.sent();
                         stashRepositories = response.data.values;
-                        stashRepositoriesWithFavoriteSign = [];
-                        _i = 0, stashRepositories_1 = stashRepositories;
-                        _a.label = 3;
+                        return [2 /*return*/, this.clearData(channelId, stashRepositories)];
                     case 3:
-                        if (!(_i < stashRepositories_1.length)) return [3 /*break*/, 6];
-                        stashRepository = stashRepositories_1[_i];
-                        return [4 /*yield*/, this.repositoryStorageService.get({ channelId: channelId, reponame: stashRepository.links.self[0].href })];
-                    case 4:
-                        favoriteRepositories = _a.sent();
-                        isFavorite = favoriteRepositories.length !== 0;
-                        favoriteId = isFavorite ? favoriteRepositories[0].id : '';
-                        stashRepositoriesWithFavoriteSign.push(__assign(__assign({}, stashRepository), { isFavorite: isFavorite, favoriteId: favoriteId }));
-                        _a.label = 5;
-                    case 5:
-                        _i++;
-                        return [3 /*break*/, 3];
-                    case 6: return [2 /*return*/, stashRepositoriesWithFavoriteSign];
-                    case 7:
                         e_1 = _a.sent();
                         return [2 /*return*/, false];
-                    case 8: return [2 /*return*/];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    StashRepositoryService.prototype.getValidRepository = function (repositoryName) {
+        return __awaiter(this, void 0, void 0, function () {
+            var url, response, stashRepositories, e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        url = "/repos?" + query_string_1.default.stringify({ name: repositoryName });
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, StashClient_1.default.get(url)];
+                    case 2:
+                        response = _a.sent();
+                        stashRepositories = response.data.values;
+                        return [2 /*return*/, stashRepositories.find(function (repository) { return repository.name === repositoryName; }) || ServiceErrorMessages_1.default.REPOSITORY_NOT_FOUND];
+                    case 3:
+                        e_2 = _a.sent();
+                        return [2 /*return*/, ServiceErrorMessages_1.default.STASH];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

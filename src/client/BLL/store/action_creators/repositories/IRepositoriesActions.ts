@@ -38,5 +38,15 @@ export interface IRunDeleteFavoriteRepositorySagaAction {
 
 export interface IRunAddStashRepositoryToFavoritesSagaAction {
     type: typeof repositoriesActions.ADD_STASH_REPOSITORY_TO_FAVORITES_SAGA;
-    payload: string;
+    payload: {reponame: string, url: string};
+}
+
+export interface ISetIsRepositoriesFetchingAction {
+    type: typeof repositoriesActions.SET_IS_REPOSITORIES_FETCHING;
+    payload: boolean;
+}
+
+export interface ISetIsFavoriteRepositoriesOnlyAction {
+    type: typeof repositoriesActions.SET_IS_FAVORITE_ONLY;
+    payload: boolean;
 }

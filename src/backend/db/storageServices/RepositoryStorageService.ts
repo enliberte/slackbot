@@ -14,22 +14,15 @@ export default class RepositoryStorageService extends BaseStorageService<IFavori
         super(FavoriteRepositoryModel);
     }
 
-    async get(filter: Partial<IFavoriteRepository>, search?: string, limit?: number): Promise<IFavoriteRepository[]> {
-        const {id, ...filterData} = filter;
-        let resFilter;
-        if (search) {
-            resFilter = {...filterData, reponame: new RegExp(`.*${search}.*`)};
-        } else {
-            resFilter = {...filterData};
-        }
+    async get(filter: Partial<IFavoriteRepository>): Promise<IFavoriteRepository[]> {
+        const {id, ...resFilter} = filter;
         if (id) {
             resFilter._id = Types.ObjectId(id);
         }
-        let query = this.model.find(resFilter).sort({reponame: 1});
-        if (limit) {
-            query = query.limit(limit);
-        }
+        const query = this.model.find(resFilter).sort({reponame: 1});
         const docs = await query.exec();
-        return docs.map(doc => ({reponame: doc.reponame, channelId: doc.channelId, addedByName: doc.addedByName, id: doc._id}));
+        return docs.map(doc =>
+            ({reponame: doc.reponame, url: doc.url, channelId: doc.channelId, addedByName: doc.addedByName, id: doc._id})
+        );
     }
 }

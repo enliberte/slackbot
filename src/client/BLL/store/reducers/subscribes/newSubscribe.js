@@ -16,29 +16,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var subscribesActions_1 = __importDefault(require("../../action_creators/subscribes/subscribesActions"));
 var initialState = {
-    data: {
-        id: '',
-        followed: '',
-        reponame: ''
-    },
-    isNew: true,
     isDeveloperPanelDisplayed: false,
     isRepositoryPanelDisplayed: false,
-    success: true
+    success: true,
+    error: {
+        developer: '',
+        repository: '',
+        subscribe: ''
+    }
 };
 exports.default = (function (state, action) {
     if (state === void 0) { state = initialState; }
     switch (action.type) {
-        case subscribesActions_1.default.SET_SUBSCRIBE:
-            return __assign(__assign({}, state), { data: __assign(__assign({}, state.data), action.payload) });
         case subscribesActions_1.default.TOGGLE_EDITING_REPOSITORY_WINDOW:
             return __assign(__assign({}, state), { isRepositoryPanelDisplayed: !state.isRepositoryPanelDisplayed });
         case subscribesActions_1.default.TOGGLE_EDITING_DEVELOPER_WINDOW:
             return __assign(__assign({}, state), { isDeveloperPanelDisplayed: !state.isDeveloperPanelDisplayed });
         case subscribesActions_1.default.SET_IS_SUCCESS:
             return __assign(__assign({}, state), { success: action.payload });
-        case subscribesActions_1.default.SET_IS_NEW:
-            return __assign(__assign({}, state), { isNew: action.payload });
+        case subscribesActions_1.default.SET_SUBSCRIBE_ERROR:
+            return __assign(__assign({}, state), { error: action.payload });
         default:
             return state;
     }

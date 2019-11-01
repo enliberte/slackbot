@@ -5,8 +5,8 @@ import {
     IRunGetFavoriteRepositoriesSagaAction,
     IRunGetStashRepositoriesSagaAction,
     ISearchFavoriteRepositoriesAction,
-    ISetFavoriteRepositoriesDataAction,
-    ISetStashRepositoriesDataAction
+    ISetFavoriteRepositoriesDataAction, ISetIsFavoriteRepositoriesOnlyAction, ISetIsRepositoriesFetchingAction,
+    ISetStashRepositoriesDataAction,
 } from "./IRepositoriesActions";
 import repositoriesActions from "./repositoriesActions";
 import {IFavoriteRepository} from "../../../../../backend/db/models/repository/favorite/FavoriteRepositoryModel";
@@ -34,5 +34,11 @@ export const runGetStashRepositoriesSaga = (): IRunGetStashRepositoriesSagaActio
 export const runDeleteFavoriteRepositorySaga = (repository: Partial<IFavoriteRepository>): IRunDeleteFavoriteRepositorySagaAction =>
     ({type: repositoriesActions.DELETE_FAVORITE_REPOSITORY_SAGA, payload: repository});
 
-export const runAddStashRepositoryToFavoritesSaga = (repositoryURL: string): IRunAddStashRepositoryToFavoritesSagaAction =>
-    ({type: repositoriesActions.ADD_STASH_REPOSITORY_TO_FAVORITES_SAGA, payload: repositoryURL});
+export const runAddStashRepositoryToFavoritesSaga = (repository: {reponame: string, url: string}): IRunAddStashRepositoryToFavoritesSagaAction =>
+    ({type: repositoriesActions.ADD_STASH_REPOSITORY_TO_FAVORITES_SAGA, payload: repository});
+
+export const setIsRepositoriesFetching = (isFetching: boolean): ISetIsRepositoriesFetchingAction =>
+    ({type: repositoriesActions.SET_IS_REPOSITORIES_FETCHING, payload: isFetching});
+
+export const setIsFavoriteRepositoriesOnly = (isFavoriteOnly: boolean): ISetIsFavoriteRepositoriesOnlyAction =>
+    ({type: repositoriesActions.SET_IS_FAVORITE_ONLY, payload: isFavoriteOnly});

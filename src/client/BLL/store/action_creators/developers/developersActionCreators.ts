@@ -5,11 +5,15 @@ import {
     ISetFavoriteDevelopersDataAction,
     IFilterStashDevelopersAction,
     ISetStashDevelopersDataAction,
-    IRunGetStashDevelopersSagaAction, IRunAddStashDeveloperToFavoritesSagaAction
+    IRunGetStashDevelopersSagaAction,
+    IRunAddStashDeveloperToFavoritesSagaAction,
+    ISetIsDevelopersFetchingAction,
+    ISetIsFavoriteDevelopersOnlyAction
 } from "./IDevelopersActions";
 import developersActions from "./developersActions"
 import {IFavoriteDeveloper} from "../../../../../backend/db/models/developer/favorite/FavoriteDeveloperModel";
 import {IStashDeveloper} from "../../../../../backend/db/models/developer/stash/StashDeveloperModel";
+
 
 export const setFavoriteDevelopersData = (developersData: IFavoriteDeveloper[]): ISetFavoriteDevelopersDataAction =>
     ({type: developersActions.SET_FAVORITE_DEVELOPERS, payload: developersData});
@@ -32,5 +36,11 @@ export const runGetStashDevelopersSaga = (): IRunGetStashDevelopersSagaAction =>
 export const runDeleteFavoriteDeveloperSaga = (developer: Partial<IFavoriteDeveloper>): IRunDeleteFavoriteDeveloperSagaAction =>
     ({type: developersActions.DELETE_FAVORITE_DEVELOPER_SAGA, payload: developer});
 
-export const runAddStashDeveloperToFavoritesSaga = (developerDisplayName: string): IRunAddStashDeveloperToFavoritesSagaAction =>
-    ({type: developersActions.ADD_STASH_DEVELOPER_TO_FAVORITES_SAGA, payload: developerDisplayName});
+export const runAddStashDeveloperToFavoritesSaga = (developer: {username: string, email: string}): IRunAddStashDeveloperToFavoritesSagaAction =>
+    ({type: developersActions.ADD_STASH_DEVELOPER_TO_FAVORITES_SAGA, payload: developer});
+
+export const setIsDevelopersFetching = (isFetching: boolean): ISetIsDevelopersFetchingAction =>
+    ({type: developersActions.SET_IS_DEVELOPERS_FETCHING, payload: isFetching});
+
+export const setIsFavoriteDevelopersOnly = (isFavoriteOnly: boolean): ISetIsFavoriteDevelopersOnlyAction =>
+    ({type: developersActions.SET_IS_FAVORITE_ONLY, payload: isFavoriteOnly});

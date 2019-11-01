@@ -1,5 +1,4 @@
 import {put, call, select} from 'redux-saga/effects';
-import {setIsFetching} from "../../action_creators/fetching/fetchingActionCreators";
 import {
     IRunAddStashRepositoryToFavoritesSagaAction,
     IRunDeleteFavoriteRepositorySagaAction,
@@ -8,69 +7,71 @@ import {
 } from "../../action_creators/repositories/IRepositoriesActions";
 import {
     setFavoriteRepositoriesData,
-    setStashRepositoriesData
+    setStashRepositoriesData,
+    setIsRepositoriesFetching
 } from "../../action_creators/repositories/repositoriesActionCreators";
 import {
     fetchAddStashRepositoryToFavorites, fetchDeleteRepository,
     fetchGetFavoriteRepositories,
     fetchGetStashRepositories
 } from "../../../API/repositoriesAPI";
-import {selectChannelId, selectUsername} from "../../selectors/auth";
-import {
-    selectFilterStashRepositoriesTerm,
-    selectLimitStashRepositories,
-    selectSearchFavoriteRepositoriesTerm
-} from "../../selectors/repositories";
+import {selectChannelId, selectStashDisplayName} from "../../selectors/auth";
 
 
 export function *getFavoriteRepositories(action: IRunGetFavoriteRepositoriesSagaAction) {
     try {
-        yield put(setIsFetching(true));
+        // yield put(setIsFetching(true));
         const channelId = yield select(selectChannelId);
-        const search = yield select(selectSearchFavoriteRepositoriesTerm);
+        // const search = yield select(selectSearchFavoriteRepositoriesTerm);
+        const search = '';
         const response = yield call(fetchGetFavoriteRepositories, {channelId, search});
         yield put(setFavoriteRepositoriesData(response.data));
     } catch (err) {
         console.log(err);
     } finally {
-        yield put(setIsFetching(false));
+        // yield put(setIsFetching(false));
     }
 }
 
 export function *getStashRepositories(action: IRunGetStashRepositoriesSagaAction) {
     try {
-        yield put(setIsFetching(true));
         const channelId = yield select(selectChannelId);
-        const name = yield select(selectFilterStashRepositoriesTerm);
-        const limit = yield select(selectLimitStashRepositories);
-        const response = yield call(fetchGetStashRepositories, {name, limit, channelId});
+        yield put(setIsRepositoriesFetching(true));
+        const response = yield call(fetchGetStashRepositories, {channelId});
         yield put(setStashRepositoriesData(response.data));
     } catch (err) {
         console.log(err);
     } finally {
-        yield put(setIsFetching(false));
+        yield put(setIsRepositoriesFetching(false));
     }
 }
 
 export function *deleteFavoriteRepository(action: IRunDeleteFavoriteRepositorySagaAction) {
     try {
         const channelId = yield select(selectChannelId);
-        const search = yield select(selectSearchFavoriteRepositoriesTerm);
+        yield put(setIsRepositoriesFetching(true));
         yield call(fetchDeleteRepository, {...action.payload, channelId});
-        const getRepositoriesResponse = yield call(fetchGetFavoriteRepositories, {channelId, search});
-        yield put(setFavoriteRepositoriesData(getRepositoriesResponse.data));
+        const getStashRepositoriesResponse = yield call(fetchGetStashRepositories, {channelId});
+        yield put(setStashRepositoriesData(getStashRepositoriesResponse.data));
     } catch (err) {
         console.log(err);
+    } finally {
+        yield put(setIsRepositoriesFetching(false));
     }
 }
 
 export function *addStashRepositoryToFavorites(action: IRunAddStashRepositoryToFavoritesSagaAction) {
     try {
         const channelId = yield select(selectChannelId);
-        const addedByName = yield select(selectUsername);
-        const reponame = action.payload;
+        const addedByName = yield select(selectStashDisplayName);
+        const {reponame} = action.payload;
+        yield put(setIsRepositoriesFetching(true));
         yield call(fetchAddStashRepositoryToFavorites, {reponame, channelId, addedByName});
+        const getStashRepositoriesResponse = yield call(fetchGetStashRepositories, {channelId});
+        yield put(setStashRepositoriesData(getStashRepositoriesResponse.data));
     } catch (err) {
         console.log(err);
+    } finally {
+        yield put(setIsRepositoriesFetching(false));
     }
 }

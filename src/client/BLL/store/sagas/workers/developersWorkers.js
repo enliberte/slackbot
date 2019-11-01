@@ -42,35 +42,92 @@ var effects_1 = require("redux-saga/effects");
 var developersAPI_1 = require("../../../API/developersAPI");
 var developersActionCreators_1 = require("../../action_creators/developers/developersActionCreators");
 var auth_1 = require("../../selectors/auth");
-var developers_1 = require("../../selectors/developers");
-var fetchingActionCreators_1 = require("../../action_creators/fetching/fetchingActionCreators");
 function getFavoriteDevelopers(action) {
     var channelId, search, response, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 6, 7, 9]);
-                return [4 /*yield*/, effects_1.put(fetchingActionCreators_1.setIsFetching(true))];
+                _a.trys.push([0, 4, 5, 6]);
+                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
+            case 1:
+                channelId = _a.sent();
+                search = '';
+                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchGetFavoriteDevelopers, { channelId: channelId, search: search })];
+            case 2:
+                response = _a.sent();
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setFavoriteDevelopersData(response.data))];
+            case 3:
+                _a.sent();
+                return [3 /*break*/, 6];
+            case 4:
+                err_1 = _a.sent();
+                console.log(err_1);
+                return [3 /*break*/, 6];
+            case 5: return [7 /*endfinally*/];
+            case 6: return [2 /*return*/];
+        }
+    });
+}
+exports.getFavoriteDevelopers = getFavoriteDevelopers;
+function getStashDevelopers(action) {
+    var channelId, response, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, 6, 8]);
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setIsDevelopersFetching(true))];
             case 1:
                 _a.sent();
                 return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
             case 2:
                 channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(developers_1.selectSearchFavoriteDevelopersTerm)];
+                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchGetStashDevelopers, { channelId: channelId })];
             case 3:
-                search = _a.sent();
-                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchGetFavoriteDevelopers, { channelId: channelId, search: search })];
-            case 4:
                 response = _a.sent();
-                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setFavoriteDevelopersData(response.data))];
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setStashDevelopersData(response.data))];
+            case 4:
+                _a.sent();
+                return [3 /*break*/, 8];
+            case 5:
+                err_2 = _a.sent();
+                console.log(err_2);
+                return [3 /*break*/, 8];
+            case 6: return [4 /*yield*/, effects_1.put(developersActionCreators_1.setIsDevelopersFetching(false))];
+            case 7:
+                _a.sent();
+                return [7 /*endfinally*/];
+            case 8: return [2 /*return*/];
+        }
+    });
+}
+exports.getStashDevelopers = getStashDevelopers;
+function deleteFavoriteDeveloper(action) {
+    var channelId, getStashDevelopersResponse, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 6, 7, 9]);
+                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
+            case 1:
+                channelId = _a.sent();
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setIsDevelopersFetching(true))];
+            case 2:
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchDeleteDeveloper, __assign(__assign({}, action.payload), { channelId: channelId }))];
+            case 3:
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchGetStashDevelopers, { channelId: channelId })];
+            case 4:
+                getStashDevelopersResponse = _a.sent();
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setStashDevelopersData(getStashDevelopersResponse.data))];
             case 5:
                 _a.sent();
                 return [3 /*break*/, 9];
             case 6:
-                err_1 = _a.sent();
-                console.log(err_1);
+                err_3 = _a.sent();
+                console.log(err_3);
                 return [3 /*break*/, 9];
-            case 7: return [4 /*yield*/, effects_1.put(fetchingActionCreators_1.setIsFetching(false))];
+            case 7: return [4 /*yield*/, effects_1.put(developersActionCreators_1.setIsDevelopersFetching(false))];
             case 8:
                 _a.sent();
                 return [7 /*endfinally*/];
@@ -78,98 +135,42 @@ function getFavoriteDevelopers(action) {
         }
     });
 }
-exports.getFavoriteDevelopers = getFavoriteDevelopers;
-function getStashDevelopers(action) {
-    var channelId, filter, limit, response, err_2;
+exports.deleteFavoriteDeveloper = deleteFavoriteDeveloper;
+function addStashDeveloperToFavorites(action) {
+    var channelId, addedByName, username, getStashDevelopersResponse, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 7, 8, 10]);
-                return [4 /*yield*/, effects_1.put(fetchingActionCreators_1.setIsFetching(true))];
-            case 1:
-                _a.sent();
                 return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
-            case 2:
+            case 1:
                 channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(developers_1.selectFilterStashDevelopersTerm)];
+                return [4 /*yield*/, effects_1.select(auth_1.selectStashDisplayName)];
+            case 2:
+                addedByName = _a.sent();
+                username = action.payload.username;
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setIsDevelopersFetching(true))];
             case 3:
-                filter = _a.sent();
-                return [4 /*yield*/, effects_1.select(developers_1.selectLimitStashDevelopers)];
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchAddStashDeveloperToFavorites, { username: username, channelId: channelId, addedByName: addedByName })];
             case 4:
-                limit = _a.sent();
-                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchGetStashDevelopers, { filter: filter, limit: limit, channelId: channelId })];
+                _a.sent();
+                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchGetStashDevelopers, { channelId: channelId })];
             case 5:
-                response = _a.sent();
-                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setStashDevelopersData(response.data))];
+                getStashDevelopersResponse = _a.sent();
+                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setStashDevelopersData(getStashDevelopersResponse.data))];
             case 6:
                 _a.sent();
                 return [3 /*break*/, 10];
             case 7:
-                err_2 = _a.sent();
-                console.log(err_2);
+                err_4 = _a.sent();
+                console.log(err_4);
                 return [3 /*break*/, 10];
-            case 8: return [4 /*yield*/, effects_1.put(fetchingActionCreators_1.setIsFetching(false))];
+            case 8: return [4 /*yield*/, effects_1.put(developersActionCreators_1.setIsDevelopersFetching(false))];
             case 9:
                 _a.sent();
                 return [7 /*endfinally*/];
             case 10: return [2 /*return*/];
-        }
-    });
-}
-exports.getStashDevelopers = getStashDevelopers;
-function deleteFavoriteDeveloper(action) {
-    var channelId, search, getDevelopersResponse, err_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 6, , 7]);
-                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
-            case 1:
-                channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(developers_1.selectSearchFavoriteDevelopersTerm)];
-            case 2:
-                search = _a.sent();
-                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchDeleteDeveloper, __assign(__assign({}, action.payload), { channelId: channelId }))];
-            case 3:
-                _a.sent();
-                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchGetFavoriteDevelopers, { channelId: channelId, search: search })];
-            case 4:
-                getDevelopersResponse = _a.sent();
-                return [4 /*yield*/, effects_1.put(developersActionCreators_1.setFavoriteDevelopersData(getDevelopersResponse.data))];
-            case 5:
-                _a.sent();
-                return [3 /*break*/, 7];
-            case 6:
-                err_3 = _a.sent();
-                console.log(err_3);
-                return [3 /*break*/, 7];
-            case 7: return [2 /*return*/];
-        }
-    });
-}
-exports.deleteFavoriteDeveloper = deleteFavoriteDeveloper;
-function addStashDeveloperToFavorites(action) {
-    var channelId, addedByName, username, err_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 4, , 5]);
-                return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
-            case 1:
-                channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(auth_1.selectUsername)];
-            case 2:
-                addedByName = _a.sent();
-                username = action.payload;
-                return [4 /*yield*/, effects_1.call(developersAPI_1.fetchAddStashDeveloperToFavorites, { username: username, channelId: channelId, addedByName: addedByName })];
-            case 3:
-                _a.sent();
-                return [3 /*break*/, 5];
-            case 4:
-                err_4 = _a.sent();
-                console.log(err_4);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
         }
     });
 }

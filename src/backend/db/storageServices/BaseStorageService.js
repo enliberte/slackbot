@@ -41,7 +41,17 @@ var BaseStorageService = /** @class */ (function () {
         this.model = model;
     }
     BaseStorageService.prototype.add = function (obj) {
-        return this.model.update(obj, {}, { upsert: true }).exec();
+        return __awaiter(this, void 0, void 0, function () {
+            var operationResult;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.model.update(obj, {}, { upsert: true }).exec()];
+                    case 1:
+                        operationResult = _a.sent();
+                        return [2 /*return*/, operationResult.ok === 1];
+                }
+            });
+        });
     };
     BaseStorageService.prototype.remove = function (filter) {
         return __awaiter(this, void 0, void 0, function () {

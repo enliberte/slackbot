@@ -74,25 +74,30 @@ function getSubscribes(action) {
 }
 exports.getSubscribes = getSubscribes;
 function saveSubscribe(action) {
-    var channelId, follower, _a, followed, reponame, addSubscribeResponse, isSuccess, err_2;
+    var channelId, follower, addSubscribeResponse, _a, developer, repository, subscribe, developerError, repositoryError, subscribeError, isSuccess, err_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 10, , 11]);
+                _b.trys.push([0, 14, , 15]);
                 return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
             case 1:
                 channelId = _b.sent();
-                return [4 /*yield*/, effects_1.select(auth_1.selectUsername)];
+                return [4 /*yield*/, effects_1.select(auth_1.selectStashDisplayName)];
             case 2:
                 follower = _b.sent();
-                return [4 /*yield*/, effects_1.select(subscribes_1.selectSubscribe)];
+                return [4 /*yield*/, effects_1.call(subscribesAPI_1.fetchSaveSubscribe, __assign({ follower: follower, channelId: channelId }, action.payload))];
             case 3:
-                _a = _b.sent(), followed = _a.followed, reponame = _a.reponame;
-                return [4 /*yield*/, effects_1.call(subscribesAPI_1.fetchSaveSubscribe, { followed: followed, follower: follower, reponame: reponame, channelId: channelId })];
-            case 4:
                 addSubscribeResponse = _b.sent();
-                isSuccess = addSubscribeResponse.data;
+                _a = addSubscribeResponse.data, developer = _a.developer, repository = _a.repository, subscribe = _a.subscribe;
+                developerError = typeof developer === 'string' ? developer : '';
+                repositoryError = typeof repository === 'string' ? repository : '';
+                subscribeError = typeof subscribe === 'string' ? subscribe : '';
+                isSuccess = developerError === '' && repositoryError === '' && subscribeError === '';
                 return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.setIsSuccess(isSuccess))];
+            case 4:
+                _b.sent();
+                if (!isSuccess) return [3 /*break*/, 10];
+                return [4 /*yield*/, action.resolve()];
             case 5:
                 _b.sent();
                 return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.toggleEditingWindow())];
@@ -107,56 +112,77 @@ function saveSubscribe(action) {
                 return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.runGetFavoriteRepositoriesSaga())];
             case 9:
                 _b.sent();
-                return [3 /*break*/, 11];
-            case 10:
+                return [3 /*break*/, 13];
+            case 10: return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.setSubscribeError({ developer: developerError, repository: repositoryError, subscribe: subscribeError }))];
+            case 11:
+                _b.sent();
+                return [4 /*yield*/, action.reject()];
+            case 12:
+                _b.sent();
+                _b.label = 13;
+            case 13: return [3 /*break*/, 15];
+            case 14:
                 err_2 = _b.sent();
                 console.log(err_2);
-                return [3 /*break*/, 11];
-            case 11: return [2 /*return*/];
+                return [3 /*break*/, 15];
+            case 15: return [2 /*return*/];
         }
     });
 }
 exports.saveSubscribe = saveSubscribe;
 function editSubscribe(action) {
-    var channelId, follower, subscribeData, editSubscribeResponse, isSuccess, err_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var channelId, follower, editSubscribeResponse, _a, developer, repository, subscribe, developerError, repositoryError, subscribeError, isSuccess, err_3;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 10, , 11]);
+                _b.trys.push([0, 14, , 15]);
                 return [4 /*yield*/, effects_1.select(auth_1.selectChannelId)];
             case 1:
-                channelId = _a.sent();
-                return [4 /*yield*/, effects_1.select(auth_1.selectUsername)];
+                channelId = _b.sent();
+                return [4 /*yield*/, effects_1.select(auth_1.selectStashDisplayName)];
             case 2:
-                follower = _a.sent();
-                return [4 /*yield*/, effects_1.select(subscribes_1.selectSubscribe)];
+                follower = _b.sent();
+                return [4 /*yield*/, effects_1.call(subscribesAPI_1.fetchEditSubscribe, __assign({ follower: follower, channelId: channelId }, action.payload))];
             case 3:
-                subscribeData = _a.sent();
-                return [4 /*yield*/, effects_1.call(subscribesAPI_1.fetchEditSubscribe, __assign({ follower: follower, channelId: channelId }, subscribeData))];
-            case 4:
-                editSubscribeResponse = _a.sent();
-                isSuccess = editSubscribeResponse.data;
+                editSubscribeResponse = _b.sent();
+                _a = editSubscribeResponse.data, developer = _a.developer, repository = _a.repository, subscribe = _a.subscribe;
+                developerError = typeof developer === 'string' ? developer : '';
+                repositoryError = typeof repository === 'string' ? repository : '';
+                subscribeError = typeof subscribe === 'string' ? subscribe : '';
+                isSuccess = developerError === '' && repositoryError === '' && subscribeError === '';
                 return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.setIsSuccess(isSuccess))];
+            case 4:
+                _b.sent();
+                if (!isSuccess) return [3 /*break*/, 10];
+                return [4 /*yield*/, action.resolve()];
             case 5:
-                _a.sent();
+                _b.sent();
                 return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.toggleEditingWindow())];
             case 6:
-                _a.sent();
+                _b.sent();
                 return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.runGetSubscribesSaga())];
             case 7:
-                _a.sent();
+                _b.sent();
                 return [4 /*yield*/, effects_1.put(developersActionCreators_1.runGetFavoriteDevelopersSaga())];
             case 8:
-                _a.sent();
+                _b.sent();
                 return [4 /*yield*/, effects_1.put(repositoriesActionCreators_1.runGetFavoriteRepositoriesSaga())];
             case 9:
-                _a.sent();
-                return [3 /*break*/, 11];
-            case 10:
-                err_3 = _a.sent();
+                _b.sent();
+                return [3 /*break*/, 13];
+            case 10: return [4 /*yield*/, effects_1.put(subscribesActionCreators_1.setSubscribeError({ developer: developerError, repository: repositoryError, subscribe: subscribeError }))];
+            case 11:
+                _b.sent();
+                return [4 /*yield*/, action.reject()];
+            case 12:
+                _b.sent();
+                _b.label = 13;
+            case 13: return [3 /*break*/, 15];
+            case 14:
+                err_3 = _b.sent();
                 console.log(err_3);
-                return [3 /*break*/, 11];
-            case 11: return [2 /*return*/];
+                return [3 /*break*/, 15];
+            case 15: return [2 /*return*/];
         }
     });
 }

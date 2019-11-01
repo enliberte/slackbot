@@ -68,7 +68,7 @@ var SubscribeStorageService = /** @class */ (function (_super) {
                     case 1:
                         docs = _a.sent();
                         return [2 /*return*/, docs.map(function (doc) {
-                                return ({ channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame, id: doc._id });
+                                return ({ channelId: doc.channelId, followed: doc.followed, follower: doc.follower, reponame: doc.reponame, id: doc._id, followedEmail: doc.followedEmail, repoUrl: doc.repoUrl });
                             })];
                 }
             });

@@ -3,6 +3,7 @@ import {IRepositoryService} from "../../admin/RepositoryService";
 import IMessageBuilder from "../templates/builders/IBuilder";
 import buildReposList from "../templates/common/buildRepositoriesList";
 import {INewFavoriteRepository} from "../../../db/models/repository/favorite/FavoriteRepositoryModel";
+import EM from "../../ServiceErrorMessages";
 
 
 export interface IRepositoryToMessageAdapter {
@@ -28,15 +29,15 @@ export default class RepositoryToMsgAdapter implements IRepositoryToMessageAdapt
     }
 
     async getAddResultMsg(builder: IMessageBuilder, obj: INewFavoriteRepository): Promise<IBlockMessage> {
-        if (obj.reponame.length !== 0) {
+        if (obj.reponame) {
             const addOperationSuccess = await this.repositoryService.add(obj);
-            if (addOperationSuccess) {
+            if (typeof addOperationSuccess !== 'string') {
                 builder.buildSection(`You have added new repository ${obj.reponame}`);
             } else {
-                builder.buildSection(`DB Error has been occurred`);
+                builder.buildSection(addOperationSuccess);
             }
         } else {
-            builder.buildSection(`Incorrect reponame ${obj.reponame}`);
+            builder.buildSection(EM.REPOSITORY_NOT_GIVEN);
         }
         return builder.getMessage();
     }

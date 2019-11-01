@@ -1,20 +1,28 @@
 import React from 'react';
 import {Router, Route, Redirect} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
-import Navigation from "../navigation/navigation";
+import Accordeon from "../accordeon/accordeon";
 import {makeStyles} from "@material-ui/core";
 import Content from "../content/content";
-import FavoriteDevelopers from "../content/developers/favorites/list/favoriteDevelopersContainer";
-import StashDevelopers from "../content/developers/stash/list/stashDevelopersContainer";
-import FavoriteRepositories from "../content/repositories/favorites/list/favoriteRepositoriesContainer";
-import StashRepositories from "../content/repositories/stash/list/stashRepositoriesContainer";
-import Subscribes from "../content/subscribes/list/subscribesContainer";
 import {connect} from "react-redux";
-import {selectIsAuth} from "../../../BLL/store/selectors/auth";
-import Unauthorized from "../pages/unauthorized";
+import {
+    selectIsAuth,
+    selectIsAuthFetching,
+    selectIsSessionWarningMsgDisplayed,
+    selectIsStashDeveloper, selectSessionEndWarningMsg
+} from "../../../BLL/store/selectors/auth";
+import Unauthorized from "../pages/unauthorized/unauthorized";
 import URLS from "../../../../common/URLS";
-import DevelopersTabs from "../content/developers/tabs/developersTabs";
-import RepositoriesTabs from "../content/repositories/tabs/repositoriesTabs";
+// @ts-ignore
+import RepositoriesTable from "../content/repositories/stash/RepositoriesTable";
+// @ts-ignore
+import DevelopersTable from "../content/developers/stash/DevelopersTable";
+// @ts-ignore
+import SubscribesTable from "../content/subscribes/SubscribesTable";
+import {runGetAuthSaga, setSessionEndWarning} from "../../../BLL/store/action_creators/auth/authActionCreators";
+import AdminCircular from "../common/loader/circular/circular";
+import SettingsPanel from "../content/settings/SettingsPanel";
+import AdminWarningSnackbar from "../common/snackbars/snackbar";
 
 
 const history = createBrowserHistory();
@@ -24,45 +32,59 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-type AppProps = ReturnType<typeof mapStateToProps>;
+type AppProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 
-const App = ({isAuth}: AppProps) => {
+const App = ({isAuth, isStashDeveloper, isAuthFetching, getAuthData, isSnackbarDisplayed, snackbarText}: AppProps) => {
     const classes = useStyles();
+
+    React.useEffect(() => {
+        getAuthData();
+    }, []);
 
     return (
         <Router history={history}>
             <div className={classes.root}>
-                {isAuth ? (
-                    <>
-                        <Navigation/>
-                            <Content>
-                                <Route path={URLS.DEVELOPERS} component={DevelopersTabs}/>
-                                <Route path={URLS.REPOSITORIES} component={RepositoriesTabs}/>
-
-                                <Route path={URLS.FAVORITE_DEVELOPERS} component={FavoriteDevelopers}/>
-                                <Route path={URLS.FAVORITE_DEVELOPERS} component={Subscribes}/>
-                                <Route path={URLS.STASH_DEVELOPERS} component={StashDevelopers}/>
-
-                                <Route path={URLS.FAVORITE_REPOSITORIES} component={FavoriteRepositories}/>
-                                <Route path={URLS.FAVORITE_REPOSITORIES} component={Subscribes}/>
-                                <Route path={URLS.STASH_REPOSITORIES} component={StashRepositories}/>
-                                <Redirect to="/"/>
-                            </Content>
-                    </>
-                ) : (
-                    <>
-                        <Route path={URLS.UNAUTHORIZED} component={Unauthorized} />
-                        <Redirect to={URLS.UNAUTHORIZED}/>
-                    </>
-                )}
+                {isAuthFetching ? <AdminCircular /> :
+                    isAuth ? (
+                        <>
+                            <AdminWarningSnackbar open={isSnackbarDisplayed} message={snackbarText}/>
+                            <Accordeon isStashDeveloper={isStashDeveloper}/>
+                                <Content>
+                                    {isStashDeveloper ? <Redirect to={URLS.SUBSCRIBES}/> : <Redirect to={URLS.SETTINGS}/>}
+                                    <Route path={URLS.SUBSCRIBES} component={SubscribesTable}/>
+                                    <Route path={URLS.DEVELOPERS} component={DevelopersTable}/>
+                                    <Route path={URLS.REPOSITORIES} component={RepositoriesTable}/>
+                                    <Route path={URLS.SETTINGS} component={SettingsPanel}/>
+                                </Content>
+                        </>
+                    ) : (
+                        <>
+                            <Route path={URLS.UNAUTHORIZED} component={Unauthorized} />
+                            <Redirect to={URLS.UNAUTHORIZED}/>
+                        </>
+                    )
+                }
             </div>
         </Router>
     )
 };
 
 const mapStateToProps = (state: any) => ({
-    isAuth: selectIsAuth(state)
+    isAuth: selectIsAuth(state),
+    isSnackbarDisplayed: selectIsSessionWarningMsgDisplayed(state),
+    snackbarText: selectSessionEndWarningMsg(state),
+    isStashDeveloper: selectIsStashDeveloper(state),
+    isAuthFetching: selectIsAuthFetching(state)
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch: any) => ({
+    getAuthData() {
+        dispatch(runGetAuthSaga());
+    },
+    closeSnackbar() {
+        dispatch(setSessionEndWarning({sessionEndWarningMsg: '', isSessionWarningMsgDisplayed: false}));
+    }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

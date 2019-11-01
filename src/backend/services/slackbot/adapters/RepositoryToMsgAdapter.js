@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var buildRepositoriesList_1 = __importDefault(require("../templates/common/buildRepositoriesList"));
+var ServiceErrorMessages_1 = __importDefault(require("../../ServiceErrorMessages"));
 var RepositoryToMsgAdapter = /** @class */ (function () {
     function RepositoryToMsgAdapter(repositoryService) {
         this.repositoryService = repositoryService;
@@ -70,19 +71,19 @@ var RepositoryToMsgAdapter = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(obj.reponame.length !== 0)) return [3 /*break*/, 2];
+                        if (!obj.reponame) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.repositoryService.add(obj)];
                     case 1:
                         addOperationSuccess = _a.sent();
-                        if (addOperationSuccess) {
+                        if (typeof addOperationSuccess !== 'string') {
                             builder.buildSection("You have added new repository " + obj.reponame);
                         }
                         else {
-                            builder.buildSection("DB Error has been occurred");
+                            builder.buildSection(addOperationSuccess);
                         }
                         return [3 /*break*/, 3];
                     case 2:
-                        builder.buildSection("Incorrect reponame " + obj.reponame);
+                        builder.buildSection(ServiceErrorMessages_1.default.REPOSITORY_NOT_GIVEN);
                         _a.label = 3;
                     case 3: return [2 /*return*/, builder.getMessage()];
                 }

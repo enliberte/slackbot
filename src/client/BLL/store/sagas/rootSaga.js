@@ -37,6 +37,7 @@ function rootSaga() {
         switch (_a.label) {
             case 0: return [4 /*yield*/, effects_1.all([
                     authWatchers_1.watchGetAuth(),
+                    authWatchers_1.watchAddStashUser(),
                     developersWatchers_1.watchGetFavoriteDevelopers(),
                     developersWatchers_1.watchGetStashDevelopers(),
                     subscribesWatchers_1.watchGetSubscribes(),
@@ -48,7 +49,8 @@ function rootSaga() {
                     repositoriesWatchers_1.watchAddStashRepositoryToFavorites(),
                     subscribesWatchers_1.watchSaveSubscribe(),
                     subscribesWatchers_1.watchEditSubscribe(),
-                    subscribesWatchers_1.watchDeleteSubscribe()
+                    subscribesWatchers_1.watchDeleteSubscribe(),
+                    authWatchers_1.watchRefreshToken()
                 ])];
             case 1:
                 _a.sent();

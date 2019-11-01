@@ -3,6 +3,7 @@ import IMessageBuilder from "../templates/builders/IBuilder";
 import {IDeveloperService} from "../../admin/DeveloperService";
 import buildDevelopersList from "../templates/common/buildDevelopersList";
 import {INewFavoriteDeveloper} from "../../../db/models/developer/favorite/FavoriteDeveloperModel";
+import EM from "../../ServiceErrorMessages";
 
 
 export interface IDeveloperToMessageAdapter {
@@ -29,15 +30,15 @@ export default class DeveloperToMsgAdapter implements IDeveloperToMessageAdapter
     }
 
     async getAddResultMsg(builder: IMessageBuilder, obj: INewFavoriteDeveloper) {
-        if (obj.username.length !== 0) {
+        if (obj.username) {
             const addOperationSuccess = await this.developerService.add(obj);
-            if (addOperationSuccess) {
+            if (typeof addOperationSuccess !== 'string') {
                 builder.buildSection(`You have added new developer ${obj.username}`);
             } else {
-                builder.buildSection(`DB Error has been occurred`);
+                builder.buildSection(addOperationSuccess);
             }
         } else {
-            builder.buildSection(`Incorrect developer name ${obj.username}`);
+            builder.buildSection(EM.DEVELOPER_NOT_GIVEN);
         }
         return builder.getMessage();
     }
