@@ -30,12 +30,14 @@ class NotifyService implements INotifyService {
     protected subscribeStorageService: ISubscribeStorageService;
     protected userStorageService: IUserStorageService;
     protected PR: {[key: string]: Set<string>};
+    protected deleteChannelIdTimeout: number;
 
     constructor(webChatAdapter: IChat, subscribeStorageService: ISubscribeStorageService, userStorageService: IUserStorageService) {
         this.webChatAdapter = webChatAdapter;
         this.subscribeStorageService = subscribeStorageService;
         this.userStorageService = userStorageService;
         this.PR = {};
+        this.deleteChannelIdTimeout = 5 * 60 * 1000;
     }
 
     private async addSubscribersChannelId(PRid: string, followed: string, repoUrl: string): Promise<void> {
@@ -45,6 +47,7 @@ class NotifyService implements INotifyService {
             const users = await this.userStorageService.get({channelId, subscribesNotifications: true});
             if (users.length !== 0) {
                 this.PR[PRid].add(channelId);
+                setTimeout(() => this.deleteChannelId(PRid, channelId), this.deleteChannelIdTimeout);
             }
         }
     }
@@ -54,6 +57,7 @@ class NotifyService implements INotifyService {
             const users = await this.userStorageService.get({stashSlug, reviewNotifications: true});
             if (users.length !== 0 && users[0].channelId) {
                 this.PR[PRid].add(users[0].channelId);
+                setTimeout(() => this.deleteChannelId(PRid, users[0].channelId as string), this.deleteChannelIdTimeout);
             }
         }
     }
@@ -63,8 +67,13 @@ class NotifyService implements INotifyService {
             const users = await this.userStorageService.get({stashSlug, commentsNotifications: true});
             if (users.length !== 0 && users[0].channelId) {
                 this.PR[PRid].add(users[0].channelId);
+                setTimeout(() => this.deleteChannelId(PRid, users[0].channelId as string), this.deleteChannelIdTimeout);
             }
         }
+    }
+
+    private deleteChannelId(PRid: string, channelId: string): void {
+        this.PR[PRid].delete(channelId);
     }
 
     async notify(data: IStashPullRequestBody): Promise<void> {

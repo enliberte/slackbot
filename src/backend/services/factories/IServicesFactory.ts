@@ -11,6 +11,7 @@ import {IStashDeveloperService} from "../stash/StashDeveloperService";
 import {IStashRepositoryService} from "../stash/StashRepositoryService";
 import {IUserService} from "../admin/UserService";
 import {ISessionService} from "../admin/SessionService";
+import {IWebhookNotifyService} from "../slackbot/WebhookNotifyService";
 
 export default interface IServicesFactory {
     getAuthService(): IAuthService;
@@ -21,7 +22,8 @@ export default interface IServicesFactory {
     getUserService(): IUserService;
     getStashDeveloperService(): IStashDeveloperService;
     getStashRepositoryService(): IStashRepositoryService;
-    getNotifyService(): INotifyService;
+    // getNotifyService(): INotifyService;
+    getNotifyService(): IWebhookNotifyService;
     getRepositoryToMsgAdapter(): IRepositoryToMessageAdapter;
     getDeveloperToMsgAdapter(): IDeveloperToMessageAdapter;
     getSessionToMessageAdapter(): ISessionToMessageAdapter;

@@ -18,6 +18,7 @@ import UserStorageService from "../../db/storageServices/UserStorageService";
 import SessionService from "../admin/SessionService";
 import SessionStorageService from "../../db/storageServices/SessionStorageService";
 import SessionToMessageAdapter from "../slackbot/adapters/SessionToMsgAdapter";
+import WebhookNotifyService from "../slackbot/WebhookNotifyService";
 
 export default class ServicesFactory implements IServicesFactory {
     getAuthService(): AuthService {
@@ -28,8 +29,12 @@ export default class ServicesFactory implements IServicesFactory {
         return new SessionService(new SessionStorageService());
     }
 
-    getNotifyService(): NotifyService {
-        return new NotifyService(new WebChatAdapter(), new SubscribeStorageService(), new UserStorageService());
+    // getNotifyService(): NotifyService {
+    //     return new NotifyService(new WebChatAdapter(), new SubscribeStorageService(), new UserStorageService());
+    // }
+
+    getNotifyService(): WebhookNotifyService {
+        return new WebhookNotifyService(new WebChatAdapter(), new SubscribeStorageService(), new UserStorageService());
     }
 
     getRepositoryService(): RepositoryService {

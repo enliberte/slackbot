@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router, Route, Redirect} from 'react-router-dom';
+import {Router, Route, Redirect, Switch} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
 import Accordeon from "../accordeon/accordeon";
 import {makeStyles} from "@material-ui/core";
@@ -51,11 +51,13 @@ const App = ({isAuth, isStashDeveloper, isAuthFetching, getAuthData, isSnackbarD
                             <AdminWarningSnackbar open={isSnackbarDisplayed} message={snackbarText}/>
                             <Accordeon isStashDeveloper={isStashDeveloper}/>
                                 <Content>
-                                    {isStashDeveloper ? <Redirect to={URLS.SUBSCRIBES}/> : <Redirect to={URLS.SETTINGS}/>}
-                                    <Route path={URLS.SUBSCRIBES} component={SubscribesTable}/>
-                                    <Route path={URLS.DEVELOPERS} component={DevelopersTable}/>
-                                    <Route path={URLS.REPOSITORIES} component={RepositoriesTable}/>
-                                    <Route path={URLS.SETTINGS} component={SettingsPanel}/>
+                                    {!isStashDeveloper && <Redirect to={URLS.SETTINGS}/>}
+                                        <Switch>
+                                            <Route path={URLS.DEVELOPERS} component={DevelopersTable}/>
+                                            <Route path={URLS.REPOSITORIES} component={RepositoriesTable}/>
+                                            <Route path={URLS.SETTINGS} component={SettingsPanel}/>
+                                            <Route path={URLS.SUBSCRIBES} component={SubscribesTable}/>
+                                        </Switch>
                                 </Content>
                         </>
                     ) : (

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var URLS = {
-    SUBSCRIBES: "/subscribes",
+    SUBSCRIBES: "/",
     DEVELOPERS: "/developers",
     REPOSITORIES: "/repositories",
     SETTINGS: "/settings",

@@ -18,7 +18,7 @@ export interface IGetStashDevelopersQuery {
 
 export interface IStashDeveloperService {
     list(query: IGetStashDevelopersQuery): Promise<IStashDeveloperWithFavoriteSign[] | false>;
-    getValidDeveloper(developerName: string): Promise<IStashDeveloper | string>;
+    getValidDeveloper(filter: string): Promise<IStashDeveloper | string>;
 }
 
 
@@ -52,12 +52,15 @@ export default class StashDeveloperService implements IStashDeveloperService {
         }
     }
 
-    async getValidDeveloper(developerName: string): Promise<IStashDeveloper | string> {
-        const url = `/users?${queryString.stringify({filter: developerName})}`;
+    async getValidDeveloper(filter: string): Promise<IStashDeveloper | string> {
+        const url = `/users?${queryString.stringify({filter})}`;
         try {
             const response = await StashClient.get(url);
             const stashDevelopers: IStashDeveloper[] = response.data.values;
-            return stashDevelopers.find(developer => developer.displayName === developerName) || EM.DEVELOPER_NOT_FOUND;
+            return stashDevelopers.find(developer =>
+                developer.displayName.toLowerCase() === filter.toLowerCase() ||
+                developer.emailAddress.toLowerCase() === filter.toLowerCase()) ||
+                EM.DEVELOPER_NOT_FOUND;
         } catch (e) {
             return EM.STASH;
         }

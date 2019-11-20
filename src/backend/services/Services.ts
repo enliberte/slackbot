@@ -12,6 +12,7 @@ import {IStashDeveloperService} from "./stash/StashDeveloperService";
 import {IStashRepositoryService} from "./stash/StashRepositoryService";
 import {IUserService} from "./admin/UserService";
 import {ISessionService} from "./admin/SessionService";
+import {IWebhookNotifyService} from "./slackbot/WebhookNotifyService";
 
 export default class Services {
     authService: IAuthService;
@@ -22,7 +23,7 @@ export default class Services {
     stashRepositoryService: IStashRepositoryService;
     repositoryService: IRepositoryService;
     subscribeService: ISubscribeService;
-    notifyService: INotifyService;
+    notifyService: IWebhookNotifyService;
     developerMessageAdapter: IDeveloperToMessageAdapter;
     repositoryMessageAdapter: IRepositoryToMessageAdapter;
     sessionToMessageAdapter: ISessionToMessageAdapter;

@@ -4,6 +4,7 @@ import BaseController from "./BaseController";
 export default class NotifyController extends BaseController {
     async notifyAboutPR(req: Request, res: Response) {
         console.log(JSON.stringify(req.body, null, 2));
+        res.status(200).send();
         await this.services.notifyService.notify(req.body);
     }
 

@@ -12,7 +12,7 @@ const help = "To see whole list of commands you should write *help*";
 
 
 const buildGreeting: IBuildGreetings = (builder, isAuth, name) => {
-    const greeting = isAuth ? `Welcome back, ${name}!` : "Hi! I\'m *StashBot*";
+    const greeting = isAuth ? `Hi, ${name}!` : "Hi! I\'m *StashBot*";
     builder.buildDivider().buildSection(greeting).buildSection(purpose);
     if (!isAuth) {
         builder.buildSection(requestForStashName);

@@ -108,15 +108,46 @@ export default class RTMController implements IRTMController {
         this.postMessage(msg, channelId);
     }
 
+    private async addUserIfNotExist(channelId: string, email: string): Promise<void> {
+        const users = await this.services.userService.list({filter: {channelId}});
+        if (users.length === 0) {
+            const stashUser = await this.services.stashDeveloperService.getValidDeveloper(email);
+            if (typeof stashUser !== "string") {
+                const {displayName: stashDisplayName, slug: stashSlug} = stashUser;
+                await this.services.userService.add({
+                    channelId,
+                    stashDisplayName,
+                    stashSlug,
+                    subscribesNotifications: true,
+                    commentsNotifications: false,
+                    reviewNotifications: false
+                })
+            }
+        }
+    }
+
     private async processMessages(event: IRTM): Promise<void> {
         const [command, ...rest] = event.text.split(' ');
         if (event.text && typeof event.text === 'string') {
-            if (command === commands.IAM) {
-                this.postMsgAddStashNameResult(event.channel, event.user, rest.join(' '));
-            } else {
+            const profile = await new WebChatAdapter().getProfile(event.user);
+            if (typeof profile !== 'string') {
+                await this.addUserIfNotExist(event.channel, profile.email);
+            }
+            // if (command === commands.IAM) {
+            //     this.postMsgAddStashNameResult(event.channel, event.user, rest.join(' '));
+            // } else {
+            //     const users = await this.services.userService.list({filter: {channelId: event.channel}});
+            //     if (users.length !== 0) {
+            //         const args = event.text.match(/\"([^\"]+)\"/g) || [];
+            //         const clearedArgs = args.map(arg => arg.replace(/"/g, ''));
+            //         this.ee.emit(command, event.channel, users[0].stashDisplayName, ...clearedArgs);
+            //     }
+            // }
+            const users = await this.services.userService.list({filter: {channelId: event.channel}});
+            if (users.length !== 0) {
                 const args = event.text.match(/\"([^\"]+)\"/g) || [];
                 const clearedArgs = args.map(arg => arg.replace(/"/g, ''));
-                this.ee.emit(command, event.channel, event.user, ...clearedArgs);
+                this.ee.emit(command, event.channel, users[0].stashDisplayName, ...clearedArgs);
             }
         }
     }

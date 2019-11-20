@@ -12,6 +12,7 @@ import HelpController from "./controllers/HelpController";
 import RTMController from "./controllers/RTMController";
 import UserController from "./controllers/UserController";
 import {connect} from 'mongoose';
+import MainController from "./controllers/MainController";
 const {PORT, MONGO_URI} = require('./../../config');
 
 connect(MONGO_URI, {useNewUrlParser: true, keepAlive: true});
@@ -29,5 +30,6 @@ app.use(new DeveloperController(services).makeRouter());
 app.use(new SubscribeController(services).makeRouter());
 app.use(new RepositoryController(services).makeRouter());
 app.use(new NotifyController(services).makeRouter());
+app.use(new MainController(services).makeRouter());
 new RTMController(services).start();
 app.listen(PORT);
